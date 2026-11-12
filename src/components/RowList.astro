@@ -1,61 +1,56 @@
 ---
-// Numbered case rows with category filters and a thumbnail that follows the cursor.
-// Used on the homepage (first six) and later on /cases/ (all).
-import { caseUrl, isTodo, readingMinutes, type Case } from '../lib/content';
-
-interface Props {
-  cases: Case[];
-  filterLabel?: string;
+// Numbered rows with filter chips and a thumbnail that follows the cursor.
+// Used for the homepage case list, the Cases page and the Academic & Artistic page.
+// Case studies and academic or artistic projects are never mixed in one list.
+export interface Row {
+  href: string;
+  title: string;
+  summary: string;
+  /** Filter keys this row belongs to */
+  tags: string[];
+  /** Third column */
+  col3: string;
+  /** Fourth column; may contain TODO markers, so it is passed as parts */
+  col4: string[];
+  thumbnail: string | null;
 }
-const { cases, filterLabel = 'Filter work by category' } = Astro.props;
-
-// Rows show the start of the intro, as in the design: at most 24 words, then an ellipsis
-const excerpt = (text: string, words = 24) => {
-  const parts = text.trim().split(/\s+/);
-  return parts.length <= words ? text : `${parts.slice(0, words).join(' ')}…`;
-};
-
-const categories =['All', ...new Set(cases.flatMap((c) => c.data.categories))];
-const rows = cases.map((c, i) => {
-  const minutes = readingMinutes(c.body);
-  return {
-    n: String(i + 1).padStart(2, '0'),
-    href: caseUrl(c),
-    title: c.data.title,
-    summary: excerpt(c.data.intro),
-    cats: c.data.categories,
-    year: c.data.year,
-    read: minutes === null ? null : `${minutes} min`,
-    thumbnail: isTodo(c.data.thumbnail) ? null : c.data.thumbnail,
-  };
-});
+interface Props {
+  rows: Row[];
+  filters: string[];
+  headings: [string, string, string, string];
+  filterLabel?: string;
+  /** The homepage sets the fourth column in capitals; the Cases and Academic & Artistic pages do not */
+  fourthUpper?: boolean;
+}
+const { rows, filters, headings, filterLabel = 'Filter', fourthUpper = false } = Astro.props;
+const isTodo = (v: string) => !v || v.trim().toUpperCase() === 'TODO';
 ---
-<div class="case-list" data-case-list>
+<div class="row-list" data-row-list>
   <div class="filters" role="group" aria-label={filterLabel}>
-    {categories.map((cat) => (
-      <button class="b-chip" type="button" data-filter={cat} aria-pressed={cat === 'All' ? 'true' : 'false'}>{cat}</button>
+    {filters.map((f, i) => (
+      <button class="b-chip" type="button" data-filter={f} aria-pressed={i === 0 ? 'true' : 'false'}>{f}</button>
     ))}
   </div>
 
   <div class="cols" aria-hidden="true">
-    <span class="c-n">No.</span>
-    <span class="c-title">Project</span>
-    <span class="c-cat">Category</span>
-    <span class="c-year">Year · Read</span>
+    <span class="c-n">{headings[0]}</span>
+    <span class="c-title">{headings[1]}</span>
+    <span class="c-cat">{headings[2]}</span>
+    <span class="c-year">{headings[3]}</span>
   </div>
 
   <div class="rows-wrap">
     <ol class="rows">
-      {rows.map((r) => (
-        <li data-cats={JSON.stringify(r.cats)}>
+      {rows.map((r, i) => (
+        <li data-tags={JSON.stringify(r.tags)}>
           <a class="w-row" href={r.href} data-thumb={r.thumbnail ?? ''} data-title={r.title}>
-            <span class="c-n num">{r.n}</span>
+            <span class="c-n num">{String(i + 1).padStart(2, '0')}</span>
             <span class="c-title body">
               <span class="title">{r.title}</span>
               <span class="summary">{r.summary}</span>
             </span>
-            <span class="c-cat meta">{r.cats.join(' · ')}</span>
-            <span class="c-year meta">{isTodo(r.year) ? <span class="todo">TODO</span> : r.year} · {r.read ?? <span class="todo">TODO</span>}</span>
+            <span class="c-cat meta">{r.col3}</span>
+            <span class:list={['c-year', 'meta', { plain: !fourthUpper }]}>{r.col4.map((part, k) => <>{k > 0 && ' · '}{isTodo(part) ? <span class="todo">TODO</span> : part}</>)}</span>
           </a>
         </li>
       ))}
@@ -131,6 +126,8 @@ const rows = cases.map((c, i) => {
     padding-top: 8px;
   }
 
+  .meta.plain { text-transform: none; letter-spacing: 0.02em; padding-right: 8px; }
+
   .sr-pop {
     position: absolute;
     left: 0;
@@ -164,7 +161,7 @@ const rows = cases.map((c, i) => {
 </style>
 
 <script>
-  document.querySelectorAll<HTMLElement>('[data-case-list]').forEach((list) => {
+  document.querySelectorAll<HTMLElement>('[data-row-list]').forEach((list) => {
     const chips = Array.from(list.querySelectorAll<HTMLButtonElement>('[data-filter]'));
     const items = Array.from(list.querySelectorAll<HTMLLIElement>('.rows li'));
     const wrap = list.querySelector<HTMLElement>('.rows-wrap')!;
@@ -175,11 +172,12 @@ const rows = cases.map((c, i) => {
     // Filters
     chips.forEach((chip) => {
       chip.addEventListener('click', () => {
-        const cat = chip.dataset.filter!;
+        const tag = chip.dataset.filter!;
+        const all = chip === chips[0];
         chips.forEach((c) => c.setAttribute('aria-pressed', c === chip ? 'true' : 'false'));
         items.forEach((li) => {
-          const cats: string[] = JSON.parse(li.dataset.cats || '[]');
-          li.hidden = cat !== 'All' && !cats.includes(cat);
+          const tags: string[] = JSON.parse(li.dataset.tags || '[]');
+          li.hidden = !all && !tags.includes(tag);
         });
         pop.hidden = true;
       });

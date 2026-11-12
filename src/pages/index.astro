@@ -2,8 +2,8 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Hero from '../components/Hero.astro';
 import SectionHead from '../components/SectionHead.astro';
-import CaseList from '../components/CaseList.astro';
-import { getCases } from '../lib/content';
+import RowList from '../components/RowList.astro';
+import { caseFilters, caseRows, getCases } from '../lib/content';
 
 const homeCases = (await getCases()).slice(0, 6);
 
@@ -81,7 +81,13 @@ const research = [
   <section id="work" class="section">
     <div class="wrap">
       <SectionHead label="Section 3">Cases</SectionHead>
-      <CaseList cases={homeCases} />
+      <RowList
+        rows={caseRows(homeCases, 'year-read')}
+        filters={caseFilters(homeCases)}
+        headings={['No.', 'Project', 'Category', 'Year · Read']}
+        filterLabel="Filter work by category"
+        fourthUpper
+      />
       <a class="b-sec all-cases" href="/cases/">See all cases →</a>
     </div>
   </section>

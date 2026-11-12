@@ -1,0 +1,47 @@
+---
+// Top of the Cases and Academic & Artistic pages: back link, big heading, intro (slot)
+interface Props {
+  title: string;
+  /** Heading size differs between the two list pages in the design */
+  size?: 'xl' | 'lg';
+}
+const { title, size = 'xl' } = Astro.props;
+---
+<section class="list-hero">
+  <div class="wrap">
+    <a class="l-mark back" href="/">← Back to home</a>
+    <h1 class:list={['list-h1', size]}>{title}</h1>
+    <p class="list-intro"><slot /></p>
+  </div>
+</section>
+
+<style>
+  .list-hero { border-bottom: var(--rule) solid var(--ink); }
+  .wrap { padding-top: clamp(32px, 5vw, 64px); padding-bottom: clamp(40px, 6vw, 72px); }
+  .back {
+    font: 500 13px var(--font-mono);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--ink);
+  }
+  .list-h1 {
+    margin: clamp(24px, 3vw, 40px) 0 0;
+    font-family: var(--font-display);
+    font-weight: 900;
+    line-height: 0.88;
+    letter-spacing: -0.035em;
+    text-transform: uppercase;
+    overflow-wrap: break-word;
+  }
+  .xl { font-size: clamp(56px, 10vw, 168px); }
+  .lg { font-size: clamp(48px, 8.4vw, 144px); }
+  .list-intro {
+    margin: 28px 0 0;
+    max-width: 760px;
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: clamp(20px, 1.8vw, 24px);
+    line-height: 1.4;
+  }
+  .list-intro :global(a) { color: var(--ink); font-weight: 600; }
+</style>

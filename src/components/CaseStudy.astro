@@ -5,6 +5,7 @@
 //   protected: hero, hero image, password box, article once unlocked, next case
 // The article is passed in the default slot. The academic and artistic pages reuse this with type "full".
 import PasswordGate from './PasswordGate.astro';
+import ContactBlock from './ContactBlock.astro';
 import { isTodo } from '../lib/content';
 
 interface MetaRow { label: string; value?: string; chips?: string[] }
@@ -80,7 +81,7 @@ const hasHeroImage = heroImage && !isTodo(heroImage);
     <a class="l-row next-row" href={next.href}>
       <span class="wrap next-inner">
         <span class="next-text">
-          <span class="next-label">{next.label}</span>
+          <span class="next-label">{isTodo(next.label) ? <span class="todo">TODO</span> : next.label}</span>
           <span class="next-title">{next.title}</span>
         </span>
         <span class="next-arrow" aria-hidden="true">→</span>
@@ -89,15 +90,7 @@ const hasHeroImage = heroImage && !isTodo(heroImage);
   </section>
 )}
 
-<section id="contact" class="cs-contact" aria-label="Get in touch">
-  <div class="wrap">
-    <a class="l-mark big-mail" href="mailto:hello@scottrobinson.co.uk">hello@scottrobinson.co.uk</a>
-    <div class="contact-actions">
-      <a class="b-pri lg" href="mailto:hello@scottrobinson.co.uk">Get in touch →</a>
-      <a class="b-sec lg" href="https://www.linkedin.com/in/drscottrobinson/">LinkedIn ↗</a>
-    </div>
-  </div>
-</section>
+<ContactBlock />
 
 <style>
   section { border-bottom: var(--rule) solid var(--ink); }
@@ -245,20 +238,4 @@ const hasHeroImage = heroImage && !isTodo(heroImage);
   }
   .next-arrow { font-size: 60px; }
 
-  /* Contact */
-  .cs-contact .wrap { padding-block: clamp(40px, 6vw, 80px); }
-  .big-mail {
-    display: inline-block;
-    font-family: var(--font-display);
-    font-weight: 800;
-    font-size: clamp(28px, 5vw, 80px);
-    line-height: 1;
-    letter-spacing: -0.03em;
-    color: var(--ink);
-    text-decoration-thickness: 3px;
-    text-underline-offset: 10px;
-    overflow-wrap: anywhere;
-  }
-  .contact-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 32px; }
-  .contact-actions .lg { min-height: 48px; font-size: 13px; }
 </style>
