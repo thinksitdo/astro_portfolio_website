@@ -1,0 +1,264 @@
+---
+// Case study template (design/reference/case-study.dc.html).
+//   full:      hero, hero image, article, next case
+//   lite:      hero, hero image, next case
+//   protected: hero, hero image, password box, article once unlocked, next case
+// The article is passed in the default slot. The academic and artistic pages reuse this with type "full".
+import PasswordGate from './PasswordGate.astro';
+import { isTodo } from '../lib/content';
+
+interface MetaRow { label: string; value?: string; chips?: string[] }
+interface Props {
+  type: 'full' | 'lite' | 'protected';
+  title: string;
+  intro: string;
+  meta: MetaRow[];
+  heroImage?: string;
+  heroAlt?: string;
+  next?: { label: string; title: string; href: string };
+  back?: { label: string; href: string };
+}
+
+const { type, title, intro, meta, heroImage, heroAlt, next, back = { label: '← Back to home', href: '/' } } = Astro.props;
+const showArticle = type !== 'lite';
+const hasHeroImage = heroImage && !isTodo(heroImage);
+---
+<section class="cs-hero">
+  <div class="wrap">
+    <a class="l-mark back" href={back.href}>{back.label}</a>
+    <h1 class="cs-title">{title}</h1>
+    <div class="cs-top">
+      <p class="cs-intro">{isTodo(intro) ? <span class="todo">TODO</span> : intro}</p>
+      <dl class="cs-meta">
+        {meta.map((row) => (
+          <div class="cs-row">
+            <dt>{row.label}</dt>
+            <dd>
+              {row.chips
+                ? <span class="chips">{row.chips.map((c) => <span class="chip">{c}</span>)}</span>
+                : isTodo(row.value) ? <span class="todo">TODO</span> : row.value}
+            </dd>
+          </div>
+        ))}
+      </dl>
+    </div>
+  </div>
+</section>
+
+<section class="cs-image" aria-label="Project image">
+  <div class="wrap">
+    <figure>
+      {hasHeroImage
+        ? <img src={heroImage} alt={heroAlt ?? ''} />
+        : <div class="thumb-placeholder hero-ph" role="img" aria-label={`Image placeholder, ${title}`}>Image · {title}</div>}
+    </figure>
+  </div>
+</section>
+
+{type === 'protected' && <PasswordGate />}
+
+{showArticle && (
+  <section class="cs-article" id="case-article" hidden={type === 'protected'} data-protected={type === 'protected' ? '' : undefined}>
+    <div class="wrap article-wrap">
+      <slot />
+    </div>
+  </section>
+)}
+
+{type === 'protected' && (
+  <script is:inline>
+    // Runs as soon as the article is parsed, before first paint: a visitor who has unlocked before sees it straight away
+    if (/(?:^|; )sr_cases=1/.test(document.cookie)) {
+      document.getElementById('case-gate')?.setAttribute('hidden', '');
+      document.getElementById('case-article')?.removeAttribute('hidden');
+    }
+  </script>
+)}
+
+{next && (
+  <section class="cs-next">
+    <a class="l-row next-row" href={next.href}>
+      <span class="wrap next-inner">
+        <span class="next-text">
+          <span class="next-label">{next.label}</span>
+          <span class="next-title">{next.title}</span>
+        </span>
+        <span class="next-arrow" aria-hidden="true">→</span>
+      </span>
+    </a>
+  </section>
+)}
+
+<section id="contact" class="cs-contact" aria-label="Get in touch">
+  <div class="wrap">
+    <a class="l-mark big-mail" href="mailto:hello@scottrobinson.co.uk">hello@scottrobinson.co.uk</a>
+    <div class="contact-actions">
+      <a class="b-pri lg" href="mailto:hello@scottrobinson.co.uk">Get in touch →</a>
+      <a class="b-sec lg" href="https://www.linkedin.com/in/drscottrobinson/">LinkedIn ↗</a>
+    </div>
+  </div>
+</section>
+
+<style>
+  section { border-bottom: var(--rule) solid var(--ink); }
+
+  /* Hero */
+  .cs-hero .wrap { padding-top: clamp(32px, 5vw, 64px); padding-bottom: clamp(40px, 6vw, 72px); }
+  .back {
+    font: 500 13px var(--font-mono);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--ink);
+  }
+  .cs-title {
+    margin: clamp(24px, 3vw, 40px) 0 0;
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: clamp(44px, 7.6vw, 128px);
+    line-height: 0.95;
+    letter-spacing: -0.03em;
+    overflow-wrap: break-word;
+  }
+  .cs-top { display: flex; flex-wrap: wrap; gap: 40px 64px; margin-top: clamp(32px, 4vw, 56px); }
+  .cs-intro {
+    flex: 1 1 420px;
+    min-width: 0;
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: clamp(20px, 1.8vw, 24px);
+    line-height: 1.4;
+  }
+  .cs-meta { flex: 1 1 420px; min-width: 0; margin: 0; border-top: var(--rule) solid var(--ink); }
+  .cs-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 16px;
+    padding: 14px 0;
+    border-bottom: var(--rule-thin) solid var(--ink);
+  }
+  .cs-row dt {
+    flex: 0 0 110px;
+    padding-top: 3px;
+    font: 600 12px var(--font-mono);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+  .cs-row dd { flex: 1 1 200px; margin: 0; font-size: 15px; line-height: 1.55; }
+  .chips { display: flex; flex-wrap: wrap; gap: 6px; }
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    min-height: 32px;
+    padding: 0 10px;
+    border: var(--rule-thin) solid var(--ink);
+    font: 500 12px var(--font-mono);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  /* Hero image on pink */
+  .cs-image { background: var(--accent); }
+  .cs-image .wrap { padding-block: 48px; }
+  .cs-image figure { margin: 0; }
+  .cs-image img, .hero-ph {
+    width: 100%;
+    aspect-ratio: 16 / 7;
+    object-fit: cover;
+    object-position: top left;
+    border: var(--rule) solid var(--ink);
+  }
+
+  /* Article: sections and figures come from the Markdown plugins in src/lib/markdown-plugins.mjs */
+  .cs-article[hidden] { display: none; }
+  .article-wrap { padding-block: clamp(40px, 6vw, 80px); }
+  .article-wrap :global(.cs-sec) {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px 64px;
+    padding: 40px 0;
+    border-top: var(--rule-thin) solid var(--ink);
+  }
+  .article-wrap :global(.cs-sec-h) {
+    flex: 1 1 220px;
+    max-width: 320px;
+    display: flex;
+    gap: 16px;
+    align-items: baseline;
+  }
+  .article-wrap :global(.cs-n) { font: 600 13px var(--font-mono); }
+  .article-wrap :global(.cs-sec-h h2) {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: 34px;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+  }
+  .article-wrap :global(.cs-sec-b) { flex: 999 1 560px; min-width: 0; max-width: 720px; }
+  .article-wrap :global(.cs-sec-b > *) { margin: 0 0 20px; }
+  .article-wrap :global(.cs-sec-b > :last-child) { margin-bottom: 0; }
+  .article-wrap :global(.cs-sec-b h3) { font-family: var(--font-display); font-weight: 800; font-size: 22px; line-height: 1.2; }
+  .article-wrap :global(.cs-sec-b a) { text-underline-offset: 3px; }
+
+  .article-wrap :global(.cs-figs) { padding-bottom: 40px; }
+  .article-wrap :global(.cs-figs--two) {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 24px;
+  }
+  @media (max-width: 720px) {
+    .article-wrap :global(.cs-figs--two) { grid-template-columns: minmax(0, 1fr); }
+  }
+  .article-wrap :global(.cs-fig) { margin: 0; }
+  .article-wrap :global(.cs-fig img) {
+    width: 100%;
+    height: auto;
+    border: var(--rule) solid var(--ink);
+    background: var(--thumb);
+  }
+  .article-wrap :global(.cs-cap) {
+    margin: 10px 0 0;
+    font: 400 12px var(--font-mono);
+    letter-spacing: 0.02em;
+    color: var(--muted);
+  }
+
+  /* Next case */
+  .next-row { display: block; padding: 0; text-decoration: none; color: var(--ink); }
+  .next-inner {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding-block: 40px;
+  }
+  .next-text { display: flex; flex-direction: column; gap: 8px; }
+  .next-label { font: 500 13px var(--font-mono); text-transform: uppercase; letter-spacing: 0.04em; }
+  .next-title, .next-arrow {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: clamp(32px, 4vw, 60px);
+    line-height: 1;
+    letter-spacing: -0.03em;
+  }
+  .next-arrow { font-size: 60px; }
+
+  /* Contact */
+  .cs-contact .wrap { padding-block: clamp(40px, 6vw, 80px); }
+  .big-mail {
+    display: inline-block;
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: clamp(28px, 5vw, 80px);
+    line-height: 1;
+    letter-spacing: -0.03em;
+    color: var(--ink);
+    text-decoration-thickness: 3px;
+    text-underline-offset: 10px;
+    overflow-wrap: anywhere;
+  }
+  .contact-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 32px; }
+  .contact-actions .lg { min-height: 48px; font-size: 13px; }
+</style>

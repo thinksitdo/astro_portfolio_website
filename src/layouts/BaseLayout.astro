@@ -7,9 +7,11 @@ import Footer from '../components/Footer.astro';
 interface Props {
   title: string;
   description?: string;
+  /** Body text face: mono on the homepage, Inter on case study and thesis pages (open question for Scott) */
+  bodyFont?: 'mono' | 'inter';
 }
 
-const { title, description } = Astro.props;
+const { title, description, bodyFont = 'mono' } = Astro.props;
 const siteName = 'Scott Robinson';
 const fullTitle = title === siteName ? title : `${title} · ${siteName}`;
 const canonical = new URL(Astro.url.pathname, Astro.site);
@@ -43,7 +45,7 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
       href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@800;900&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap"
     />
   </head>
-  <body>
+  <body class:list={[{ 'body-inter': bodyFont === 'inter' }]}>
     <a class="skip-link" href="#main">Skip to content</a>
     <Header />
     <Menu />

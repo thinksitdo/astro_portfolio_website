@@ -1,0 +1,38 @@
+---
+import { render } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import CaseStudy from '../../components/CaseStudy.astro';
+import { caseUrl, getCases, isTodo, type Case } from '../../lib/content';
+
+export async function getStaticPaths() {
+  const cases = await getCases();
+  return cases.map((entry, i) => ({
+    params: { slug: entry.id },
+    props: { entry, next: cases[(i + 1) % cases.length] },
+  }));
+}
+
+interface Props { entry: Case; next: Case }
+const { entry, next } = Astro.props;
+const d = entry.data;
+const { Content } = await render(entry);
+---
+<BaseLayout title={d.title} description={isTodo(d.task) ? undefined : d.task} bodyFont="inter">
+  <CaseStudy
+    type={d.type}
+    title={d.title}
+    intro={d.intro}
+    heroImage={d.heroImage}
+    heroAlt={d.heroAlt}
+    meta={[
+      { label: 'Client', value: d.client },
+      { label: 'Role', value: d.role },
+      { label: 'Activities', value: d.activities },
+      { label: 'Category', chips: d.categories },
+      { label: 'Task', value: d.task },
+    ]}
+    next={{ label: 'Next case', title: next.data.title, href: caseUrl(next) }}
+  >
+    <Content />
+  </CaseStudy>
+</BaseLayout>

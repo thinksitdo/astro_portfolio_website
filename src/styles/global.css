@@ -55,6 +55,14 @@ body {
   line-height: 1.65;
 }
 
+/* Case study and thesis pages set body text in Inter */
+body.body-inter {
+  --font-body: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  font-family: var(--font-body);
+  font-size: 17px;
+  line-height: 1.6;
+}
+
 main { flex: 1 0 auto; }
 
 img, svg, video { display: block; max-width: 100%; }
@@ -71,6 +79,9 @@ input:focus-visible {
 }
 
 a, button { cursor: var(--cursor-link); }
+
+/* Elements that only receive focus from script (skip link target, unlocked article) need no ring */
+[tabindex='-1']:focus { outline: none; }
 
 .wrap {
   max-width: var(--max);

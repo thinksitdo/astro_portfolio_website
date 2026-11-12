@@ -20,6 +20,7 @@ const cases = defineCollection({
     task: z.string(),
     intro: z.string(),
     heroImage: z.string(),
+    heroAlt: z.string().optional(),
     thumbnail: z.string(),
     legacyUrl: z.string().url(),
   }),
