@@ -1,0 +1,614 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<title>Brutalist homepage, pink accent, light</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@100..900&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@100..900&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@100..800&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400..900&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@100..900&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@400..700&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300..700&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:inherit}a:hover{color:inherit}
+a:focus-visible,button:focus-visible{outline:3px solid currentColor;outline-offset:3px}
+.b-switch:hover .sw-off{background:var(--accent)!important;color:#0A0A0A!important}
+.b-switch:active{transform:translate(1px,1px)}
+@media (prefers-reduced-motion: reduce){.sw-half{transition:none!important}}
+.sr-burger:hover{background:var(--ink)!important;color:var(--bg)!important}
+.sr-menu{transition:background-color .12s ease}
+.sr-menu-wrap{height:100vh;height:100dvh}
+.sr-menu-label{font-size:clamp(20px,min(6.2vw,calc((100vh - 200px) / 7 * 0.62)),112px)}
+@supports (height:100dvh){.sr-menu-label{font-size:clamp(20px,min(6.2vw,calc((100dvh - 200px) / 7 * 0.62)),112px)}}
+.sr-menu:hover,.sr-menu:focus-visible{background:var(--accent);color:#0A0A0A!important}
+.sr-menu:focus-visible{outline-offset:-6px}
+@media (prefers-reduced-motion: reduce){.sr-menu{transition:none}}
+@media (hover: none), (max-width: 900px){.sr-pop{display:none!important}}
+/* Hover, focus and active states: pure CSS so they survive HTML export */
+.h-logo{transition:opacity .12s}.h-logo:hover{opacity:.65}
+.b-pri{transition:transform .12s ease,box-shadow .12s ease}
+.b-pri:hover{transform:translate(-3px,-3px);box-shadow:4px 4px 0 var(--ink)}
+.b-pri:active{transform:translate(1px,1px);box-shadow:none}
+.b-sec,.b-chip,.b-tileP,.b-tileS,.b-inv,.w-row,.l-row{transition:background-color .12s ease,color .12s ease}
+.b-sec:hover{background:var(--ink)!important;color:var(--bg)!important}
+.b-chip:hover{background:var(--accent)!important;color:#0A0A0A!important}
+.b-chip[aria-pressed="true"]:hover{background:var(--ink)!important;color:var(--bg)!important}
+.b-tileP:hover{background:var(--ink)!important;color:var(--accent)!important}
+.b-tileS:hover{background:var(--ink)!important;color:var(--bg)!important}
+.b-tileP>span:first-child,.b-tileS>span:first-child{display:inline-block;transition:transform .15s ease}
+.b-tileP:hover>span:first-child{transform:translateX(8px)}
+.b-tileS:hover>span:first-child{transform:translateY(6px)}
+.b-inv:hover{background:#F4F4F0!important;color:#0A0A0A!important}
+.b-sec:active,.b-chip:active,.b-tileP:active,.b-tileS:active,.b-inv:active{transform:translate(1px,1px)}
+.w-row:hover,.w-row:focus-visible{background:var(--accent)!important;color:#0A0A0A!important}
+.w-row:focus-visible{outline-offset:-4px}
+.l-mark{padding:2px 4px;margin:-2px -4px;text-decoration-thickness:2px}
+.l-mark:hover,.l-big:hover{background:var(--accent);color:#0A0A0A!important;text-decoration:none}
+.l-mark:active{background:var(--ink);color:var(--bg)!important}
+.l-row{padding-left:8px!important;padding-right:8px!important}
+.l-row:hover,.l-row:focus-visible{background:var(--accent)}
+.l-row:hover span,.l-row:focus-visible span{color:#0A0A0A!important}
+.l-row span[aria-hidden]{transition:transform .15s ease}
+.l-row:hover span[aria-hidden]{transform:translateX(8px)}
+@media (prefers-reduced-motion: reduce){.h-logo,.b-pri,.b-sec,.b-chip,.b-tileP,.b-tileS,.b-inv,.w-row,.l-row,.l-row span[aria-hidden],.b-tileP>span:first-child,.b-tileS>span:first-child{transition:none}}
+/* Bulge grid background (from bulge-grid_1.html). Never blocks clicks */
+.hx-hero{display:grid;grid-template-columns:28fr 32fr 40fr;grid-template-rows:minmax(clamp(460px,64vh,780px),auto) clamp(150px,15vw,240px);gap:3px;background:var(--ink);border-bottom:3px solid var(--ink)}
+.hx-strap{grid-column:1 / 3;grid-row:1;background:var(--bg);padding:clamp(28px,4.4vw,64px) clamp(20px,3.3vw,48px);display:flex;flex-direction:column;justify-content:space-between;gap:clamp(24px,3vw,48px);container-type:inline-size;min-width:0}
+.hx-h1{margin:0;font-family:'Inter Tight',Arial,sans-serif;font-weight:800;font-size:clamp(34px,9.4cqi,132px);line-height:.95;letter-spacing:-.035em;overflow-wrap:break-word}
+.hx-name{align-self:flex-start;display:flex;flex-direction:column;gap:8px;padding:clamp(14px,1.6vw,20px) clamp(18px,2vw,28px);border:3px solid var(--ink);background:var(--bg);font:400 clamp(12px,1.05vw,15px) 'JetBrains Mono',ui-monospace,monospace;text-transform:uppercase;letter-spacing:.06em}
+.hx-video{grid-column:3;grid-row:1;position:relative;background:var(--bg);overflow:hidden;touch-action:pan-y;min-height:0}
+.hx-vcap{position:absolute;left:clamp(10px,1.2vw,16px);right:clamp(10px,1.2vw,16px);bottom:clamp(10px,1.2vw,16px);max-width:420px;padding:10px 14px;line-height:1.4;border:3px solid var(--ink);background:var(--bg);font:500 clamp(11px,.85vw,12px) 'JetBrains Mono',ui-monospace,monospace;letter-spacing:.02em}
+.hx-tile{container-type:inline-size;min-width:0;padding:clamp(14px,1.6vw,24px);box-sizing:border-box;display:flex;flex-direction:column;justify-content:space-between;text-decoration:none}
+.hx-tile .t{font-family:'Inter Tight',Arial,sans-serif;font-weight:800;font-size:clamp(24px,10cqi,48px);line-height:1;letter-spacing:-.03em}
+.hx-tile .a{font:600 14px 'JetBrains Mono',ui-monospace,monospace;text-transform:uppercase;letter-spacing:.04em}
+.hx-cta{grid-column:1;grid-row:2}
+.hx-slides{grid-column:2;grid-row:2;position:relative;background:var(--bg);overflow:hidden;touch-action:pan-y;min-width:0}
+.hx-scap{position:absolute;left:12px;right:12px;bottom:12px;padding:6px 10px;line-height:1.4;border:3px solid var(--ink);background:var(--bg);font:500 clamp(11px,.85vw,12px) 'JetBrains Mono',ui-monospace,monospace}
+.hx-work{grid-column:3;grid-row:2}
+@media (max-width: 820px){
+.hx-hint{display:none}
+.hx-hero{grid-template-columns:1fr 1fr;grid-template-rows:auto auto auto auto}
+.hx-strap{grid-column:1 / -1;grid-row:1}
+.hx-video{grid-column:1 / -1;grid-row:2;aspect-ratio:4 / 5}
+.hx-cta{grid-column:1;grid-row:3;min-height:150px}
+.hx-work{grid-column:2;grid-row:3;min-height:150px}
+.hx-slides{grid-column:1 / -1;grid-row:4;aspect-ratio:4 / 3}
+}
+.hx-name .l1{font-weight:600}
+.hx-name .l2,.hx-name .l3{font-size:.9em;line-height:1.5}
+.hx-name .l3{font-weight:500}
+.hx-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+a,button,.hx-tile{cursor:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%2228%22%20height%3D%2228%22%20viewBox%3D%220%200%2028%2028%22%3E%3Crect%20x%3D%221.5%22%20y%3D%221.5%22%20width%3D%2225%22%20height%3D%2225%22%20fill%3D%22%23F9F7ED%22%20stroke%3D%22%230A0A0A%22%20stroke-width%3D%223%22/%3E%3Cpath%20d%3D%22M8.5%2019.5L19%209M12%208.5H19.5V16%22%20fill%3D%22none%22%20stroke%3D%22%230A0A0A%22%20stroke-width%3D%222.6%22%20stroke-linecap%3D%22square%22/%3E%3C/svg%3E") 20 8, pointer}
+.bCursor{cursor:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%2258%22%20height%3D%2228%22%20viewBox%3D%220%200%2058%2028%22%3E%3Crect%20x%3D%221.5%22%20y%3D%221.5%22%20width%3D%2225%22%20height%3D%2225%22%20fill%3D%22%23F9F7ED%22%20stroke%3D%22%230A0A0A%22%20stroke-width%3D%223%22/%3E%3Crect%20x%3D%2231.5%22%20y%3D%221.5%22%20width%3D%2225%22%20height%3D%2225%22%20fill%3D%22%23F9F7ED%22%20stroke%3D%22%230A0A0A%22%20stroke-width%3D%223%22/%3E%3Cpath%20d%3D%22M19%2014H9M13%209.5L8.5%2014L13%2018.5%22%20fill%3D%22none%22%20stroke%3D%22%230A0A0A%22%20stroke-width%3D%222.6%22%20stroke-linecap%3D%22square%22/%3E%3Cpath%20d%3D%22M39%2014H49M45%209.5L49.5%2014L45%2018.5%22%20fill%3D%22none%22%20stroke%3D%22%230A0A0A%22%20stroke-width%3D%222.6%22%20stroke-linecap%3D%22square%22/%3E%3C/svg%3E") 29 14, ew-resize}
+.sr-root{isolation:isolate}
+.sr-bulge{position:fixed;inset:0;width:100%;height:100%;z-index:-1;pointer-events:none;display:block}
+/* Pink blocks blend with the grid beneath: multiply on light, screen on dark */
+.sr-root[data-mode="light"] .pk,
+.sr-root[data-mode="light"] .w-row:hover,.sr-root[data-mode="light"] .b-chip:not([aria-pressed="true"]):hover,
+.sr-root[data-mode="light"] .l-row:hover,.sr-root[data-mode="light"] .l-mark:hover,.sr-root[data-mode="light"] .l-big:hover{mix-blend-mode:multiply}
+.sr-root[data-mode="dark"] .pk,
+.sr-root[data-mode="dark"] .w-row:hover,.sr-root[data-mode="dark"] .b-chip:not([aria-pressed="true"]):hover,
+.sr-root[data-mode="dark"] .l-row:hover,.sr-root[data-mode="dark"] .l-mark:hover,.sr-root[data-mode="dark"] .l-big:hover{mix-blend-mode:screen}
+.sr-root .b-tileP.pk:hover{mix-blend-mode:normal}
+@keyframes zScan{from{background-position:0 0}to{background-position:12px 0}}
+.zoe2 .zMask{opacity:0;animation:zScan .66s linear infinite}
+.zoe2:hover .zMask,.zoe2.on .zMask{opacity:1}
+@media (prefers-reduced-motion: reduce){.zoe2 .zMask{animation:none}}
+</style>
+</helmet>
+<div class="sr-root" data-mode="{{modeName}}" style="--accent: {{t.accent}}; --ink: {{t.ink}}; --bg: {{t.bg}}; background: {{t.bg}}; color: {{t.ink}}; font-family: {{f.body}}; font-size: 16px; line-height: 1.65; width: 100%; min-height: 100%">
+<canvas class="sr-bulge" ref="{{bulgeRef}}" aria-hidden="true"></canvas>
+
+<header style="border-bottom: 3px solid {{t.ink}}">
+<div style="max-width: 1320px; margin: 0 auto; padding: 0 clamp(16px, 3vw, 40px); display: flex; flex-wrap: wrap; align-items: stretch; justify-content: space-between; gap: 0 24px">
+<a class="h-logo" href="#top" aria-label="Scott Robinson, home" style="display: flex; align-items: center; min-height: 72px; padding: 12px 0; box-sizing: border-box; text-decoration: none"><img src="/_blob/7ed398faa647658ba4b33272d85b386f" alt="" style="display: block; height: 44px; width: auto; filter: {{logoFilter}}"></a>
+<div style="display: flex; align-items: center; gap: 12px; padding: 12px 0">
+<button class="b-sec" onClick="{{toggleGrid}}" aria-label="{{gridLabel}}" style="min-height: 44px; padding: 0 14px; border: 2px solid {{t.ink}}; border-radius: 0; background: transparent; color: {{t.ink}}; font: 600 13px {{f.body}}; text-transform: uppercase; letter-spacing: 0.04em; cursor: pointer">{{gridText}}</button>
+<button class="b-switch" type="button" role="switch" aria-checked="{{darkChecked}}" aria-label="Dark mode" onClick="{{toggleMode}}" style="display: inline-flex; align-items: stretch; height: 44px; padding: 0; border: 2px solid {{t.ink}}; border-radius: 0; background: transparent; color: {{t.ink}}; box-sizing: border-box"><span class="sw-half {{sunCls}}" style="display: flex; align-items: center; justify-content: center; width: 44px; height: 40px; transition: background-color .12s ease, color .12s ease; background: {{sunBg}}; color: {{sunFg}}"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="square" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="4.5"></circle><path d="M12 1.5V4.5M12 19.5V22.5M1.5 12H4.5M19.5 12H22.5M4.6 4.6L6.7 6.7M17.3 17.3L19.4 19.4M4.6 19.4L6.7 17.3M17.3 6.7L19.4 4.6"></path></svg></span><span aria-hidden="true" style="width: 2px; background: {{t.ink}}"></span><span class="sw-half {{moonCls}}" style="display: flex; align-items: center; justify-content: center; width: 44px; height: 40px; transition: background-color .12s ease, color .12s ease; background: {{moonBg}}; color: {{moonFg}}"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="square" stroke-linejoin="miter" aria-hidden="true" focusable="false"><path d="M20 14.5A8.5 8.5 0 1 1 9.5 4a7 7 0 0 0 10.5 10.5z"></path></svg></span></button>
+<a class="b-pri pk" href="#contact" style="display: inline-flex; align-items: center; min-height: 44px; padding: 0 18px; border: 2px solid {{t.ink}}; background: {{t.accent}}; color: {{t.onAccent}}; font: 600 13px {{f.body}}; text-transform: uppercase; letter-spacing: 0.04em; text-decoration: none">Let’s talk →</a>
+<button class="sr-burger" type="button" aria-label="Open menu" aria-expanded="{{menuExpanded}}" aria-controls="site-menu" onClick="{{openMenu}}" style="display: inline-flex; align-items: center; justify-content: center; width: 48px; height: 48px; padding: 0; border: 2px solid {{t.ink}}; border-radius: 0; background: transparent; color: {{t.ink}}; cursor: pointer"><svg width="22" height="16" viewBox="0 0 22 16" aria-hidden="true" focusable="false"><path d="M0 2H22M0 8H22M0 14H22" stroke="currentColor" stroke-width="3"></path></svg></button>
+</div>
+</div>
+</header>
+
+<sc-if value="{{menuOpen}}" hint-placeholder-val="{{false}}">
+<div id="site-menu" role="dialog" aria-modal="true" aria-label="Menu" class="sr-menu-wrap" style="position: fixed; inset: 0; z-index: 50; overflow: hidden; background: {{t.bg}}; color: {{t.ink}}; display: flex; flex-direction: column">
+<div style="border-bottom: 3px solid {{t.ink}}">
+<div style="max-width: 1320px; margin: 0 auto; padding: 0 clamp(16px, 3vw, 40px); display: flex; align-items: center; justify-content: space-between; gap: 24px">
+<a class="h-logo" href="#top" onClick="{{closeMenu}}" aria-label="Scott Robinson, home" style="display: flex; align-items: center; min-height: 72px; padding: 12px 0; box-sizing: border-box"><img src="/_blob/7ed398faa647658ba4b33272d85b386f" alt="" style="display: block; height: 44px; width: auto; filter: {{logoFilter}}"></a>
+<button class="sr-burger" type="button" aria-label="Close menu" onClick="{{closeMenu}}" style="display: inline-flex; align-items: center; justify-content: center; width: 48px; height: 48px; padding: 0; border: 2px solid {{t.ink}}; border-radius: 0; background: transparent; color: {{t.ink}}; cursor: pointer"><svg width="20" height="20" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M2 2L18 18M18 2L2 18" stroke="currentColor" stroke-width="3"></path></svg></button>
+</div>
+</div>
+<nav aria-label="Main" style="flex: 1 1 auto; min-height: 0; display: flex; flex-direction: column; max-width: 1320px; width: 100%; margin: 0 auto; padding: clamp(12px, 3vh, 48px) clamp(16px, 3vw, 40px); box-sizing: border-box">
+<ol style="flex: 1 1 auto; min-height: 0; display: flex; flex-direction: column; margin: 0; padding: 0; list-style: none; border-top: 3px solid {{t.ink}}">
+<sc-for list="{{menu}}" as="m" hint-placeholder-count="6">
+<li style="flex: 1 1 0; min-height: 0; display: flex; border-bottom: 3px solid {{t.ink}}">
+<a class="sr-menu" href="{{m.href}}" onClick="{{closeMenu}}" style="flex: 1; display: flex; align-items: center; justify-content: space-between; gap: 24px; padding: 0 8px; color: {{t.ink}}; text-decoration: none">
+<span class="sr-menu-label" style="font-family: {{f.display}}; font-weight: 900; line-height: 0.9; letter-spacing: -0.035em; text-transform: uppercase; white-space: nowrap">{{m.label}}</span>
+<span style="font-family: {{f.body}}; font-size: 14px; font-weight: 500">{{m.n}}</span>
+</a>
+</li>
+</sc-for>
+</ol>
+</nav>
+<div style="border-top: 3px solid {{t.ink}}">
+<div style="max-width: 1320px; margin: 0 auto; padding: 20px clamp(16px, 3vw, 40px) 28px; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px 24px; font-family: {{f.body}}; font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em">
+<a class="l-mark" href="mailto:hello@scottrobinson.co.uk" style="color: {{t.ink}}; text-underline-offset: 4px; text-transform: none">hello@scottrobinson.co.uk</a>
+<a class="l-mark" href="https://www.linkedin.com/in/drscottrobinson/" style="color: {{t.ink}}; text-underline-offset: 4px">LinkedIn ↗</a>
+</div>
+</div>
+</div>
+</sc-if>
+
+<section id="top" class="hx-hero">
+<div class="hx-strap">
+<h1 class="hx-h1" style="font-family: {{f.display}}">I research encounters between people and technology, to better designed products.</h1>
+<div class="hx-name"><span class="l1">Dr Scott Robinson</span><span class="l2">London, UK • Hybrid or Remote • Permanent or Contract</span><span class="l3">User Research <span aria-hidden="true">⇄</span><span class="hx-only">, moving back and forth with </span> UX and Product Design <span aria-hidden="true">⇄</span><span class="hx-only">, moving back and forth with </span> Product Strategy</span></div>
+</div>
+<div class="hx-video bCursor" onPointerMove="{{vidMove}}" ref="{{vidCellRef}}" role="img" aria-label="Video of Scott stepping, scrubs as you scroll or move across it">
+<video ref="{{vidRef}}" onSeeked="{{onSeeked}}" src="/_blob/29453955fb47a4f4e439c8251ed5222a" poster="/_blob/871eafd836348bbc63f23212a0dc6430" muted playsinline preload="auto" aria-hidden="true" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block"></video>
+<span class="hx-vcap"><span style="display: block">Becoming Tortoise: Designing a Participatory Installation on the action of stepping</span><span style="display: block; margin-top: 4px"><strong ref="{{vidCapRef}}">0:00.0</strong> / 1:01.6</span></span>
+</div>
+<a class="hx-tile hx-cta b-tileP" href="#contact" style="background: {{t.accent}}; color: {{t.onAccent}}"><span class="a">→</span><span class="t" style="font-family: {{f.display}}">Get in touch</span></a>
+<div class="hx-slides bCursor" onPointerMove="{{slMove}}" ref="{{slCellRef}}" role="img" aria-label="Slideshow of case study images, advances as you scroll or move across it">
+<div ref="{{slWrapRef}}" style="position: absolute; inset: 0"><div class="sl" data-i="0" style="position: absolute; inset: 0; opacity: 1"><img src="/_blob/096bbc9cbcef76151049a8398468b1c6" alt="" style="width: 100%; height: 100%; object-fit: cover; object-position: top left; display: block; filter: grayscale(1) contrast(1.05)"></div><div class="sl" data-i="1" style="position: absolute; inset: 0; opacity: 0"><div style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; text-align: center; padding: 16px; box-sizing: border-box; background: {{t.thumb}}; font: 500 12px 'JetBrains Mono', ui-monospace, monospace; text-transform: uppercase; letter-spacing: 0.04em">Image · Contours: Strategic Pivot to AI Research Platform</div></div><div class="sl" data-i="2" style="position: absolute; inset: 0; opacity: 0"><div style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; text-align: center; padding: 16px; box-sizing: border-box; background: {{t.thumb}}; font: 500 12px 'JetBrains Mono', ui-monospace, monospace; text-transform: uppercase; letter-spacing: 0.04em">Image · Designing for student experience</div></div><div class="sl" data-i="3" style="position: absolute; inset: 0; opacity: 0"><div style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; text-align: center; padding: 16px; box-sizing: border-box; background: {{t.thumb}}; font: 500 12px 'JetBrains Mono', ui-monospace, monospace; text-transform: uppercase; letter-spacing: 0.04em">Image · Contours: Designing for trust in AI answers</div></div><div class="sl" data-i="4" style="position: absolute; inset: 0; opacity: 0"><div style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; text-align: center; padding: 16px; box-sizing: border-box; background: {{t.thumb}}; font: 500 12px 'JetBrains Mono', ui-monospace, monospace; text-transform: uppercase; letter-spacing: 0.04em">Image · Apex: focusing an MVP backlog on user needs</div></div></div>
+<span class="hx-scap"><strong ref="{{slCapRef}}">01</strong> / 05 · <span ref="{{slNameRef}}">NGO: Mapping Digital Relationships</span></span>
+</div>
+<a class="hx-tile hx-work b-tileS" href="#work" style="background: {{t.bg}}; color: {{t.ink}}"><span class="a">↓</span><span class="t" style="font-family: {{f.display}}">See my work</span></a>
+</section>
+
+<section id="about" style="border-bottom: 3px solid {{t.ink}}">
+<div style="max-width: 1320px; margin: 0 auto; padding: clamp(40px, 6vw, 80px) clamp(16px, 3vw, 40px)">
+<div style="display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 12px 24px; padding-bottom: 20px; border-bottom: 3px solid {{t.ink}}">
+<h2 style="font-family: {{f.display}}; margin: 0; font-weight: 900; font-size: clamp(48px, 7vw, 112px); line-height: 0.88; letter-spacing: -0.03em; text-transform: uppercase">In short</h2>
+<span style="font-family: {{f.body}}; font-size: 14px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.04em">Section 1</span>
+</div>
+<div style="display: flex; flex-wrap: wrap; gap: 32px 64px; margin-top: 40px">
+<div style="flex: 2 1 480px; min-width: 0">
+<p style="font-family: {{f.display}}; margin: 0; font-weight: 700; font-size: clamp(24px, 2.6vw, 38px); line-height: 1.1; letter-spacing: -0.015em">Designer, researcher and product strategist with 25+ years’ experience and a practice-based PhD.</p>
+<p style="margin: 24px 0 0; max-width: 680px; color: {{t.muted}}">I help organisations understand people and products, find where meaningful change is possible, and turn that into product vision, strategy and features. Most recently, I spent seven years at an AI fintech startup, where I led research, product strategy and UX for a research platform used by investment professionals in a heavily regulated industry. <a class="l-mark" href="#contact" style="color: {{t.ink}}; font-weight: 600; text-underline-offset: 4px">CV available on request</a></p>
+</div>
+<div style="flex: 1 1 300px; min-width: 0; display: grid; grid-template-columns: repeat(1, minmax(0, 1fr)); gap: 3px; background: {{t.ink}}; border: 3px solid {{t.ink}}; align-self: start">
+<div style="background: {{t.bg}}; padding: 20px 24px">
+<h3 style="margin: 0 0 12px; font-family: {{f.body}}; font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em">Specialisms</h3>
+<ul style="font-family: {{f.display}}; margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 4px; font-weight: 700; font-size: 20px; line-height: 1.25">
+<li>Design Research</li>
+<li>Product Strategy</li>
+<li>Experience Design (UX)</li>
+<li>Human–AI Decision-Making</li>
+</ul>
+</div>
+<div style="background: {{t.bg}}; padding: 20px 24px">
+<h3 style="margin: 0 0 12px; font-family: {{f.body}}; font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em">Location</h3>
+<p style="font-family: {{f.display}}; margin: 0; font-weight: 700; font-size: 20px; line-height: 1.25">London, UK · Remote</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="focus" class="pk" style="border-bottom: 3px solid {{t.ink}}; background: {{t.accent}}; color: {{t.onAccent}}">
+<div style="max-width: 1320px; margin: 0 auto; padding: clamp(40px, 6vw, 80px) clamp(16px, 3vw, 40px)">
+<div style="display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 12px 24px; padding-bottom: 20px; border-bottom: 3px solid {{t.onAccent}}">
+<h2 style="font-family: {{f.display}}; margin: 0; font-weight: 900; font-size: clamp(48px, 7vw, 112px); line-height: 0.88; letter-spacing: -0.03em; text-transform: uppercase">Current focus</h2>
+<span style="font-family: {{f.body}}; font-size: 14px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.04em">Section 2</span>
+</div>
+<div style="display: flex; flex-wrap: wrap; gap: 32px 64px; margin-top: 40px">
+<div style="flex: 1 1 360px; min-width: 0">
+<p style="font-family: {{f.display}}; margin: 0; font-weight: 800; font-size: clamp(32px, 4vw, 60px); line-height: 0.98; letter-spacing: -0.025em">Human + AI decision-making</p>
+<p style="font-family: {{f.display}}; margin: 24px 0 0; font-weight: 600; font-size: clamp(20px, 1.8vw, 26px); line-height: 1.25">AI is both something I investigate and something that is changing how I investigate and make.</p>
+</div>
+<div style="flex: 1 1 420px; min-width: 0">
+<p style="margin: 0">My recent work explores AI from both sides of the design process. I research how people work with increasingly capable AI — how they interrogate evidence, establish trust and retain judgement and accountability.</p>
+<p style="margin: 16px 0 0">At the same time, AI is changing how I research and design. The boundary between designing and building is becoming more fluid, allowing questions to move from research, through design and into working software. For me, this is part of a familiar evolution in design tools. What matters is still the judgement about what to build, what not to build, and what needs to exist to answer the question.</p>
+<a class="b-inv" href="#work" style="display: inline-flex; align-items: center; min-height: 48px; margin-top: 28px; padding: 0 20px; background: {{t.onAccent}}; color: {{t.accent}}; font: 600 13px {{f.body}}; text-transform: uppercase; letter-spacing: 0.04em; text-decoration: none">Learn more →</a>
+</div>
+</div>
+</div>
+</section>
+<section id="work" style="border-bottom: 3px solid {{t.ink}}">
+<div style="max-width: 1320px; margin: 0 auto; padding: clamp(40px, 6vw, 80px) clamp(16px, 3vw, 40px)">
+<div style="display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 12px 24px; padding-bottom: 20px; border-bottom: 3px solid {{t.ink}}">
+<h2 style="font-family: {{f.display}}; margin: 0; font-weight: 900; font-size: clamp(48px, 7vw, 112px); line-height: 0.88; letter-spacing: -0.03em; text-transform: uppercase">Cases</h2>
+<span style="font-family: {{f.body}}; font-size: 14px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.04em">Section 3</span>
+</div>
+<div role="group" aria-label="Filter work by category" style="display: flex; flex-wrap: wrap; gap: 8px; padding: 20px 0">
+<sc-for list="{{filters}}" as="f" hint-placeholder-count="5">
+<button class="b-chip" onClick="{{f.pick}}" aria-pressed="{{f.pressed}}" style="min-height: 44px; padding: 0 16px; border: 2px solid {{t.ink}}; border-radius: 0; background: {{f.bg}}; color: {{f.fg}}; font: 500 13px {{f.body}}; text-transform: uppercase; letter-spacing: 0.04em; cursor: pointer">{{f.label}}</button>
+</sc-for>
+</div>
+<div aria-hidden="true" style="display: flex; flex-wrap: wrap; gap: 0 24px; padding: 10px 0; border-top: 3px solid {{t.ink}}; border-bottom: 2px solid {{t.ink}}; font-family: {{f.body}}; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em">
+<span style="flex: 0 0 56px">No.</span>
+<span style="flex: 999 1 300px">Project</span>
+<span style="flex: 1 1 180px">Category</span>
+<span style="flex: 1 1 160px">Year · Read</span>
+</div>
+<div style="position: relative" onMouseMove="{{onListMove}}">
+<ol style="margin: 0; padding: 0; list-style: none">
+<sc-for list="{{work}}" as="item" hint-placeholder-count="6">
+<li style="border-bottom: 2px solid {{t.ink}}">
+<a class="w-row" href="#work" onMouseEnter="{{item.enter}}" onMouseLeave="{{item.leave}}" onFocus="{{item.enter}}" onBlur="{{item.leave}}" style="position: relative; display: flex; flex-wrap: wrap; gap: 8px 24px; padding: 22px 0; text-decoration: none; color: {{item.fg}}; background: {{item.rowBg}}">
+<span style="flex: 0 0 56px; font-family: {{f.body}}; font-size: 14px; font-weight: 600; padding: 6px 0 0 8px; box-sizing: border-box">{{item.n}}</span>
+<span style="flex: 999 1 300px; min-width: 0; display: flex; flex-direction: column; gap: 6px">
+<span style="font-family: {{f.display}}; font-weight: 800; font-size: clamp(22px, 2.2vw, 30px); line-height: 1.1; letter-spacing: -0.015em">{{item.title}}</span>
+<span style="font-size: 16px; line-height: 1.5; max-width: 600px">{{item.summary}}</span>
+</span>
+<span style="flex: 1 1 180px; font-family: {{f.body}}; font-size: 13px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.04em; padding-top: 8px">{{item.cat}}</span>
+<span style="flex: 1 1 160px; font-family: {{f.body}}; font-size: 13px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.04em; padding-top: 8px">{{item.year}} · {{item.read}}</span>
+</a>
+</li>
+</sc-for>
+</ol>
+<div class="sr-pop" ref="{{popRef}}" aria-hidden="true" style="position: absolute; left: 0; top: 0; width: 440px; height: 275px; display: {{popDisplay}}; align-items: center; justify-content: center; text-align: center; padding: 12px; box-sizing: border-box; background: {{t.thumb}}; color: {{t.ink}}; border: 3px solid {{t.ink}}; box-shadow: 8px 8px 0 {{t.ink}}; font-family: {{f.body}}; font-size: 12px; text-transform: uppercase; pointer-events: none; z-index: 5; will-change: transform">Thumbnail · {{popThumb}}</div>
+</div>
+<a class="b-sec" href="#work" style="display: inline-flex; align-items: center; min-height: 48px; margin-top: 24px; padding: 0 20px; border: 2px solid {{t.ink}}; color: {{t.ink}}; font: 600 13px {{f.body}}; text-transform: uppercase; letter-spacing: 0.04em; text-decoration: none">See all cases →</a>
+</div>
+</section>
+<section id="how" style="border-bottom: 3px solid {{t.ink}}">
+<div style="max-width: 1320px; margin: 0 auto; padding: clamp(40px, 6vw, 80px) clamp(16px, 3vw, 40px)">
+<div style="display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 12px 24px; padding-bottom: 20px; border-bottom: 3px solid {{t.ink}}">
+<h2 style="font-family: {{f.display}}; margin: 0; font-weight: 900; font-size: clamp(48px, 7vw, 112px); line-height: 0.88; letter-spacing: -0.03em; text-transform: uppercase">How I work</h2>
+<span style="font-family: {{f.body}}; font-size: 14px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.04em">Section 4</span>
+</div>
+<p style="font-family: {{f.display}}; margin: 40px 0 0; font-weight: 700; font-size: clamp(24px, 2.6vw, 38px); line-height: 1.1; letter-spacing: -0.015em">The question determines the method.</p>
+<p style="margin: 16px 0 0; max-width: 720px; font-size: 20px; color: {{t.muted}}">I don’t begin with a particular design method. I begin by asking what we need to understand.</p>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 3px; background: {{t.ink}}; border: 3px solid {{t.ink}}; margin-top: 40px">
+<sc-for list="{{questions}}" as="q" hint-placeholder-count="4">
+<div style="background: {{t.bg}}; padding: 24px; display: flex; flex-direction: column; gap: 12px">
+<span style="font-family: {{f.body}}; font-size: 13px; font-weight: 600">{{q.n}}</span>
+<h3 style="font-family: {{f.display}}; margin: 0; font-weight: 800; font-size: 24px; line-height: 1.1; letter-spacing: -0.01em">{{q.title}}</h3>
+<p style="margin: 0; font-size: 16px; line-height: 1.55">{{q.body}}</p>
+<p style="margin: auto 0 0; padding-top: 12px; border-top: 2px solid {{t.ink}}; font-family: {{f.body}}; font-size: 12px; line-height: 1.6; text-transform: uppercase; letter-spacing: 0.02em; color: {{t.muted}}">{{q.methods}}</p>
+</div>
+</sc-for>
+</div>
+</div>
+</section>
+<section id="design-research" style="border-bottom: 3px solid {{t.ink}}">
+<div style="max-width: 1320px; margin: 0 auto; padding: clamp(40px, 6vw, 80px) clamp(16px, 3vw, 40px)">
+<div style="display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 12px 24px; padding-bottom: 20px; border-bottom: 3px solid {{t.ink}}">
+<h2 style="font-family: {{f.display}}; margin: 0; font-weight: 900; font-size: clamp(48px, 7vw, 112px); line-height: 0.88; letter-spacing: -0.03em; text-transform: uppercase">Design as research</h2>
+<span style="font-family: {{f.body}}; font-size: 14px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.04em">Section 5</span>
+</div>
+<div style="display: flex; flex-wrap: wrap; gap: 16px 64px; margin-top: 40px">
+<p style="font-family: {{f.display}}; flex: 1 1 320px; margin: 0; font-weight: 700; font-size: clamp(24px, 2.6vw, 38px); line-height: 1.1; letter-spacing: -0.015em">Research doesn’t end with a report.</p>
+<p style="flex: 1 1 420px; margin: 0; color: {{t.muted}}">Research can take many forms, and it doesn’t stop when designing or making begins. Mapping relationships, sketching an idea, staging an encounter or building working software can all be ways of investigating a question. What I make — and how I make it — depends on what I’m trying to understand.</p>
+</div>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 3px; background: {{t.ink}}; border: 3px solid {{t.ink}}; margin-top: 40px">
+<sc-for list="{{making}}" as="m" hint-placeholder-count="4">
+<div style="background: {{t.bg}}; display: flex; flex-direction: column">
+<div style="aspect-ratio: 4 / 3; background: {{t.thumb}}; border-bottom: 3px solid {{t.ink}}; display: flex; align-items: center; justify-content: center; text-align: center; padding: 12px; font-family: {{f.body}}; font-size: 12px; text-transform: uppercase">Image · {{m.img}}</div>
+<div style="padding: 20px 24px 24px">
+<h3 style="font-family: {{f.display}}; margin: 0 0 8px; font-weight: 800; font-size: 22px; line-height: 1.1">{{m.title}}</h3>
+<p style="margin: 0; font-size: 15px; line-height: 1.55; color: {{t.muted}}">{{m.body}}</p>
+</div>
+</div>
+</sc-for>
+</div>
+</div>
+</section>
+<section id="research" style="border-bottom: 3px solid {{t.ink}}">
+<div style="max-width: 1320px; margin: 0 auto; padding: clamp(40px, 6vw, 80px) clamp(16px, 3vw, 40px)">
+<div style="display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 12px 24px; padding-bottom: 20px; border-bottom: 3px solid {{t.ink}}">
+<h2 style="font-family: {{f.display}}; margin: 0; font-weight: 900; font-size: clamp(48px, 7vw, 112px); line-height: 0.88; letter-spacing: -0.03em; text-transform: uppercase">PhD in Design</h2>
+<span style="font-family: {{f.body}}; font-size: 14px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.04em">Section 6</span>
+</div>
+<div style="display: flex; flex-wrap: wrap; gap: 32px 64px; margin-top: 40px">
+<div style="flex: 1 1 420px; min-width: 0">
+<p style="font-family: {{f.display}}; margin: 0; font-weight: 700; font-size: clamp(24px, 2.6vw, 38px); line-height: 1.1; letter-spacing: -0.015em">A practice-based PhD in embodied and somatic design</p>
+<p style="margin: 20px 0 0; color: {{t.muted}}"><strong style="font-family: {{f.display}}; font-weight: 700; color: {{t.ink}}">My research starts with people whose practices are deeply embodied.</strong> I work with practitioners from disciplines such as theatre and climbing to explore what their ways of working can teach us about design, and how thinking about design activities as encounters might change the way we understand embodied experience.</p>
+</div>
+<ul style="flex: 1 1 420px; min-width: 0; margin: 0; padding: 0; list-style: none; border-top: 3px solid {{t.ink}}; align-self: start">
+<sc-for list="{{research}}" as="r" hint-placeholder-count="3">
+<li style="border-bottom: 2px solid {{t.ink}}">
+<a class="l-row" href="#research" style="display: flex; gap: 16px; justify-content: space-between; align-items: flex-start; padding: 20px 0; text-decoration: none; color: {{t.ink}}">
+<span style="display: flex; flex-direction: column; gap: 6px">
+<span style="font-family: {{f.display}}; font-weight: 800; font-size: 24px; line-height: 1.1">{{r.title}}</span>
+<span style="font-size: 15px; line-height: 1.5; color: {{t.muted}}">{{r.body}}</span>
+</span>
+<span aria-hidden="true" style="font-family: {{f.display}}; font-weight: 800; font-size: 28px; line-height: 1">→</span>
+</a>
+</li>
+</sc-for>
+</ul>
+</div>
+</div>
+</section>
+<section id="contact" style="border-bottom: 3px solid {{t.ink}}">
+<div style="max-width: 1320px; margin: 0 auto; padding: clamp(40px, 6vw, 80px) clamp(16px, 3vw, 40px)">
+<div style="display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 12px 24px; padding-bottom: 20px; border-bottom: 3px solid {{t.ink}}">
+<h2 style="font-family: {{f.display}}; margin: 0; font-weight: 900; font-size: clamp(48px, 7vw, 112px); line-height: 0.88; letter-spacing: -0.03em; text-transform: uppercase">Get in touch</h2>
+<span style="font-family: {{f.body}}; font-size: 14px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.04em">Section 7</span>
+</div>
+<a class="l-big" href="mailto:hello@scottrobinson.co.uk" style="font-family: {{f.display}}; display: block; margin-top: 40px; font-weight: 800; font-size: clamp(28px, 5.4vw, 88px); line-height: 1; letter-spacing: -0.03em; color: {{t.ink}}; text-decoration-thickness: 4px; text-underline-offset: 10px; overflow-wrap: anywhere">hello@scottrobinson.co.uk</a>
+<div style="display: flex; flex-wrap: wrap; gap: 12px; margin-top: 40px">
+<a class="b-pri pk" href="mailto:hello@scottrobinson.co.uk" style="display: inline-flex; align-items: center; min-height: 52px; padding: 0 24px; border: 2px solid {{t.ink}}; background: {{t.accent}}; color: {{t.onAccent}}; font: 600 14px {{f.body}}; text-transform: uppercase; letter-spacing: 0.04em; text-decoration: none">Get in touch →</a>
+<a class="b-sec" href="https://www.linkedin.com/in/drscottrobinson/" style="display: inline-flex; align-items: center; min-height: 52px; padding: 0 24px; border: 2px solid {{t.ink}}; color: {{t.ink}}; font: 600 14px {{f.body}}; text-transform: uppercase; letter-spacing: 0.04em; text-decoration: none">LinkedIn ↗</a>
+</div>
+</div>
+</section>
+
+<footer>
+<div style="max-width: 1320px; margin: 0 auto; padding: 24px clamp(16px, 3vw, 40px) 32px; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px; font-family: {{f.body}}; font-size: 12px; text-transform: uppercase; letter-spacing: 0.04em">
+<span>© 2025–2026 Scott Robinson. All rights reserved</span>
+<a class="l-mark" href="#top" style="color: {{t.ink}}">Back to top ↑</a>
+</div>
+</footer>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"mode":{"editor":"enum","options":["light","dark"],"default":"light"},"type":{"editor":"enum","options":["Geist + Geist Mono","Inter Tight + JetBrains Mono","Schibsted Grotesk + IBM Plex Mono","Hanken Grotesk + Geist Mono","Familjen Grotesk + DM Mono","Space Grotesk + Space Mono"],"default":"Inter Tight + JetBrains Mono"},"accent":{"editor":"color","options":["#FF3EA5","#FF5A1F","#FFE14D","#3D6BFF"],"default":"#FF3EA5"},"$preview":{"width":1440,"height":6600}}'>
+class Component extends DCLogic {
+  componentDidMount() {
+    // Bulge grid: the grid swells towards the pointer, then settles to save battery.
+    var self = this;
+    var canvas = this._bulge;
+    if (!canvas || !canvas.getContext) return;
+    var ctx = canvas.getContext('2d');
+    var cfg = { spacing: 28, baseR: 1.1, maxR: 4.2, radius: 180, push: 0.35, ease: 0.12 };
+    var reduce = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+    var target = { x: -9999, y: -9999, s: 0 };
+    var cur = { x: -9999, y: -9999, s: 0 };
+    var w = 0, h = 0, running = false;
+    function falloff(dx, dy) {
+      var t = Math.max(0, 1 - Math.hypot(dx, dy) / cfg.radius);
+      return t * t * (3 - 2 * t) * cur.s;
+    }
+    function warp(x, y) {
+      var dx = x - cur.x, dy = y - cur.y, f = falloff(dx, dy);
+      return [x + dx * cfg.push * f, y + dy * cfg.push * f];
+    }
+    function draw() {
+      if (!w || !h) return;
+      var s = cfg.spacing, x, y, p;
+      ctx.clearRect(0, 0, w, h);
+      if (self._gridMode === 'dots') {
+        ctx.fillStyle = self._gridColour;
+        for (y = s / 2; y < h + s; y += s) {
+          for (x = s / 2; x < w + s; x += s) {
+            var r = cfg.baseR + (cfg.maxR - cfg.baseR) * falloff(x - cur.x, y - cur.y);
+            ctx.beginPath(); ctx.arc(x, y, r, 0, Math.PI * 2); ctx.fill();
+          }
+        }
+      } else {
+        ctx.strokeStyle = self._gridColour; ctx.lineWidth = 1;
+        var step = s / 4;
+        ctx.beginPath();
+        for (y = 0; y <= h + s; y += s) {
+          for (x = -s; x <= w + s; x += step) { p = warp(x, y); if (x === -s) ctx.moveTo(p[0], p[1]); else ctx.lineTo(p[0], p[1]); }
+        }
+        for (x = 0; x <= w + s; x += s) {
+          for (y = -s; y <= h + s; y += step) { p = warp(x, y); if (y === -s) ctx.moveTo(p[0], p[1]); else ctx.lineTo(p[0], p[1]); }
+        }
+        ctx.stroke();
+      }
+    }
+    function resize() {
+      w = canvas.clientWidth || window.innerWidth;
+      h = canvas.clientHeight || window.innerHeight;
+      // Very tall viewports (like a full-height canvas frame) drop to 1x to keep memory sane.
+      var dpr = w * h > 3e6 ? 1 : Math.min(window.devicePixelRatio || 1, 2);
+      canvas.width = Math.round(w * dpr); canvas.height = Math.round(h * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      draw();
+    }
+    function tick() {
+      cur.x += (target.x - cur.x) * cfg.ease;
+      cur.y += (target.y - cur.y) * cfg.ease;
+      cur.s += (target.s - cur.s) * cfg.ease;
+      draw();
+      var settled = Math.abs(target.x - cur.x) < 0.1 && Math.abs(target.y - cur.y) < 0.1 && Math.abs(target.s - cur.s) < 0.001;
+      if (settled) { running = false; return; }
+      self._raf = requestAnimationFrame(tick);
+    }
+    function wake() { if (!running && !reduce) { running = true; self._raf = requestAnimationFrame(tick); } }
+    var onMove = function (e) {
+      if (cur.s < 0.01) { cur.x = e.clientX; cur.y = e.clientY; }
+      target.x = e.clientX; target.y = e.clientY; target.s = 1; wake();
+    };
+    var onOut = function (e) { if (!e.relatedTarget) { target.s = 0; wake(); } };
+    var onUp = function (e) { if (e.pointerType === 'touch') { target.s = 0; wake(); } };
+    window.addEventListener('pointermove', onMove, { passive: true });
+    document.addEventListener('pointerout', onOut);
+    window.addEventListener('pointerup', onUp);
+    window.addEventListener('resize', resize);
+    this._bulgeDraw = draw;
+    this._bulgeCleanup = function () {
+      window.removeEventListener('pointermove', onMove);
+      document.removeEventListener('pointerout', onOut);
+      window.removeEventListener('pointerup', onUp);
+      window.removeEventListener('resize', resize);
+      if (self._raf) cancelAnimationFrame(self._raf);
+    };
+    resize();
+  }
+  componentDidUpdate() {
+    // Redraw when the colour mode or grid style changes.
+    if (this._bulgeDraw) this._bulgeDraw();
+  }
+  componentWillUnmount() {
+    if (this._bulgeCleanup) this._bulgeCleanup();
+  }
+  renderVals() {
+    var s = this.state || {};
+    var self = this;
+    var mode = s.mode || this.props.mode || 'light';
+    var accent = this.props.accent || '#FF3EA5';
+    var themes = {
+      light: { bg: '#F4F4F0', ink: '#0A0A0A', muted: '#3F3F3F', thumb: '#DCDCD6' },
+      dark: { bg: '#0A0A0A', ink: '#F4F4F0', muted: '#BDBDB8', thumb: '#232323' }
+    };
+    var base = themes[mode] || themes.light;
+    if (mode !== 'dark') { base = Object.assign({}, base, { bg: this.props.lightBg || '#F9F7ED' }); }
+    var gridMode = s.grid || 'lines';
+    self._gridMode = gridMode;
+    self._gridColour = mode === 'dark' ? 'rgba(244,244,240,0.08)' : 'rgba(10,10,10,0.1)';
+    var t = { bg: base.bg, ink: base.ink, muted: base.muted, thumb: base.thumb, accent: accent, onAccent: '#0A0A0A' };
+    var pairs = {
+      'Geist + Geist Mono': ["Geist", "Geist Mono"],
+      'Inter Tight + JetBrains Mono': ["Inter Tight", "JetBrains Mono"],
+      'Schibsted Grotesk + IBM Plex Mono': ["Schibsted Grotesk", "IBM Plex Mono"],
+      'Hanken Grotesk + Geist Mono': ["Hanken Grotesk", "Geist Mono"],
+      'Familjen Grotesk + DM Mono': ["Familjen Grotesk", "DM Mono"],
+      'Space Grotesk + Space Mono': ["Space Grotesk", "Space Mono"]
+    };
+    var p = pairs[this.props.type] || pairs['Inter Tight + JetBrains Mono'];
+    var f = { display: "'" + p[0] + "', 'Helvetica Neue', Arial, sans-serif", body: "'" + p[1] + "', ui-monospace, Menlo, monospace" };
+    var filter = s.filter || 'All';
+    var hovered = s.hovered == null ? -1 : s.hovered;
+
+    var work = [
+      {"n": "01", "title": "NGO: Mapping Digital Relationships", "cats": ["Digital Transformation", "User Research"], "cat": "Digital Transformation · User Research", "year": "[Year]", "read": "[x] min", "summary": "An international non-profit setting standards for sustainable fishing wanted to know how its digital services could better support its relationships with fisheries, supply-chain partners,…", "thumb": "NGO: Mapping Digital Relationships"},
+      {"n": "02", "title": "Contours: Strategic Pivot to AI Research Platform", "cats": ["Product Strategy"], "cat": "Product Strategy", "year": "2023–2026", "read": "[x] min", "summary": "Apex, our research search platform, wasn’t getting traction, and we were running out of runway. Research showed investment firms felt they had to adopt…", "thumb": "Contours: Strategic Pivot to AI Research Platform"},
+      {"n": "03", "title": "Designing for student experience", "cats": ["User Research"], "cat": "User Research", "year": "2019", "read": "[x] min", "summary": "A Russell Group university wanted to understand how different groups of students, from prospective students to those already studying, experienced its digital services and…", "thumb": "Designing for student experience"},
+      {"n": "04", "title": "Contours: Designing for trust in AI answers", "cats": ["Product Design"], "cat": "Product Design", "year": "2026", "read": "[x] min", "summary": "Contours answers asset managers’ questions from licensed research. The brief was to update citations, which hadn’t changed since the MVP. Testing them, I found…", "thumb": "Contours: Designing for trust in AI answers"},
+      {"n": "05", "title": "Apex: focusing an MVP backlog on user needs", "cats": ["User Research", "UX Design"], "cat": "User Research · UX Design", "year": "2018", "read": "[x] min", "summary": "I worked on Apex, our first MVP, first as a UX consultant and then as the only UX resource. The backlog had grown large…", "thumb": "Apex: focusing an MVP backlog on user needs"},
+      {"n": "06", "title": "MusiciansFirst: connecting musicians, fixers and bookers.", "cats": ["Branding"], "cat": "Branding", "year": "2018", "read": "[x] min", "summary": "MusiciansFirst was a start-up providing digital services to the music industry, beginning with a searchable directory that connected professional musicians with industry fixers, programmers…", "thumb": "MusiciansFirst: connecting musicians, fixers and bookers."}
+    ];
+    var shown = filter === 'All' ? work : work.filter(function (w) { return w.cats.indexOf(filter) >= 0; });
+    shown = shown.map(function (w, i) {
+      var on = hovered === i;
+      return Object.assign({}, w, {
+        hovered: on,
+        rowBg: on ? t.accent : 'transparent',
+        fg: on ? t.onAccent : t.ink,
+        enter: function (e) {
+          // Keyboard focus has no cursor: park the popover at the row's right edge.
+          if (e && e.type === 'focus' && self._pop && e.currentTarget) {
+            var list = self._pop.parentNode.getBoundingClientRect();
+            var row = e.currentTarget.getBoundingClientRect();
+            self._pop.style.transform = 'translate(' + (row.right - list.left - 464) + 'px,' + (row.top - list.top + row.height / 2 - 137) + 'px)';
+          }
+          self.setState({ hovered: i });
+        },
+        leave: function () { self.setState({ hovered: -1 }); }
+      });
+    });
+
+    var caseCats = ['All']; work.forEach(function (w) { w.cats.forEach(function (k) { if (caseCats.indexOf(k) < 0) caseCats.push(k); }); });
+    var filters = caseCats.map(function (f) {
+      var on = f === filter;
+      return {
+        label: f,
+        pressed: on ? 'true' : 'false',
+        bg: on ? t.ink : 'transparent',
+        fg: on ? t.bg : t.ink,
+        pick: function () { self.setState({ filter: f, hovered: -1 }); }
+      };
+    });
+
+    var questions = [
+      { n: '01', title: 'What is actually happening?', body: 'I use research to understand how people work, what they need, where things break down, and the organisational and technical context around them.', methods: 'Interviews · Observation · Workshops · Stakeholder engagement · Qualitative research · Experience mapping · Information architecture · Data evaluation' },
+      { n: '02', title: 'What have we learned, and where is the opportunity?', body: 'I make sense of what we’ve learned, identify where meaningful change is possible, and turn evidence into opportunities, propositions and product direction.', methods: 'Synthesis · Relationship mapping · Product discovery · Proposition development · Product vision · Product strategy' },
+      { n: '03', title: 'What might the answer look like?', body: 'I make things to explore ideas and answer questions, choosing the level of fidelity according to what we need to learn — from maps and staged experiences to prototypes and working software.', methods: 'Concept development · Embodied ideation · Wizard of Oz · Prototyping · AI-assisted prototyping' },
+      { n: '04', title: 'Are we right?', body: 'I put ideas in front of people to understand what works, what doesn’t, and what we need to learn next.', methods: 'Usability testing · Remote testing · Prototype evaluation · Iteration · Product feedback · Market evidence' }
+    ];
+
+    var making = [
+      { title: 'Mapping complex relationships', img: 'NGO mapping', body: 'Bringing interviews and workshops together into a form that allowed relationships between people, processes, data and digital services to be seen and questioned.' },
+      { title: 'Staging an encounter', img: 'Staging an encounter', body: 'Sometimes the thing being investigated is experiential. Staging an experience makes it possible to encounter and question something before deciding what should be built.' },
+      { title: 'Making an idea testable', img: 'Sketch', body: 'From sketches and interactive prototypes to working technology, giving an idea form creates something that can be experienced and questioned.' },
+      { title: 'Building to investigate', img: 'Citations React interface', body: 'AI-assisted development lets me take those questions into functional React interfaces, where encounters can be experienced and tested rather than imagined.' }
+    ];
+
+    var research = [
+      { title: 'Academic research', body: 'Practice-based research into embodied encounters between people, things, technologies and environments.' },
+      { title: 'Thesis', body: 'I completed my AHRC-funded thesis at Goldsmiths, University of London, April 2026.' },
+      { title: 'Publications', body: 'Read my research published by Bloomsbury, Taylor & Francis and Goldsmiths.' }
+    ];
+
+    var heroNames = ['NGO: Mapping Digital Relationships', 'Contours: Strategic Pivot to AI Research Platform', 'Designing for student experience', 'Contours: Designing for trust in AI answers', 'Apex: focusing an MVP backlog on user needs'];
+    function heroFmt(t) { var m = Math.floor(t / 60), sec = t - m * 60; return m + ':' + (sec < 10 ? '0' : '') + sec.toFixed(1); }
+    function heroSeek(t) { var v = self._vid; if (!v) return; var d = v.duration || 61.6; t = Math.max(0, Math.min(d - 0.05, t)); self._target = t; if (!v.seeking) v.currentTime = t; if (self._vcap) self._vcap.textContent = heroFmt(t); }
+    function heroSlide(i) { i = ((i % 5) + 5) % 5; if (self._slw) { var els = self._slw.querySelectorAll('.sl'); for (var k = 0; k < els.length; k++) els[k].style.opacity = (k === i) ? '1' : '0'; } if (self._scap) self._scap.textContent = '0' + (i + 1); if (self._sname) self._sname.textContent = heroNames[i]; }
+    function bindScroll() {
+      if (self._heroScrollBound || typeof window === 'undefined') return;
+      self._heroScrollBound = true;
+      window.addEventListener('scroll', function () {
+        var max = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
+        var p = window.scrollY / max; var v = self._vid;
+        heroSeek(p * ((v && v.duration) || 61.6));
+        heroSlide(Math.floor(p * 15));
+      }, { passive: true });
+    }
+
+    return {
+      t: t,
+      f: f,
+      work: shown,
+      filters: filters,
+      questions: questions,
+      making: making,
+      research: research,
+      vidCellRef: self._r_vcell || (self._r_vcell = function (el) { self._vcell = el; bindScroll(); }),
+      vidRef: self._r_vid || (self._r_vid = function (el) { self._vid = el; }),
+      vidCapRef: self._r_vcap || (self._r_vcap = function (el) { self._vcap = el; }),
+      slCellRef: self._r_scell || (self._r_scell = function (el) { self._scell = el; }),
+      slWrapRef: self._r_slw || (self._r_slw = function (el) { self._slw = el; }),
+      slCapRef: self._r_scap || (self._r_scap = function (el) { self._scap = el; }),
+      slNameRef: self._r_sname || (self._r_sname = function (el) { self._sname = el; }),
+      onSeeked: function () { var v = self._vid; if (v && self._target != null && Math.abs(v.currentTime - self._target) > 0.04) v.currentTime = self._target; },
+      vidMove: function (e) { if (!self._vcell) return; var r = self._vcell.getBoundingClientRect(); var p = Math.min(1, Math.max(0, (e.clientX - r.left) / r.width)); var v = self._vid; heroSeek(p * ((v && v.duration) || 61.6)); },
+      slMove: function (e) { if (!self._scell) return; var r = self._scell.getBoundingClientRect(); var p = Math.min(0.9999, Math.max(0, (e.clientX - r.left) / r.width)); heroSlide(Math.floor(p * 5)); },
+      popRef: self._popRef || (self._popRef = function (el) { self._pop = el; }),
+      popDisplay: hovered >= 0 && shown[hovered] ? 'flex' : 'none',
+      popThumb: hovered >= 0 && shown[hovered] ? shown[hovered].thumb : '',
+      onListMove: self._onListMove || (self._onListMove = function (e) {
+        // Cursor sits at the popover's bottom-left corner.
+        var el = self._pop;
+        if (!el) return;
+        var r = e.currentTarget.getBoundingClientRect();
+        var w = el.offsetWidth || 440;
+        var x = e.clientX - r.left + 2;
+        if (x + w > r.width) x = e.clientX - r.left - w - 2;
+        var y = e.clientY - r.top - (el.offsetHeight || 275) - 2;
+        el.style.transform = 'translate(' + x + 'px,' + y + 'px)';
+      }),
+      menu: [
+        { n: '(01)', label: 'Home', href: '#top' },
+        { n: '(02)', label: 'Cases', href: '#projects' },
+        { n: '(03)', label: 'Academic & Artistic', href: '#academic' },
+        { n: '(04)', label: 'PhD in Design', href: '#research' },
+        { n: '(05)', label: 'Publications', href: '#research' },
+        { n: '(06)', label: 'Thesis', href: '#research' },
+        { n: '(07)', label: 'About', href: '#about' }
+      ],
+      menuOpen: !!s.menu,
+      menuExpanded: s.menu ? 'true' : 'false',
+      openMenu: function () { self.setState({ menu: true }); },
+      closeMenu: function () { self.setState({ menu: false }); },
+      bulgeRef: self._bulgeRef || (self._bulgeRef = function (el) { self._bulge = el; }),
+      gridText: gridMode === 'lines' ? 'Dots' : 'Lines',
+      gridLabel: gridMode === 'lines' ? 'Switch background grid to dots' : 'Switch background grid to lines',
+      toggleGrid: function () { self.setState({ grid: gridMode === 'lines' ? 'dots' : 'lines' }); },
+      modeName: mode === 'dark' ? 'dark' : 'light',
+      darkChecked: mode === 'dark' ? 'true' : 'false',
+      sunCls: mode === 'dark' ? 'sw-off' : 'sw-on',
+      moonCls: mode === 'dark' ? 'sw-on' : 'sw-off',
+      sunBg: mode === 'dark' ? 'transparent' : t.ink,
+      sunFg: mode === 'dark' ? t.ink : t.bg,
+      moonBg: mode === 'dark' ? t.ink : 'transparent',
+      moonFg: mode === 'dark' ? t.bg : t.ink,
+      toggleText: mode === 'dark' ? 'Light' : 'Dark',
+      toggleLabel: mode === 'dark' ? 'Switch to light mode' : 'Switch to dark mode',
+      logoFilter: mode === 'dark' ? 'invert(1)' : 'none',
+      zCls: s.zoe ? 'on' : '',
+      zToggle: function () { self.setState({ zoe: !s.zoe }); },
+      toggleMode: function () { self.setState({ mode: mode === 'dark' ? 'light' : 'dark' }); }
+    };
+  }
+}
+</script>
+</body>
+</html>

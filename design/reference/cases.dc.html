@@ -1,0 +1,225 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<title>Cases</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@100..900&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@100..800&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:inherit}a:hover{color:inherit}
+a:focus-visible,button:focus-visible{outline:3px solid currentColor;outline-offset:3px}
+.b-switch:hover .sw-off{background:var(--accent)!important;color:#0A0A0A!important}
+.b-switch:active{transform:translate(1px,1px)}
+@media (prefers-reduced-motion: reduce){.sw-half{transition:none!important}}
+.sr-burger:hover{background:var(--ink)!important;color:var(--bg)!important}
+.sr-menu{transition:background-color .12s ease}
+.sr-menu-wrap{height:100vh;height:100dvh}
+.sr-menu-label{font-size:clamp(20px,min(6.2vw,calc((100vh - 200px) / 7 * 0.62)),112px)}
+@supports (height:100dvh){.sr-menu-label{font-size:clamp(20px,min(6.2vw,calc((100dvh - 200px) / 7 * 0.62)),112px)}}
+.sr-menu:hover,.sr-menu:focus-visible{background:var(--accent);color:#0A0A0A!important}
+.sr-menu:focus-visible{outline-offset:-6px}
+@media (prefers-reduced-motion: reduce){.sr-menu{transition:none}}
+@media (hover: none), (max-width: 900px){.sr-pop{display:none!important}}
+/* Hover, focus and active states: pure CSS so they survive HTML export */
+.h-logo{transition:opacity .12s}.h-logo:hover{opacity:.65}
+.b-pri{transition:transform .12s ease,box-shadow .12s ease}
+.b-pri:hover{transform:translate(-3px,-3px);box-shadow:4px 4px 0 var(--ink)}
+.b-pri:active{transform:translate(1px,1px);box-shadow:none}
+.b-sec,.b-chip,.b-tileP,.b-tileS,.b-inv,.w-row,.l-row{transition:background-color .12s ease,color .12s ease}
+.b-sec:hover{background:var(--ink)!important;color:var(--bg)!important}
+.b-chip:hover{background:var(--accent)!important;color:#0A0A0A!important}
+.b-chip[aria-pressed="true"]:hover{background:var(--ink)!important;color:var(--bg)!important}
+.b-tileP:hover{background:var(--ink)!important;color:var(--accent)!important}
+.b-tileS:hover{background:var(--ink)!important;color:var(--bg)!important}
+.b-tileP>span:first-child,.b-tileS>span:first-child{display:inline-block;transition:transform .15s ease}
+.b-tileP:hover>span:first-child{transform:translateX(8px)}
+.b-tileS:hover>span:first-child{transform:translateY(6px)}
+.b-inv:hover{background:#F4F4F0!important;color:#0A0A0A!important}
+.b-sec:active,.b-chip:active,.b-tileP:active,.b-tileS:active,.b-inv:active{transform:translate(1px,1px)}
+.w-row:hover,.w-row:focus-visible{background:var(--accent)!important;color:#0A0A0A!important}
+.w-row:focus-visible{outline-offset:-4px}
+.l-mark{padding:2px 4px;margin:-2px -4px;text-decoration-thickness:2px}
+.l-mark:hover,.l-big:hover{background:var(--accent);color:#0A0A0A!important;text-decoration:none}
+.l-mark:active{background:var(--ink);color:var(--bg)!important}
+.l-row{padding-left:8px!important;padding-right:8px!important}
+.l-row:hover,.l-row:focus-visible{background:var(--accent)}
+.l-row:hover span,.l-row:focus-visible span{color:#0A0A0A!important}
+.l-row span[aria-hidden]{transition:transform .15s ease}
+.l-row:hover span[aria-hidden]{transform:translateX(8px)}
+@media (prefers-reduced-motion: reduce){.h-logo,.b-pri,.b-sec,.b-chip,.b-tileP,.b-tileS,.b-inv,.w-row,.l-row,.l-row span[aria-hidden],.b-tileP>span:first-child,.b-tileS>span:first-child{transition:none}}
+/* Bulge grid background (from bulge-grid_1.html). Never blocks clicks */
+a,button,.sr-tile{cursor:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%2228%22%20height%3D%2228%22%20viewBox%3D%220%200%2028%2028%22%3E%3Crect%20x%3D%221.5%22%20y%3D%221.5%22%20width%3D%2225%22%20height%3D%2225%22%20fill%3D%22%23F9F7ED%22%20stroke%3D%22%230A0A0A%22%20stroke-width%3D%223%22/%3E%3Cpath%20d%3D%22M8.5%2019.5L19%209M12%208.5H19.5V16%22%20fill%3D%22none%22%20stroke%3D%22%230A0A0A%22%20stroke-width%3D%222.6%22%20stroke-linecap%3D%22square%22/%3E%3C/svg%3E") 20 8, pointer}
+.bCursor{cursor:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%2258%22%20height%3D%2228%22%20viewBox%3D%220%200%2058%2028%22%3E%3Crect%20x%3D%221.5%22%20y%3D%221.5%22%20width%3D%2225%22%20height%3D%2225%22%20fill%3D%22%23F9F7ED%22%20stroke%3D%22%230A0A0A%22%20stroke-width%3D%223%22/%3E%3Crect%20x%3D%2231.5%22%20y%3D%221.5%22%20width%3D%2225%22%20height%3D%2225%22%20fill%3D%22%23F9F7ED%22%20stroke%3D%22%230A0A0A%22%20stroke-width%3D%223%22/%3E%3Cpath%20d%3D%22M19%2014H9M13%209.5L8.5%2014L13%2018.5%22%20fill%3D%22none%22%20stroke%3D%22%230A0A0A%22%20stroke-width%3D%222.6%22%20stroke-linecap%3D%22square%22/%3E%3Cpath%20d%3D%22M39%2014H49M45%209.5L49.5%2014L45%2018.5%22%20fill%3D%22none%22%20stroke%3D%22%230A0A0A%22%20stroke-width%3D%222.6%22%20stroke-linecap%3D%22square%22/%3E%3C/svg%3E") 29 14, ew-resize}
+</style>
+</helmet>
+<div style="--ink: {{t.ink}}; --bg: {{t.bg}}; --muted: {{t.muted}}; --thumb: {{t.thumb}}; --accent: {{t.accent}}; background: var(--bg); color: var(--ink); font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif; font-size: 17px; line-height: 1.6; width: 100%; min-height: 100%">
+<header style="border-bottom: 3px solid {{t.ink}}">
+<div style="max-width: 1320px; margin: 0 auto; padding: 0 clamp(16px, 3vw, 40px); display: flex; flex-wrap: wrap; align-items: stretch; justify-content: space-between; gap: 0 24px">
+<a class="h-logo" href="#top" aria-label="Scott Robinson, home" style="display: flex; align-items: center; min-height: 72px; padding: 12px 0; box-sizing: border-box; text-decoration: none"><img src="/_blob/7ed398faa647658ba4b33272d85b386f" alt="" style="display: block; height: 44px; width: auto; filter: {{logoFilter}}"></a>
+<div style="display: flex; align-items: center; gap: 12px; padding: 12px 0">
+<button class="b-switch" type="button" role="switch" aria-checked="{{darkChecked}}" aria-label="Dark mode" onClick="{{toggleMode}}" style="display: inline-flex; align-items: stretch; height: 44px; padding: 0; border: 2px solid {{t.ink}}; border-radius: 0; background: transparent; color: {{t.ink}}; box-sizing: border-box"><span class="sw-half {{sunCls}}" style="display: flex; align-items: center; justify-content: center; width: 44px; height: 40px; transition: background-color .12s ease, color .12s ease; background: {{sunBg}}; color: {{sunFg}}"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="square" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="4.5"></circle><path d="M12 1.5V4.5M12 19.5V22.5M1.5 12H4.5M19.5 12H22.5M4.6 4.6L6.7 6.7M17.3 17.3L19.4 19.4M4.6 19.4L6.7 17.3M17.3 6.7L19.4 4.6"></path></svg></span><span aria-hidden="true" style="width: 2px; background: {{t.ink}}"></span><span class="sw-half {{moonCls}}" style="display: flex; align-items: center; justify-content: center; width: 44px; height: 40px; transition: background-color .12s ease, color .12s ease; background: {{moonBg}}; color: {{moonFg}}"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="square" stroke-linejoin="miter" aria-hidden="true" focusable="false"><path d="M20 14.5A8.5 8.5 0 1 1 9.5 4a7 7 0 0 0 10.5 10.5z"></path></svg></span></button>
+<a class="b-pri pk" href="#contact" style="display: inline-flex; align-items: center; min-height: 44px; padding: 0 18px; border: 2px solid {{t.ink}}; background: {{t.accent}}; color: {{t.onAccent}}; font: 600 13px {{f.body}}; text-transform: uppercase; letter-spacing: 0.04em; text-decoration: none">Let’s talk →</a>
+<button class="sr-burger" type="button" aria-label="Open menu" aria-expanded="{{menuExpanded}}" aria-controls="site-menu" onClick="{{openMenu}}" style="display: inline-flex; align-items: center; justify-content: center; width: 48px; height: 48px; padding: 0; border: 2px solid {{t.ink}}; border-radius: 0; background: transparent; color: {{t.ink}}; cursor: pointer"><svg width="22" height="16" viewBox="0 0 22 16" aria-hidden="true" focusable="false"><path d="M0 2H22M0 8H22M0 14H22" stroke="currentColor" stroke-width="3"></path></svg></button>
+</div>
+</div>
+</header>
+<sc-if value="{{menuOpen}}" hint-placeholder-val="{{false}}">
+<div id="site-menu" role="dialog" aria-modal="true" aria-label="Menu" class="sr-menu-wrap" style="position: fixed; inset: 0; z-index: 50; overflow: hidden; background: {{t.bg}}; color: {{t.ink}}; display: flex; flex-direction: column">
+<div style="border-bottom: 3px solid {{t.ink}}">
+<div style="max-width: 1320px; margin: 0 auto; padding: 0 clamp(16px, 3vw, 40px); display: flex; align-items: center; justify-content: space-between; gap: 24px">
+<a class="h-logo" href="#top" onClick="{{closeMenu}}" aria-label="Scott Robinson, home" style="display: flex; align-items: center; min-height: 72px; padding: 12px 0; box-sizing: border-box"><img src="/_blob/7ed398faa647658ba4b33272d85b386f" alt="" style="display: block; height: 44px; width: auto; filter: {{logoFilter}}"></a>
+<button class="sr-burger" type="button" aria-label="Close menu" onClick="{{closeMenu}}" style="display: inline-flex; align-items: center; justify-content: center; width: 48px; height: 48px; padding: 0; border: 2px solid {{t.ink}}; border-radius: 0; background: transparent; color: {{t.ink}}; cursor: pointer"><svg width="20" height="20" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M2 2L18 18M18 2L2 18" stroke="currentColor" stroke-width="3"></path></svg></button>
+</div>
+</div>
+<nav aria-label="Main" style="flex: 1 1 auto; min-height: 0; display: flex; flex-direction: column; max-width: 1320px; width: 100%; margin: 0 auto; padding: clamp(12px, 3vh, 48px) clamp(16px, 3vw, 40px); box-sizing: border-box">
+<ol style="flex: 1 1 auto; min-height: 0; display: flex; flex-direction: column; margin: 0; padding: 0; list-style: none; border-top: 3px solid {{t.ink}}">
+<sc-for list="{{menu}}" as="m" hint-placeholder-count="6">
+<li style="flex: 1 1 0; min-height: 0; display: flex; border-bottom: 3px solid {{t.ink}}">
+<a class="sr-menu" href="{{m.href}}" onClick="{{closeMenu}}" style="flex: 1; display: flex; align-items: center; justify-content: space-between; gap: 24px; padding: 0 8px; color: {{t.ink}}; text-decoration: none">
+<span class="sr-menu-label" style="font-family: {{f.display}}; font-weight: 900; line-height: 0.9; letter-spacing: -0.035em; text-transform: uppercase; white-space: nowrap">{{m.label}}</span>
+<span style="font-family: {{f.body}}; font-size: 14px; font-weight: 500">{{m.n}}</span>
+</a>
+</li>
+</sc-for>
+</ol>
+</nav>
+<div style="border-top: 3px solid {{t.ink}}">
+<div style="max-width: 1320px; margin: 0 auto; padding: 20px clamp(16px, 3vw, 40px) 28px; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px 24px; font-family: {{f.body}}; font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em">
+<a class="l-mark" href="mailto:hello@scottrobinson.co.uk" style="color: {{t.ink}}; text-underline-offset: 4px; text-transform: none">hello@scottrobinson.co.uk</a>
+<a class="l-mark" href="https://www.linkedin.com/in/drscottrobinson/" style="color: {{t.ink}}; text-underline-offset: 4px">LinkedIn ↗</a>
+</div>
+</div>
+</div>
+</sc-if>
+<section style="border-bottom: 3px solid var(--ink)"><div style="max-width: 1320px; margin: 0 auto; padding-left: clamp(16px, 3vw, 40px); padding-right: clamp(16px, 3vw, 40px); padding-top: clamp(32px, 5vw, 64px); padding-bottom: clamp(40px, 6vw, 72px)">
+<a class="l-mark" href="#" style="font: 500 13px 'JetBrains Mono', ui-monospace, Menlo, monospace; text-transform: uppercase; letter-spacing: 0.04em; color: var(--ink); text-underline-offset: 4px">← Back to home</a>
+<h1 style="margin: clamp(24px, 3vw, 40px) 0 0; font-family: 'Inter Tight', 'Helvetica Neue', Arial, sans-serif; font-weight: 900; font-size: clamp(56px, 10vw, 168px); line-height: 0.88; letter-spacing: -0.035em; text-transform: uppercase">Cases</h1>
+<p style="margin: 28px 0 0; max-width: 760px; font-family: 'Inter Tight', 'Helvetica Neue', Arial, sans-serif; font-weight: 500; font-size: clamp(20px, 1.8vw, 24px); line-height: 1.4">Some projects link to a fuller case study. The password is on my CV, or <a class="l-mark" href="mailto:hello@scottrobinson.co.uk" style="color: var(--ink); font-weight: 600; text-underline-offset: 4px">contact me</a> for access.</p>
+</div></section><section style="border-bottom: 3px solid var(--ink)"><div style="max-width: 1320px; margin: 0 auto; padding-left: clamp(16px, 3vw, 40px); padding-right: clamp(16px, 3vw, 40px); padding-top: clamp(40px, 6vw, 80px); padding-bottom: clamp(40px, 6vw, 80px)"><div role="group" aria-label="Filter" style="display: flex; flex-wrap: wrap; gap: 8px; padding: 20px 0"><sc-for list="{{caseChips}}" as="c" hint-placeholder-count="6"><button class="b-chip" type="button" onClick="{{c.pick}}" aria-pressed="{{c.pressed}}" style="min-height: 44px; padding: 0 16px; border: 2px solid var(--ink); border-radius: 0; background: {{c.bg}}; color: {{c.fg}}; font: 500 13px 'JetBrains Mono', ui-monospace, Menlo, monospace; text-transform: uppercase; letter-spacing: 0.04em">{{c.label}}</button></sc-for></div><div aria-hidden="true" style="display: flex; flex-wrap: wrap; gap: 0 24px; padding: 10px 0; border-top: 3px solid var(--ink); border-bottom: 2px solid var(--ink); font: 600 12px 'JetBrains Mono', ui-monospace, Menlo, monospace; text-transform: uppercase; letter-spacing: 0.06em"><span style="flex: 0 0 56px; padding-left: 8px; box-sizing: border-box">No.</span><span style="flex: 999 1 300px">Project</span><span style="flex: 1 1 180px">Category</span><span style="flex: 1 1 200px">Client · Year</span></div><div style="position: relative" onMouseMove="{{caseMove}}">
+<ol style="margin: 0; padding: 0; list-style: none">
+<sc-for list="{{caseRows}}" as="item" hint-placeholder-count="6">
+<li style="border-bottom: 2px solid var(--ink)">
+<a class="w-row" href="#" onMouseEnter="{{item.enter}}" onMouseLeave="{{item.leave}}" onFocus="{{item.enter}}" onBlur="{{item.leave}}" style="position: relative; display: flex; flex-wrap: wrap; gap: 8px 24px; padding: 22px 0; text-decoration: none; color: {{item.fg}}; background: {{item.rowBg}}">
+<span style="flex: 0 0 56px; font: 600 14px 'JetBrains Mono', ui-monospace, Menlo, monospace; padding: 6px 0 0 8px; box-sizing: border-box">{{item.n}}</span>
+<span style="flex: 999 1 300px; min-width: 0; display: flex; flex-direction: column; gap: 6px">
+<span style="font-family: 'Inter Tight', 'Helvetica Neue', Arial, sans-serif; font-weight: 800; font-size: clamp(22px, 2.2vw, 30px); line-height: 1.1; letter-spacing: -0.015em">{{item.title}}</span>
+<span style="font-size: 16px; line-height: 1.5; max-width: 640px">{{item.summary}}</span>
+</span>
+<span style="flex: 1 1 180px; font: 500 13px 'JetBrains Mono', ui-monospace, Menlo, monospace; text-transform: uppercase; letter-spacing: 0.04em; padding-top: 8px">{{item.cat}}</span>
+<span style="flex: 1 1 200px; font: 500 13px 'JetBrains Mono', ui-monospace, Menlo, monospace; letter-spacing: 0.02em; padding-top: 8px; padding-right: 8px">{{item.meta}}</span>
+</a>
+</li>
+</sc-for>
+</ol>
+<div class="sr-pop" ref="{{casePopRef}}" aria-hidden="true" style="position: absolute; left: 0; top: 0; width: 440px; height: 275px; display: {{casePopDisplay}}; align-items: center; justify-content: center; text-align: center; padding: 12px; box-sizing: border-box; background: var(--thumb); color: var(--ink); border: 3px solid var(--ink); box-shadow: 8px 8px 0 var(--ink); font: 500 12px 'JetBrains Mono', ui-monospace, Menlo, monospace; text-transform: uppercase; pointer-events: none; z-index: 5; will-change: transform">Thumbnail · {{casePopThumb}}</div>
+</div></div></section>
+<section id="contact" style="border-top: 3px solid var(--ink); border-bottom: 3px solid var(--ink)">
+<div style="max-width: 1320px; margin: 0 auto; padding-left: clamp(16px, 3vw, 40px); padding-right: clamp(16px, 3vw, 40px); padding-top: clamp(40px, 6vw, 80px); padding-bottom: clamp(40px, 6vw, 80px)">
+<a class="l-mark" href="mailto:hello@scottrobinson.co.uk" style="display: inline-block; font-family: 'Inter Tight', 'Helvetica Neue', Arial, sans-serif; font-weight: 800; font-size: clamp(28px, 5vw, 80px); line-height: 1; letter-spacing: -0.03em; color: var(--ink); text-decoration-thickness: 3px; text-underline-offset: 10px; overflow-wrap: anywhere">hello@scottrobinson.co.uk</a>
+<div style="display: flex; flex-wrap: wrap; gap: 12px; margin-top: 32px"><a class="b-pri" href="mailto:hello@scottrobinson.co.uk" style="display: inline-flex; align-items: center; min-height: 48px; padding: 0 22px; border: 2px solid var(--ink); background: var(--accent); color: #0A0A0A; font: 600 13px 'JetBrains Mono', ui-monospace, Menlo, monospace; text-transform: uppercase; letter-spacing: 0.04em; text-decoration: none">Get in touch →</a><a class="b-sec" href="https://www.linkedin.com/in/drscottrobinson/" style="display: inline-flex; align-items: center; min-height: 48px; padding: 0 20px; border: 2px solid var(--ink); color: var(--ink); font: 600 13px 'JetBrains Mono', ui-monospace, Menlo, monospace; text-transform: uppercase; letter-spacing: 0.04em; text-decoration: none">LinkedIn ↗</a></div>
+</div>
+</section>
+<footer><div style="max-width: 1320px; margin: 0 auto; padding-left: clamp(16px, 3vw, 40px); padding-right: clamp(16px, 3vw, 40px); padding-top: 24px; padding-bottom: 32px; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px; font: 400 12px 'JetBrains Mono', ui-monospace, Menlo, monospace; text-transform: uppercase; letter-spacing: 0.04em"><span>© 2025–2026 Scott Robinson. All rights reserved</span><a class="l-mark" href="#" style="color: var(--ink)">Back to top ↑</a></div></footer>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"mode":{"editor":"enum","options":["light","dark"],"default":"light"},"$preview":{"width":1440,"height":3200}}'>
+class Component extends DCLogic {
+  renderVals() {
+    var s = this.state || {};
+    var self = this;
+    var mode = s.mode || this.props.mode || 'light';
+    var t = mode === 'dark'
+      ? { bg: '#0A0A0A', ink: '#F4F4F0', muted: '#BDBDB8', thumb: '#232323', accent: '#FF3EA5', onAccent: '#0A0A0A' }
+      : { bg: '#F9F7ED', ink: '#0A0A0A', muted: '#3F3F3F', thumb: '#DCDCD6', accent: '#FF3EA5', onAccent: '#0A0A0A' };
+    var f = { display: "'Inter Tight', 'Helvetica Neue', Arial, sans-serif".replace(/"/g, ''), body: "'JetBrains Mono', ui-monospace, Menlo, monospace" };
+    var CASES = [{"title": "NGO: Mapping Digital Relationships", "cats": ["Digital Transformation", "User Research"], "client": "Global NGO", "role": "UX Lead", "year": "[Year]", "summary": "An international non-profit setting standards for sustainable fishing wanted to know how its digital services could better support its relationships with fisheries, supply-chain partners,…"}, {"title": "Contours: Strategic Pivot to AI Research Platform", "cats": ["Product Strategy"], "client": "KiteEdge Ltd", "role": "CPO/CXO", "year": "2023–2026", "summary": "Apex, our research search platform, wasn’t getting traction, and we were running out of runway. Research showed investment firms felt they had to adopt…"}, {"title": "Designing for student experience", "cats": ["User Research"], "client": "Russell Group university, via Precedent", "role": "UX Lead", "year": "2019", "summary": "A Russell Group university wanted to understand how different groups of students, from prospective students to those already studying, experienced its digital services and…"}, {"title": "Contours: Designing for trust in AI answers", "cats": ["Product Design"], "client": "KiteEdge", "role": "CPO/CXO", "year": "2026", "summary": "Contours answers asset managers’ questions from licensed research. The brief was to update citations, which hadn’t changed since the MVP. Testing them, I found…"}, {"title": "Apex: focusing an MVP backlog on user needs", "cats": ["User Research", "UX Design"], "client": "KiteEdge", "role": "UX Consultant", "year": "2018", "summary": "I worked on Apex, our first MVP, first as a UX consultant and then as the only UX resource. The backlog had grown large…"}, {"title": "MusiciansFirst: connecting musicians, fixers and bookers.", "cats": ["Branding"], "client": "MusiciansFirst", "role": "Product Designer", "year": "2018", "summary": "MusiciansFirst was a start-up providing digital services to the music industry, beginning with a searchable directory that connected professional musicians with industry fixers, programmers…"}, {"title": "Optix: Online platform for Media Efficiency KPI Benchmarking", "cats": ["Service Design", "UX Design"], "client": "Ebiquity", "role": "Head of Design", "year": "2016", "summary": "Through acquisitions, Ebiquity’s Strategic Media Consultancy had ended up with several methodologies for scoring digital media efficiency, much of it running on Excel macros.…"}, {"title": "CAT: rebuilding a compliance advertising tool", "cats": ["Product Design"], "client": "Ebiquity for Microsoft", "role": "Head of Design", "year": "2014", "summary": "CAT checks whether Microsoft’s advertising partners follow its brand guidelines. The original tool was over ten years old, and the update coincided with contract…"}, {"title": "Vital Signs: from printed reports to a live metrics service", "cats": ["Product Design"], "client": "Ebiquity for Direct Line Group", "role": "Head of Design", "year": "2009", "summary": "Senior stakeholders at Direct Line needed to act quickly on up-to-date sales and marketing information, but it reached them in printed, hand-bound documents. I…"}, {"title": "Ebiquity: Global Rebrand for Media Consultancy", "cats": ["Branding"], "client": "Ebiquity", "role": "Head of Design", "year": "2008", "summary": "After many acquisitions, Ebiquity’s portfolio needed consolidating under a single brand identity. I carried out a full brand review across all of Ebiquity’s territories…"}];
+    var ACAD = [{"title": "Stepping: With Theatre Practitioners", "type": "Academic", "meta": "Researcher · with Dr Göze Saner · Goldsmiths, UoL", "year": "2016", "summary": "This research project formed the third chapter of my doctoral thesis, where I collaborate with Dr Göze Saner, to design new approaches to performer…"}, {"title": "Climbing: With Routesetters", "type": "Academic", "meta": "Researcher · with Mile End Wall and Staff · Goldsmiths, UoL", "year": "2024", "summary": "This research project formed the fourth chapter of my doctoral thesis where I conduct a first-person study of the embodied practice of routesetting to…"}, {"title": "StoryBall", "type": "Academic", "meta": "Early doctoral research", "year": "2016", "summary": "Early research for my doctoral thesis. My previous project In Search of the Blue Danube focused on walking as a spatial practice and how…"}, {"title": "In Search of the Blue Danube", "type": "Academic", "meta": "PhD Candidate · Goldsmiths, UoL", "year": "2015", "summary": "Walking drift, photography and creative writing."}, {"title": "Jacque et Jerzy", "type": "Artistic", "meta": "Performance", "year": "2014", "summary": ""}, {"title": "What Happened to the Tyrant", "type": "Artistic", "meta": "Videographer, Editor · with Göze Saner, Katja Hilevaara · Camden People’s Theatre", "year": "2012", "summary": ""}, {"title": "Lilith’s Rain", "type": "Artistic", "meta": "Visual Director, Videographer · with Lillian Garcia, Steve Mason, Chiara D’ana, Laura Gubbins", "year": "2020", "summary": "A site-specific performance at The Space, Bloomsbury, created in collaboration with playwright Lillian Garcia and sound designer Steve H Mason. The work explored the…"}, {"title": "Zanni", "type": "Artistic", "meta": "Videographer, Editor · with Chiara D’ana", "year": "2009", "summary": "A joint experimentation with actor Chiara D’Anna around the idea of performer in space — isolated, without context. The commedia dell’arte character Zanni, a…"}, {"title": "Lost and Found Department", "type": "Artistic", "meta": "Organiser, Videographer, Audio Engineer · with Michael Warwick, Andrew Philips", "year": "2009", "summary": "A curated live music and video art event built around intimacy and presence."}];
+    function pad(n) { return (n < 10 ? '0' : '') + n; }
+    function chipsFor(labels, current, key) {
+      return labels.map(function (l) {
+        var on = l === current;
+        return { label: l, pressed: on ? 'true' : 'false', bg: on ? t.ink : 'transparent', fg: on ? t.bg : t.ink,
+          pick: function () { var o = {}; o[key] = l; o[key + 'Hover'] = -1; self.setState(o); } };
+      });
+    }
+    function rowsFor(list, hov, key, mapper) {
+      return list.map(function (it, i) {
+        var on = hov === i;
+        return Object.assign(mapper(it, i), {
+          rowBg: on ? t.accent : 'transparent', fg: on ? t.onAccent : t.ink,
+          enter: function () { var o = {}; o[key + 'Hover'] = i; self.setState(o); },
+          leave: function () { var o = {}; o[key + 'Hover'] = -1; self.setState(o); }
+        });
+      });
+    }
+    function mover(refKey) {
+      return function (e) {
+        var el = self[refKey]; if (!el) return;
+        var r = e.currentTarget.getBoundingClientRect();
+        var w = el.offsetWidth || 440;
+        var x = e.clientX - r.left + 2; if (x + w > r.width) x = e.clientX - r.left - w - 2;
+        var y = e.clientY - r.top - (el.offsetHeight || 275) - 2;
+        el.style.transform = 'translate(' + x + 'px,' + y + 'px)';
+      };
+    }
+    var caseCats = ['All'];
+    CASES.forEach(function (c) { c.cats.forEach(function (k) { if (caseCats.indexOf(k) < 0) caseCats.push(k); }); });
+    var caseF = s.cases || 'All', acadF = s.acad || 'All';
+    var caseList = CASES.filter(function (c) { return caseF === 'All' || c.cats.indexOf(caseF) >= 0; });
+    var acadList = ACAD.filter(function (a) { return acadF === 'All' || a.type === acadF; });
+    var ch = s.casesHover == null ? -1 : s.casesHover, ah = s.acadHover == null ? -1 : s.acadHover;
+    var caseRows = rowsFor(caseList, ch, 'cases', function (c) { return { n: pad(CASES.indexOf(c) + 1), title: c.title, summary: c.summary, cat: c.cats.join(' · '), meta: c.client + ' · ' + c.year }; });
+    var acadRows = rowsFor(acadList, ah, 'acad', function (a) { return { n: pad(ACAD.indexOf(a) + 1), title: a.title, summary: a.summary, cat: a.type, meta: a.meta + ' · ' + a.year }; });
+    return {
+      t: t,
+      f: f,
+      logoFilter: mode === 'dark' ? 'invert(1)' : 'none',
+      darkChecked: mode === 'dark' ? 'true' : 'false',
+      sunCls: mode === 'dark' ? 'sw-off' : 'sw-on',
+      moonCls: mode === 'dark' ? 'sw-on' : 'sw-off',
+      sunBg: mode === 'dark' ? 'transparent' : t.ink,
+      sunFg: mode === 'dark' ? t.ink : t.bg,
+      moonBg: mode === 'dark' ? t.ink : 'transparent',
+      moonFg: mode === 'dark' ? t.bg : t.ink,
+      toggleText: mode === 'dark' ? 'Light' : 'Dark',
+      toggleLabel: mode === 'dark' ? 'Switch to light mode' : 'Switch to dark mode',
+      toggleMode: function () { self.setState({ mode: mode === 'dark' ? 'light' : 'dark' }); },
+      menu: [
+        { n: '(01)', label: 'Home', href: '#' },
+        { n: '(02)', label: 'Cases', href: '#' },
+        { n: '(03)', label: 'Academic & Artistic', href: '#' },
+        { n: '(04)', label: 'PhD in Design', href: '#' },
+        { n: '(05)', label: 'Publications', href: '#' },
+        { n: '(06)', label: 'Thesis', href: '#' },
+        { n: '(07)', label: 'About', href: '#' }
+      ],
+      menuOpen: !!s.menu,
+      menuExpanded: s.menu ? 'true' : 'false',
+      openMenu: function () { self.setState({ menu: true }); },
+      closeMenu: function () { self.setState({ menu: false }); },
+      caseChips: chipsFor(caseCats, caseF, 'cases'),
+      acadChips: chipsFor(['All', 'Academic', 'Artistic'], acadF, 'acad'),
+      caseRows: caseRows,
+      acadRows: acadRows,
+      casePopRef: self._cpr || (self._cpr = function (el) { self._casePop = el; }),
+      acadPopRef: self._apr || (self._apr = function (el) { self._acadPop = el; }),
+      caseMove: self._cmv || (self._cmv = mover('_casePop')),
+      acadMove: self._amv || (self._amv = mover('_acadPop')),
+      casePopDisplay: ch >= 0 && caseList[ch] ? 'flex' : 'none',
+      acadPopDisplay: ah >= 0 && acadList[ah] ? 'flex' : 'none',
+      casePopThumb: ch >= 0 && caseList[ch] ? caseList[ch].title : '',
+      acadPopThumb: ah >= 0 && acadList[ah] ? acadList[ah].title : '',
+      _x: 0
+    };
+  }
+}
+</script>
+</body>
+</html>

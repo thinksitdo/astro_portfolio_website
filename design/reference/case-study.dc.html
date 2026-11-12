@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<title>Case study, NGO: Mapping Digital Relationships</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@100..900&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@100..800&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:inherit}a:hover{color:inherit}
+a:focus-visible,button:focus-visible{outline:3px solid currentColor;outline-offset:3px}
+.b-switch:hover .sw-off{background:var(--accent)!important;color:#0A0A0A!important}
+.b-switch:active{transform:translate(1px,1px)}
+@media (prefers-reduced-motion: reduce){.sw-half{transition:none!important}}
+.sr-burger:hover{background:var(--ink)!important;color:var(--bg)!important}
+.sr-menu{transition:background-color .12s ease}
+.sr-menu-wrap{height:100vh;height:100dvh}
+.sr-menu-label{font-size:clamp(20px,min(6.2vw,calc((100vh - 200px) / 7 * 0.62)),112px)}
+@supports (height:100dvh){.sr-menu-label{font-size:clamp(20px,min(6.2vw,calc((100dvh - 200px) / 7 * 0.62)),112px)}}
+.sr-menu:hover,.sr-menu:focus-visible{background:var(--accent);color:#0A0A0A!important}
+.sr-menu:focus-visible{outline-offset:-6px}
+@media (prefers-reduced-motion: reduce){.sr-menu{transition:none}}
+@media (hover: none), (max-width: 900px){.sr-pop{display:none!important}}
+/* Hover, focus and active states: pure CSS so they survive HTML export */
+.h-logo{transition:opacity .12s}.h-logo:hover{opacity:.65}
+.b-pri{transition:transform .12s ease,box-shadow .12s ease}
+.b-pri:hover{transform:translate(-3px,-3px);box-shadow:4px 4px 0 var(--ink)}
+.b-pri:active{transform:translate(1px,1px);box-shadow:none}
+.b-sec,.b-chip,.b-tileP,.b-tileS,.b-inv,.w-row,.l-row{transition:background-color .12s ease,color .12s ease}
+.b-sec:hover{background:var(--ink)!important;color:var(--bg)!important}
+.b-chip:hover{background:var(--accent)!important;color:#0A0A0A!important}
+.b-chip[aria-pressed="true"]:hover{background:var(--ink)!important;color:var(--bg)!important}
+.b-tileP:hover{background:var(--ink)!important;color:var(--accent)!important}
+.b-tileS:hover{background:var(--ink)!important;color:var(--bg)!important}
+.b-tileP>span:first-child,.b-tileS>span:first-child{display:inline-block;transition:transform .15s ease}
+.b-tileP:hover>span:first-child{transform:translateX(8px)}
+.b-tileS:hover>span:first-child{transform:translateY(6px)}
+.b-inv:hover{background:#F4F4F0!important;color:#0A0A0A!important}
+.b-sec:active,.b-chip:active,.b-tileP:active,.b-tileS:active,.b-inv:active{transform:translate(1px,1px)}
+.w-row:hover,.w-row:focus-visible{background:var(--accent)!important;color:#0A0A0A!important}
+.w-row:focus-visible{outline-offset:-4px}
+.l-mark{padding:2px 4px;margin:-2px -4px;text-decoration-thickness:2px}
+.l-mark:hover,.l-big:hover{background:var(--accent);color:#0A0A0A!important;text-decoration:none}
+.l-mark:active{background:var(--ink);color:var(--bg)!important}
+.l-row{padding-left:8px!important;padding-right:8px!important}
+.l-row:hover,.l-row:focus-visible{background:var(--accent)}
+.l-row:hover span,.l-row:focus-visible span{color:#0A0A0A!important}
+.l-row span[aria-hidden]{transition:transform .15s ease}
+.l-row:hover span[aria-hidden]{transform:translateX(8px)}
+@media (prefers-reduced-motion: reduce){.h-logo,.b-pri,.b-sec,.b-chip,.b-tileP,.b-tileS,.b-inv,.w-row,.l-row,.l-row span[aria-hidden],.b-tileP>span:first-child,.b-tileS>span:first-child{transition:none}}
+/* Bulge grid background (from bulge-grid_1.html). Never blocks clicks */
+a,button,.sr-tile{cursor:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%2228%22%20height%3D%2228%22%20viewBox%3D%220%200%2028%2028%22%3E%3Crect%20x%3D%221.5%22%20y%3D%221.5%22%20width%3D%2225%22%20height%3D%2225%22%20fill%3D%22%23F9F7ED%22%20stroke%3D%22%230A0A0A%22%20stroke-width%3D%223%22/%3E%3Cpath%20d%3D%22M8.5%2019.5L19%209M12%208.5H19.5V16%22%20fill%3D%22none%22%20stroke%3D%22%230A0A0A%22%20stroke-width%3D%222.6%22%20stroke-linecap%3D%22square%22/%3E%3C/svg%3E") 20 8, pointer}
+.bCursor{cursor:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%2258%22%20height%3D%2228%22%20viewBox%3D%220%200%2058%2028%22%3E%3Crect%20x%3D%221.5%22%20y%3D%221.5%22%20width%3D%2225%22%20height%3D%2225%22%20fill%3D%22%23F9F7ED%22%20stroke%3D%22%230A0A0A%22%20stroke-width%3D%223%22/%3E%3Crect%20x%3D%2231.5%22%20y%3D%221.5%22%20width%3D%2225%22%20height%3D%2225%22%20fill%3D%22%23F9F7ED%22%20stroke%3D%22%230A0A0A%22%20stroke-width%3D%223%22/%3E%3Cpath%20d%3D%22M19%2014H9M13%209.5L8.5%2014L13%2018.5%22%20fill%3D%22none%22%20stroke%3D%22%230A0A0A%22%20stroke-width%3D%222.6%22%20stroke-linecap%3D%22square%22/%3E%3Cpath%20d%3D%22M39%2014H49M45%209.5L49.5%2014L45%2018.5%22%20fill%3D%22none%22%20stroke%3D%22%230A0A0A%22%20stroke-width%3D%222.6%22%20stroke-linecap%3D%22square%22/%3E%3C/svg%3E") 29 14, ew-resize}
+</style>
+</helmet>
+<div style="--ink: {{t.ink}}; --bg: {{t.bg}}; --muted: {{t.muted}}; --thumb: {{t.thumb}}; --accent: {{t.accent}}; background: var(--bg); color: var(--ink); font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif; font-size: 17px; line-height: 1.6; width: 100%; min-height: 100%">
+<header style="border-bottom: 3px solid {{t.ink}}">
+<div style="max-width: 1320px; margin: 0 auto; padding: 0 clamp(16px, 3vw, 40px); display: flex; flex-wrap: wrap; align-items: stretch; justify-content: space-between; gap: 0 24px">
+<a class="h-logo" href="#top" aria-label="Scott Robinson, home" style="display: flex; align-items: center; min-height: 72px; padding: 12px 0; box-sizing: border-box; text-decoration: none"><img src="/_blob/7ed398faa647658ba4b33272d85b386f" alt="" style="display: block; height: 44px; width: auto; filter: {{logoFilter}}"></a>
+<div style="display: flex; align-items: center; gap: 12px; padding: 12px 0">
+<button class="b-switch" type="button" role="switch" aria-checked="{{darkChecked}}" aria-label="Dark mode" onClick="{{toggleMode}}" style="display: inline-flex; align-items: stretch; height: 44px; padding: 0; border: 2px solid {{t.ink}}; border-radius: 0; background: transparent; color: {{t.ink}}; box-sizing: border-box"><span class="sw-half {{sunCls}}" style="display: flex; align-items: center; justify-content: center; width: 44px; height: 40px; transition: background-color .12s ease, color .12s ease; background: {{sunBg}}; color: {{sunFg}}"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="square" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="4.5"></circle><path d="M12 1.5V4.5M12 19.5V22.5M1.5 12H4.5M19.5 12H22.5M4.6 4.6L6.7 6.7M17.3 17.3L19.4 19.4M4.6 19.4L6.7 17.3M17.3 6.7L19.4 4.6"></path></svg></span><span aria-hidden="true" style="width: 2px; background: {{t.ink}}"></span><span class="sw-half {{moonCls}}" style="display: flex; align-items: center; justify-content: center; width: 44px; height: 40px; transition: background-color .12s ease, color .12s ease; background: {{moonBg}}; color: {{moonFg}}"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="square" stroke-linejoin="miter" aria-hidden="true" focusable="false"><path d="M20 14.5A8.5 8.5 0 1 1 9.5 4a7 7 0 0 0 10.5 10.5z"></path></svg></span></button>
+<a class="b-pri pk" href="#contact" style="display: inline-flex; align-items: center; min-height: 44px; padding: 0 18px; border: 2px solid {{t.ink}}; background: {{t.accent}}; color: {{t.onAccent}}; font: 600 13px {{f.body}}; text-transform: uppercase; letter-spacing: 0.04em; text-decoration: none">Let’s talk →</a>
+<button class="sr-burger" type="button" aria-label="Open menu" aria-expanded="{{menuExpanded}}" aria-controls="site-menu" onClick="{{openMenu}}" style="display: inline-flex; align-items: center; justify-content: center; width: 48px; height: 48px; padding: 0; border: 2px solid {{t.ink}}; border-radius: 0; background: transparent; color: {{t.ink}}; cursor: pointer"><svg width="22" height="16" viewBox="0 0 22 16" aria-hidden="true" focusable="false"><path d="M0 2H22M0 8H22M0 14H22" stroke="currentColor" stroke-width="3"></path></svg></button>
+</div>
+</div>
+</header>
+<sc-if value="{{menuOpen}}" hint-placeholder-val="{{false}}">
+<div id="site-menu" role="dialog" aria-modal="true" aria-label="Menu" class="sr-menu-wrap" style="position: fixed; inset: 0; z-index: 50; overflow: hidden; background: {{t.bg}}; color: {{t.ink}}; display: flex; flex-direction: column">
+<div style="border-bottom: 3px solid {{t.ink}}">
+<div style="max-width: 1320px; margin: 0 auto; padding: 0 clamp(16px, 3vw, 40px); display: flex; align-items: center; justify-content: space-between; gap: 24px">
+<a class="h-logo" href="#top" onClick="{{closeMenu}}" aria-label="Scott Robinson, home" style="display: flex; align-items: center; min-height: 72px; padding: 12px 0; box-sizing: border-box"><img src="/_blob/7ed398faa647658ba4b33272d85b386f" alt="" style="display: block; height: 44px; width: auto; filter: {{logoFilter}}"></a>
+<button class="sr-burger" type="button" aria-label="Close menu" onClick="{{closeMenu}}" style="display: inline-flex; align-items: center; justify-content: center; width: 48px; height: 48px; padding: 0; border: 2px solid {{t.ink}}; border-radius: 0; background: transparent; color: {{t.ink}}; cursor: pointer"><svg width="20" height="20" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M2 2L18 18M18 2L2 18" stroke="currentColor" stroke-width="3"></path></svg></button>
+</div>
+</div>
+<nav aria-label="Main" style="flex: 1 1 auto; min-height: 0; display: flex; flex-direction: column; max-width: 1320px; width: 100%; margin: 0 auto; padding: clamp(12px, 3vh, 48px) clamp(16px, 3vw, 40px); box-sizing: border-box">
+<ol style="flex: 1 1 auto; min-height: 0; display: flex; flex-direction: column; margin: 0; padding: 0; list-style: none; border-top: 3px solid {{t.ink}}">
+<sc-for list="{{menu}}" as="m" hint-placeholder-count="6">
+<li style="flex: 1 1 0; min-height: 0; display: flex; border-bottom: 3px solid {{t.ink}}">
+<a class="sr-menu" href="{{m.href}}" onClick="{{closeMenu}}" style="flex: 1; display: flex; align-items: center; justify-content: space-between; gap: 24px; padding: 0 8px; color: {{t.ink}}; text-decoration: none">
+<span class="sr-menu-label" style="font-family: {{f.display}}; font-weight: 900; line-height: 0.9; letter-spacing: -0.035em; text-transform: uppercase; white-space: nowrap">{{m.label}}</span>
+<span style="font-family: {{f.body}}; font-size: 14px; font-weight: 500">{{m.n}}</span>
+</a>
+</li>
+</sc-for>
+</ol>
+</nav>
+<div style="border-top: 3px solid {{t.ink}}">
+<div style="max-width: 1320px; margin: 0 auto; padding: 20px clamp(16px, 3vw, 40px) 28px; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px 24px; font-family: {{f.body}}; font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em">
+<a class="l-mark" href="mailto:hello@scottrobinson.co.uk" style="color: {{t.ink}}; text-underline-offset: 4px; text-transform: none">hello@scottrobinson.co.uk</a>
+<a class="l-mark" href="https://www.linkedin.com/in/drscottrobinson/" style="color: {{t.ink}}; text-underline-offset: 4px">LinkedIn ↗</a>
+</div>
+</div>
+</div>
+</sc-if>
+<section style="border-bottom: 3px solid var(--ink)"><div style="max-width: 1320px; margin: 0 auto; padding-left: clamp(16px, 3vw, 40px); padding-right: clamp(16px, 3vw, 40px); padding-top: clamp(32px, 5vw, 64px); padding-bottom: clamp(40px, 6vw, 72px)">
+<a class="l-mark" href="#" style="font: 500 13px 'JetBrains Mono', ui-monospace, Menlo, monospace; text-transform: uppercase; letter-spacing: 0.04em; color: var(--ink); text-underline-offset: 4px">← Back to home</a>
+<h1 style="margin: clamp(24px, 3vw, 40px) 0 0; font-family: 'Inter Tight', 'Helvetica Neue', Arial, sans-serif; font-weight: 800; font-size: clamp(44px, 7.6vw, 128px); line-height: 0.95; letter-spacing: -0.03em">NGO: Mapping Digital Relationships</h1>
+<div style="display: flex; flex-wrap: wrap; gap: 40px 64px; margin-top: clamp(32px, 4vw, 56px)">
+<p style="flex: 1 1 420px; min-width: 0; margin: 0; font-family: 'Inter Tight', 'Helvetica Neue', Arial, sans-serif; font-weight: 500; font-size: clamp(20px, 1.8vw, 24px); line-height: 1.4">An international non-profit setting standards for sustainable fishing wanted to know how its digital services could better support its relationships with fisheries, supply-chain partners, researchers, journalists and NGOs. I co-designed and facilitated full-day workshops with senior staff, and brought what we learned into seven experience maps, one per stakeholder group, refined with the people who knew those relationships first-hand. When a wider transformation programme was reconsidered, the maps helped the organisation reassess what it needed.</p>
+<div style="flex: 1 1 420px; min-width: 0"><div style="border-top: 3px solid var(--ink)"><div style="display: flex; flex-wrap: wrap; gap: 4px 16px; padding: 14px 0; border-bottom: 2px solid var(--ink)"><span style="flex: 0 0 110px; font: 600 12px 'JetBrains Mono', ui-monospace, Menlo, monospace; text-transform: uppercase; letter-spacing: 0.06em; padding-top: 3px">Client</span><span style="flex: 1 1 200px; font-size: 15px; line-height: 1.55">Global NGO</span></div><div style="display: flex; flex-wrap: wrap; gap: 4px 16px; padding: 14px 0; border-bottom: 2px solid var(--ink)"><span style="flex: 0 0 110px; font: 600 12px 'JetBrains Mono', ui-monospace, Menlo, monospace; text-transform: uppercase; letter-spacing: 0.06em; padding-top: 3px">Role</span><span style="flex: 1 1 200px; font-size: 15px; line-height: 1.55">UX Lead</span></div><div style="display: flex; flex-wrap: wrap; gap: 4px 16px; padding: 14px 0; border-bottom: 2px solid var(--ink)"><span style="flex: 0 0 110px; font: 600 12px 'JetBrains Mono', ui-monospace, Menlo, monospace; text-transform: uppercase; letter-spacing: 0.06em; padding-top: 3px">Activities</span><span style="flex: 1 1 200px; font-size: 15px; line-height: 1.55">Discovery research, workshop facilitation, experience mapping</span></div><div style="display: flex; flex-wrap: wrap; gap: 4px 16px; padding: 14px 0; border-bottom: 2px solid var(--ink)"><span style="flex: 0 0 110px; font: 600 12px 'JetBrains Mono', ui-monospace, Menlo, monospace; text-transform: uppercase; letter-spacing: 0.06em; padding-top: 3px">Category</span><span style="flex: 1 1 200px; font-size: 15px; line-height: 1.55"><span style='display: flex; flex-wrap: wrap; gap: 6px'><span style="display: inline-flex; align-items: center; min-height: 32px; padding: 0 10px; border: 2px solid var(--ink); font: 500 12px 'JetBrains Mono', ui-monospace, Menlo, monospace; text-transform: uppercase; letter-spacing: 0.04em">Digital Transformation</span><span style="display: inline-flex; align-items: center; min-height: 32px; padding: 0 10px; border: 2px solid var(--ink); font: 500 12px 'JetBrains Mono', ui-monospace, Menlo, monospace; text-transform: uppercase; letter-spacing: 0.04em">User Research</span></span></span></div><div style="display: flex; flex-wrap: wrap; gap: 4px 16px; padding: 14px 0; border-bottom: 2px solid var(--ink)"><span style="flex: 0 0 110px; font: 600 12px 'JetBrains Mono', ui-monospace, Menlo, monospace; text-transform: uppercase; letter-spacing: 0.06em; padding-top: 3px">Task</span><span style="flex: 1 1 200px; font-size: 15px; line-height: 1.55">Discovery and experience mapping for an international sustainable fishing NGO, exploring how digital services and data could better support its relationships with stakeholders.</span></div></div></div>
+</div>
+</div></section><section style="border-bottom: 3px solid var(--ink); background: var(--accent)"><div style="max-width: 1320px; margin: 0 auto; padding-left: clamp(16px, 3vw, 40px); padding-right: clamp(16px, 3vw, 40px); padding-top: 48px; padding-bottom: 48px"><figure style="margin: 0"><img src="/_blob/096bbc9cbcef76151049a8398468b1c6" alt="Experience map for Suzanne, an ocean programme manager, showing phases, activities, thoughts and ideation" style="display: block; width: 100%; aspect-ratio: 16 / 7; object-fit: cover; object-position: top left; border: 3px solid var(--ink); box-sizing: border-box"></figure></div></section>
+<sc-if value="{{showGate}}" hint-placeholder-val="{{false}}"><section style="border-bottom: 3px solid var(--ink)"><div style="max-width: 1320px; margin: 0 auto; padding-left: clamp(16px, 3vw, 40px); padding-right: clamp(16px, 3vw, 40px); padding-top: clamp(40px, 6vw, 80px); padding-bottom: clamp(48px, 7vw, 96px); display: flex; flex-wrap: wrap; gap: 48px 64px; align-items: flex-start">
+<div style="flex: 1 1 460px; min-width: 0; max-width: 720px; border: 3px solid var(--ink); box-shadow: 10px 10px 0 var(--ink); background: var(--bg); padding: clamp(24px, 3vw, 40px); box-sizing: border-box">
+<div style="display: flex; align-items: center; gap: 16px"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="square" aria-hidden="true"><rect x="4" y="11" width="16" height="10"></rect><path d="M8 11V7a4 4 0 0 1 8 0v4"></path></svg><h2 style="margin: 0; font-family: 'Inter Tight', 'Helvetica Neue', Arial, sans-serif; font-weight: 800; font-size: 32px; line-height: 1.05; letter-spacing: -0.02em">The full case study</h2></div>
+<p style="margin: 16px 0 0; color: var(--muted)">A deeper look at this project, covering the process, the artefacts and what changed as a result, is available to recruiters and hiring managers. Enter the password from my CV to read on.</p>
+<form onSubmit="{{submit}}" style="margin: 28px 0 0">
+<label for="case-pw" style="display: block; margin-bottom: 8px; font: 600 12px 'JetBrains Mono', ui-monospace, Menlo, monospace; text-transform: uppercase; letter-spacing: 0.06em">Password</label>
+<div style="display: flex; flex-wrap: wrap; gap: 12px">
+<input id="case-pw" type="password" autocomplete="current-password" aria-invalid="{{ariaInvalid}}" aria-describedby="case-pw-msg" onInput="{{onPw}}" style="flex: 1 1 240px; min-width: 0; min-height: 56px; padding: 0 16px; border: 3px solid {{inputBorder}}; border-radius: 0; background: var(--bg); color: var(--ink); font: 500 18px 'JetBrains Mono', ui-monospace, Menlo, monospace; box-sizing: border-box">
+<button class="b-pri" type="submit" style="min-height: 56px; padding: 0 24px; border: 3px solid var(--ink); border-radius: 0; background: var(--accent); color: #0A0A0A; font: 600 14px 'JetBrains Mono', ui-monospace, Menlo, monospace; text-transform: uppercase; letter-spacing: 0.04em">Unlock →</button>
+</div>
+<sc-if value="{{showError}}" hint-placeholder-val="{{false}}">
+<p id="case-pw-msg" role="alert" style="display: flex; gap: 10px; align-items: flex-start; margin: 14px 0 0; padding: 12px 14px; border: 3px solid var(--ink); background: var(--accent); color: #0A0A0A; font-size: 15px; line-height: 1.45"><span aria-hidden="true" style="font: 700 16px 'JetBrains Mono', ui-monospace, Menlo, monospace">!</span><span>That password didn’t work. Check the case study details in my CV, or ask me for it.</span></p>
+</sc-if>
+</form>
+<p style="margin: 24px 0 0; padding-top: 18px; border-top: 2px solid var(--ink); font-size: 15px">Don’t have it? <a class="l-mark" href="mailto:hello@scottrobinson.co.uk?subject=Case%20study%20password" style="color: var(--ink); font-weight: 600; text-decoration-thickness: 2px; text-underline-offset: 4px">Ask for the password</a></p>
+</div>
+</div></section></sc-if>
+<sc-if value="{{showArticle}}" hint-placeholder-val="{{true}}"><section style="border-bottom: 3px solid var(--ink)"><div style="max-width: 1320px; margin: 0 auto; padding-left: clamp(16px, 3vw, 40px); padding-right: clamp(16px, 3vw, 40px); padding-top: clamp(40px, 6vw, 80px); padding-bottom: clamp(40px, 6vw, 80px)"><div style="display: flex; flex-wrap: wrap; gap: 12px 64px; padding: 40px 0; border-top: 2px solid var(--ink)"><div style="flex: 1 1 220px; max-width: 320px; display: flex; gap: 16px; align-items: baseline"><span style="font: 600 13px 'JetBrains Mono', ui-monospace, Menlo, monospace">01</span><h2 style="margin: 0; font-family: 'Inter Tight', 'Helvetica Neue', Arial, sans-serif; font-weight: 800; font-size: 34px; line-height: 1.1; letter-spacing: -0.02em">Context</h2></div><div style="flex: 999 1 560px; min-width: 0; max-width: 720px"><p style="margin: 0 0 20px">I worked as UX Lead on a discovery project for an international non-profit working to establish standards for sustainable fishing. The organisation works with a wide range of people and organisations — from fisheries and supply-chain partners to researchers, journalists and NGOs — and relies on data, certification processes and long-term relationships to achieve its aims.</p><p style="margin: 0 0 20px">The project began by asking how its digital systems could better support those relationships. At the time, the organisation was developing its CRM and dealing with data and processes that had grown across different teams and systems.</p></div></div><div style="display: flex; flex-wrap: wrap; gap: 12px 64px; padding: 40px 0; border-top: 2px solid var(--ink)"><div style="flex: 1 1 220px; max-width: 320px; display: flex; gap: 16px; align-items: baseline"><span style="font: 600 13px 'JetBrains Mono', ui-monospace, Menlo, monospace">02</span><h2 style="margin: 0; font-family: 'Inter Tight', 'Helvetica Neue', Arial, sans-serif; font-weight: 800; font-size: 34px; line-height: 1.1; letter-spacing: -0.02em">Approach</h2></div><div style="flex: 999 1 560px; min-width: 0; max-width: 720px"><p style="margin: 0 0 20px">My role was to understand how those relationships worked across the organisation and make them visible. I co-designed and facilitated a series of full-day workshops with senior staff from different departments, mapping how they worked with different stakeholder groups over time: what information was exchanged, which systems and processes were involved, and where people encountered problems or opportunities.</p></div></div><div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 24px; padding-bottom: 40px"><figure style="margin: 0"><div role="img" aria-label="Image placeholder, workshop (Charities-3-3.jpeg)" style="aspect-ratio: 4 / 3; background: var(--thumb); border: 3px solid var(--ink); display: flex; align-items: center; justify-content: center; text-align: center; padding: 16px; box-sizing: border-box; font: 500 12px 'JetBrains Mono', ui-monospace, Menlo, monospace; text-transform: uppercase; letter-spacing: 0.04em">Image · workshop (Charities-3-3.jpeg)</div><figcaption style="margin: 10px 0 0; font: 400 12px 'JetBrains Mono', ui-monospace, Menlo, monospace; letter-spacing: 0.02em; color: var(--muted)">Figure 1 · [Caption]</figcaption></figure><figure style="margin: 0"><div role="img" aria-label="Image placeholder, workshop materials (Charities-2-3.jpeg)" style="aspect-ratio: 4 / 3; background: var(--thumb); border: 3px solid var(--ink); display: flex; align-items: center; justify-content: center; text-align: center; padding: 16px; box-sizing: border-box; font: 500 12px 'JetBrains Mono', ui-monospace, Menlo, monospace; text-transform: uppercase; letter-spacing: 0.04em">Image · workshop materials (Charities-2-3.jpeg)</div><figcaption style="margin: 10px 0 0; font: 400 12px 'JetBrains Mono', ui-monospace, Menlo, monospace; letter-spacing: 0.02em; color: var(--muted)">Figure 2 · [Caption]</figcaption></figure></div><div style="display: flex; flex-wrap: wrap; gap: 12px 64px; padding: 40px 0; border-top: 2px solid var(--ink)"><div style="flex: 1 1 220px; max-width: 320px; display: flex; gap: 16px; align-items: baseline"><span style="font: 600 13px 'JetBrains Mono', ui-monospace, Menlo, monospace">03</span><h2 style="margin: 0; font-family: 'Inter Tight', 'Helvetica Neue', Arial, sans-serif; font-weight: 800; font-size: 34px; line-height: 1.1; letter-spacing: -0.02em">Seven experience maps</h2></div><div style="flex: 999 1 560px; min-width: 0; max-width: 720px"><p style="margin: 0 0 20px">I brought this material together into seven detailed experience maps, each representing a different stakeholder group. Rather than describing a single user journey through an interface, the maps showed the relationship between people, organisational processes, data and digital touchpoints over time. I took them back into follow-up sessions where they were reviewed, challenged and refined with the people who understood those relationships first-hand.</p></div></div><figure style="margin: 0; padding-bottom: 40px"><div role="img" aria-label="Image placeholder, experience maps (Charities-6-3.jpg)" style="aspect-ratio: 16 / 8; background: var(--thumb); border: 3px solid var(--ink); display: flex; align-items: center; justify-content: center; text-align: center; padding: 16px; box-sizing: border-box; font: 500 12px 'JetBrains Mono', ui-monospace, Menlo, monospace; text-transform: uppercase; letter-spacing: 0.04em">Image · experience maps (Charities-6-3.jpg)</div><figcaption style="margin: 10px 0 0; font: 400 12px 'JetBrains Mono', ui-monospace, Menlo, monospace; letter-spacing: 0.02em; color: var(--muted)">Figure 3 · [Caption]</figcaption></figure><div style="display: flex; flex-wrap: wrap; gap: 12px 64px; padding: 40px 0; border-top: 2px solid var(--ink)"><div style="flex: 1 1 220px; max-width: 320px; display: flex; gap: 16px; align-items: baseline"><span style="font: 600 13px 'JetBrains Mono', ui-monospace, Menlo, monospace">04</span><h2 style="margin: 0; font-family: 'Inter Tight', 'Helvetica Neue', Arial, sans-serif; font-weight: 800; font-size: 34px; line-height: 1.1; letter-spacing: -0.02em">What changed</h2></div><div style="flex: 999 1 560px; min-width: 0; max-width: 720px"><p style="margin: 0 0 20px">The project changed while we were doing it. A broader digital transformation programme was reconsidered, which meant the original brief no longer made sense in quite the same way. Rather than continuing towards a predetermined solution, we used the research and maps to help the organisation reassess what it needed. They gave teams a shared view of relationships and data that had previously been understood separately, and a way to discuss where digital change might actually be useful.</p></div></div></div></section></sc-if>
+<section style="border-bottom: 3px solid var(--ink)"><a class="l-row" href="#" style="display: block; text-decoration: none; color: var(--ink)"><div style="max-width: 1320px; margin: 0 auto; padding-left: clamp(16px, 3vw, 40px); padding-right: clamp(16px, 3vw, 40px); padding-top: 40px; padding-bottom: 40px; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px"><span style="display: flex; flex-direction: column; gap: 8px"><span style="font: 500 13px 'JetBrains Mono', ui-monospace, Menlo, monospace; text-transform: uppercase; letter-spacing: 0.04em">Next case</span><span style="font-family: 'Inter Tight', 'Helvetica Neue', Arial, sans-serif; font-weight: 800; font-size: clamp(32px, 4vw, 60px); line-height: 1; letter-spacing: -0.03em">Contours: Strategic Pivot to AI Research Platform</span></span><span aria-hidden="true" style="font-family: 'Inter Tight', 'Helvetica Neue', Arial, sans-serif; font-weight: 800; font-size: 60px; line-height: 1">→</span></div></a></section>
+<section id="contact" style="border-top: 3px solid var(--ink); border-bottom: 3px solid var(--ink)">
+<div style="max-width: 1320px; margin: 0 auto; padding-left: clamp(16px, 3vw, 40px); padding-right: clamp(16px, 3vw, 40px); padding-top: clamp(40px, 6vw, 80px); padding-bottom: clamp(40px, 6vw, 80px)">
+<a class="l-mark" href="mailto:hello@scottrobinson.co.uk" style="display: inline-block; font-family: 'Inter Tight', 'Helvetica Neue', Arial, sans-serif; font-weight: 800; font-size: clamp(28px, 5vw, 80px); line-height: 1; letter-spacing: -0.03em; color: var(--ink); text-decoration-thickness: 3px; text-underline-offset: 10px; overflow-wrap: anywhere">hello@scottrobinson.co.uk</a>
+<div style="display: flex; flex-wrap: wrap; gap: 12px; margin-top: 32px"><a class="b-pri" href="mailto:hello@scottrobinson.co.uk" style="display: inline-flex; align-items: center; min-height: 48px; padding: 0 22px; border: 2px solid var(--ink); background: var(--accent); color: #0A0A0A; font: 600 13px 'JetBrains Mono', ui-monospace, Menlo, monospace; text-transform: uppercase; letter-spacing: 0.04em; text-decoration: none">Get in touch →</a><a class="b-sec" href="https://www.linkedin.com/in/drscottrobinson/" style="display: inline-flex; align-items: center; min-height: 48px; padding: 0 20px; border: 2px solid var(--ink); color: var(--ink); font: 600 13px 'JetBrains Mono', ui-monospace, Menlo, monospace; text-transform: uppercase; letter-spacing: 0.04em; text-decoration: none">LinkedIn ↗</a></div>
+</div>
+</section>
+<footer><div style="max-width: 1320px; margin: 0 auto; padding-left: clamp(16px, 3vw, 40px); padding-right: clamp(16px, 3vw, 40px); padding-top: 24px; padding-bottom: 32px; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px; font: 400 12px 'JetBrains Mono', ui-monospace, Menlo, monospace; text-transform: uppercase; letter-spacing: 0.04em"><span>© 2025–2026 Scott Robinson. All rights reserved</span><a class="l-mark" href="#" style="color: var(--ink)">Back to top ↑</a></div></footer>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"mode":{"editor":"enum","options":["light","dark"],"default":"light"},"variant":{"editor":"enum","options":["full","lite","protected"],"default":"full"},"$preview":{"width":1440,"height":5200}}'>
+class Component extends DCLogic {
+  renderVals() {
+    var s = this.state || {};
+    var self = this;
+    var mode = s.mode || this.props.mode || 'light';
+    var t = mode === 'dark'
+      ? { bg: '#0A0A0A', ink: '#F4F4F0', muted: '#BDBDB8', thumb: '#232323', accent: '#FF3EA5', onAccent: '#0A0A0A' }
+      : { bg: '#F9F7ED', ink: '#0A0A0A', muted: '#3F3F3F', thumb: '#DCDCD6', accent: '#FF3EA5', onAccent: '#0A0A0A' };
+    var f = { display: "'Inter Tight', 'Helvetica Neue', Arial, sans-serif".replace(/"/g, ''), body: "'JetBrains Mono', ui-monospace, Menlo, monospace" };
+    var variant = this.props.variant || 'full';
+    var hasCookie = false;
+    try { hasCookie = /(?:^|; )sr_cases=1/.test(document.cookie); } catch (e) {}
+    var unlocked = !!s.unlocked || hasCookie;
+    var gate = s.gate || 'locked';
+    var pw = s.pw || '';
+    return {
+      t: t,
+      f: f,
+      logoFilter: mode === 'dark' ? 'invert(1)' : 'none',
+      darkChecked: mode === 'dark' ? 'true' : 'false',
+      sunCls: mode === 'dark' ? 'sw-off' : 'sw-on',
+      moonCls: mode === 'dark' ? 'sw-on' : 'sw-off',
+      sunBg: mode === 'dark' ? 'transparent' : t.ink,
+      sunFg: mode === 'dark' ? t.ink : t.bg,
+      moonBg: mode === 'dark' ? t.ink : 'transparent',
+      moonFg: mode === 'dark' ? t.bg : t.ink,
+      toggleText: mode === 'dark' ? 'Light' : 'Dark',
+      toggleLabel: mode === 'dark' ? 'Switch to light mode' : 'Switch to dark mode',
+      toggleMode: function () { self.setState({ mode: mode === 'dark' ? 'light' : 'dark' }); },
+      menu: [
+        { n: '(01)', label: 'Home', href: '#' },
+        { n: '(02)', label: 'Cases', href: '#' },
+        { n: '(03)', label: 'Academic & Artistic', href: '#' },
+        { n: '(04)', label: 'PhD in Design', href: '#' },
+        { n: '(05)', label: 'Publications', href: '#' },
+        { n: '(06)', label: 'Thesis', href: '#' },
+        { n: '(07)', label: 'About', href: '#' }
+      ],
+      menuOpen: !!s.menu,
+      menuExpanded: s.menu ? 'true' : 'false',
+      openMenu: function () { self.setState({ menu: true }); },
+      closeMenu: function () { self.setState({ menu: false }); },
+      showGate: variant === 'protected' && !unlocked,
+      showArticle: variant === 'full' || (variant === 'protected' && unlocked),
+      showError: gate === 'error',
+      ariaInvalid: gate === 'error' ? 'true' : 'false',
+      inputBorder: gate === 'error' ? 'var(--accent)' : 'var(--ink)',
+      onPw: function (e) { self.setState({ pw: e && e.target ? e.target.value : '' }); },
+      submit: function (e) {
+        if (e && e.preventDefault) e.preventDefault();
+        if (pw === 'encounters') {
+          try { document.cookie = 'sr_cases=1; path=/; max-age=2592000; SameSite=Lax'; } catch (err) {}
+          self.setState({ unlocked: true, gate: 'locked' });
+        } else { self.setState({ gate: 'error' }); }
+      },
+      _x: 0
+    };
+  }
+}
+</script>
+</body>
+</html>
