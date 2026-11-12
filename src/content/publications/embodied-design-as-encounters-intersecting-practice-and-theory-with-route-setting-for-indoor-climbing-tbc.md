@@ -5,6 +5,7 @@ year: "TBC"
 date: 2026-06-19
 order: 1
 summary: "This forthcoming book chapter develops material from chapter four of my PhD, Bodies(in)Form, and follows my contribution to the Designing for Bodies conference."
+reference: "Robinson, Scott. TBA. “Bodies Inform: Embodied Design (as) Encounters.” In *Designing for Bodies*, edited by Mads Nygaard Folkmann and Harun Kaygan. London: Routledge."
 thumbnail: "TODO"
 legacyUrl: "https://scottrobinson.co.uk/embodied-design-as-encounters-intersecting-practice-and-theory-with-route-setting-for-indoor-climbing-tbc/"
 ---
@@ -14,7 +15,3 @@ This forthcoming book chapter develops material from chapter four of my PhD, *Bo
 ## Abstract
 
 This chapter explores routesetting—the practice of designing indoor climbing routes—as a form of embodied design. Drawing on post-phenomenological feminist theory, especially Sara Ahmed and Gail Weiss, it uses **encounters** as a framework for understanding embodiment as relational, intercorporeal, and shaped by difference and power. Based on practice-based research conducted through both observation of professional routesetters and firsthand participation in routesetting training, the chapter argues that routesetting is a body-first design practice in which movement, bodily speculation, and imagined body-images shape the design of emotional, pedagogic, and kinaesthetic experiences for other bodies. In doing so, it shows how embodied design is not simply generated through an individual designer’s body, but emerges through the messy, situated, and ethically charged relations between bodies, materials, and environments.
-
-## Reference
-
-Robinson, Scott. TBA. “Bodies Inform: Embodied Design (as) Encounters.” In *Designing for Bodies*, edited by Mads Nygaard Folkmann and Harun Kaygan. London: Routledge.

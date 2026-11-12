@@ -78,7 +78,7 @@ title, kind: "academic" | "artistic", details, year, order: number, summary, thu
 `src/content/publications/*.md`:
 ```
 title, kind: "Book Chapter" | "Conference Paper" | "Thesis" | "Journal Article", year, date, order: number,
-summary, thumbnail, legacyUrl
+summary, reference (inline Markdown, shown in the details table), thumbnail (optional), legacyUrl
 ```
 Starter files are in place, generated from the current site. Fields marked `TODO` need Scott's input.
 

@@ -9,7 +9,7 @@ import ContactBlock from './ContactBlock.astro';
 import { isTodo } from '../lib/content';
 import type { ResolvedImage } from '../lib/images';
 
-interface MetaRow { label: string; value?: string; chips?: string[] }
+interface MetaRow { label: string; value?: string; chips?: string[]; /** Pre-escaped HTML (see lib/inline-markdown) */ html?: string }
 interface Props {
   type: 'full' | 'lite' | 'protected';
   title: string;
@@ -38,7 +38,9 @@ const showArticle = type !== 'lite';
           <div class="cs-row">
             <dt>{row.label}</dt>
             <dd>
-              {row.chips
+              {row.html
+                ? <Fragment set:html={row.html} />
+                : row.chips
                 ? <span class="chips">{row.chips.map((c) => <span class="chip">{c}</span>)}</span>
                 : isTodo(row.value) ? <span class="todo">TODO</span> : row.value}
             </dd>
@@ -142,7 +144,8 @@ const showArticle = type !== 'lite';
     text-transform: uppercase;
     letter-spacing: 0.06em;
   }
-  .cs-row dd { flex: 1 1 200px; margin: 0; font-size: 15px; line-height: 1.55; }
+  .cs-row dd { flex: 1 1 200px; min-width: 0; margin: 0; font-size: 15px; line-height: 1.55; overflow-wrap: anywhere; }
+  .cs-row dd :global(a) { color: var(--ink); text-underline-offset: 3px; }
   .chips { display: flex; flex-wrap: wrap; gap: 6px; }
   .chip {
     display: inline-flex;

@@ -6,6 +6,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import CaseStudy from '../../components/CaseStudy.astro';
 import { getPublications, publicationUrl, type Publication } from '../../lib/content';
 import { HERO_WIDTH, resolveImage } from '../../lib/images';
+import { inlineMarkdown } from '../../lib/inline-markdown';
 
 export async function getStaticPaths() {
   const pubs = await getPublications();
@@ -29,6 +30,7 @@ const { Content } = await render(entry);
     meta={[
       { label: 'Type', chips: [d.kind] },
       { label: 'Year', value: d.year },
+      ...(d.reference ? [{ label: 'Reference', html: inlineMarkdown(d.reference) }] : []),
     ]}
     next={{ label: 'TODO', title: next.data.title, href: publicationUrl(next) }}
     back={{ label: '← Back to home', href: '/' }}

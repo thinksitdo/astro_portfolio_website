@@ -5,6 +5,7 @@ year: "2026"
 date: 2026-04-30
 order: 2
 summary: "This practice-based PhD responds to a growing shift in experience design towards approaches that engage bodies—both designers’ and participants’—as central to design practice. Drawing on feminist post-phenomenology, particularly the work of Gail Weiss and Sara Ahmed, the research proposes encounters as a strong concept that articulates embodiment as relational, intercorporeal, and situated."
+reference: "Robinson, Scott (2026) Bodies (in)Form: Reconceptualising Embodied Design as Intercorporeal Encounters. Doctoral thesis, Goldsmiths, University of London.."
 thumbnail: "TODO"
 legacyUrl: "https://scottrobinson.co.uk/bodies-inform-reconceptualising-embodied-design-as-encounters-2026/"
 ---
@@ -22,7 +23,3 @@ The thesis reconceptualises embodied design activities as **Design Encounters**�
 ## Link
 
 [Download](https://research.gold.ac.uk/id/eprint/40427/) from Goldsmiths GRO website
-
-## Reference
-
-Robinson, Scott (2026) Bodies (in)Form: Reconceptualising Embodied Design as Intercorporeal Encounters. Doctoral thesis, Goldsmiths, University of London..

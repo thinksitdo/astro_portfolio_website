@@ -50,6 +50,8 @@ const publications = defineCollection({
     date: z.coerce.date().optional(),
     order: z.number(),
     summary: z.string(),
+    /** Citation, shown in the details table. Supports *italic*, **bold** and [links](https://…) */
+    reference: z.string().optional(),
     /** Optional: leave out (or TODO) for no thumbnail; then the list shows no popover */
     thumbnail: z.string().default(''),
     legacyUrl: z.string().url(),
