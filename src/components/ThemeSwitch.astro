@@ -42,7 +42,8 @@
   :global(:root[data-theme='dark']) .sw-moon { background: var(--ink); color: var(--bg); }
 
   /* Hover fills the inactive half pink */
-  .b-switch:hover .sw-moon { background: var(--accent); color: var(--on-accent); }
+  /* Only the inactive half: the moon in light mode, the sun in dark mode */
+  :global(:root:not([data-theme='dark'])) .b-switch:hover .sw-moon { background: var(--accent); color: var(--on-accent); }
   :global(:root[data-theme='dark']) .b-switch:hover .sw-sun { background: var(--accent); color: var(--on-accent); }
 
   @media (prefers-reduced-motion: reduce) {
