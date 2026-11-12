@@ -1,10 +1,11 @@
 ---
-import { getCases, isTodo } from '../lib/content';
+import { getCases } from '../lib/content';
+import { resolveImageSrc, THUMB_WIDTH } from '../lib/images';
 
 // The slideshow shows the first five case studies' thumbnails
 const slides = (await getCases()).slice(0, 5).map((c) => ({
   title: c.data.title,
-  thumbnail: isTodo(c.data.thumbnail) ? null : c.data.thumbnail,
+  thumbnail: resolveImageSrc(c.filePath, c.data.thumbnail, THUMB_WIDTH),
 }));
 const pad = (n: number) => String(n).padStart(2, '0');
 ---

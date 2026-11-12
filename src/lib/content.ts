@@ -37,7 +37,9 @@ export function excerpt(text: string, words = 24) {
   return parts.length <= words ? text : `${parts.slice(0, words).join(' ')}…`;
 }
 
-const thumbOrNull = (v: string) => (isTodo(v) ? null : v);
+import { resolveImageSrc, THUMB_WIDTH } from './images';
+
+const thumbSrc = (entry: Case | Project) => resolveImageSrc(entry.filePath, entry.data.thumbnail, THUMB_WIDTH);
 
 /** Category filters for a set of cases: All, then each category in order of first appearance */
 export const caseFilters = (cases: Case[]) => ['All', ...new Set(cases.flatMap((c) => c.data.categories))];
@@ -55,7 +57,7 @@ export function caseRows(cases: Case[], fourth: 'year-read' | 'client-year') {
       col4: fourth === 'year-read'
         ? [c.data.year, minutes === null ? 'TODO' : `${minutes} min`]
         : [c.data.client, c.data.year],
-      thumbnail: thumbOrNull(c.data.thumbnail),
+      thumbnail: thumbSrc(c),
     };
   });
 }
@@ -68,6 +70,6 @@ export function projectRows(projects: Project[]) {
     tags: [kindLabel(p.data.kind)],
     col3: kindLabel(p.data.kind),
     col4: [p.data.details, p.data.year],
-    thumbnail: thumbOrNull(p.data.thumbnail),
+    thumbnail: thumbSrc(p),
   }));
 }

@@ -5,6 +5,7 @@ import { render } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import CaseStudy from '../../components/CaseStudy.astro';
 import { getProjects, kindLabel, projectUrl, type Project } from '../../lib/content';
+import { HERO_WIDTH, resolveImage } from '../../lib/images';
 
 export async function getStaticPaths() {
   const projects = await getProjects();
@@ -24,7 +25,7 @@ const { Content } = await render(entry);
     type="full"
     title={d.title}
     intro={d.summary}
-    heroImage={d.thumbnail}
+    heroImage={resolveImage(entry.filePath, d.thumbnail, HERO_WIDTH)}
     meta={[
       { label: 'Type', chips: [kindLabel(d.kind)] },
       { label: 'Role', value: d.details },

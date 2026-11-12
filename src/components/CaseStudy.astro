@@ -7,6 +7,7 @@
 import PasswordGate from './PasswordGate.astro';
 import ContactBlock from './ContactBlock.astro';
 import { isTodo } from '../lib/content';
+import type { ResolvedImage } from '../lib/images';
 
 interface MetaRow { label: string; value?: string; chips?: string[] }
 interface Props {
@@ -14,7 +15,7 @@ interface Props {
   title: string;
   intro: string;
   meta: MetaRow[];
-  heroImage?: string;
+  heroImage?: ResolvedImage | null;
   heroAlt?: string;
   next?: { label: string; title: string; href: string };
   back?: { label: string; href: string };
@@ -22,7 +23,6 @@ interface Props {
 
 const { type, title, intro, meta, heroImage, heroAlt, next, back = { label: '← Back to home', href: '/' } } = Astro.props;
 const showArticle = type !== 'lite';
-const hasHeroImage = heroImage && !isTodo(heroImage);
 ---
 <section class="cs-hero">
   <div class="wrap">
@@ -49,9 +49,11 @@ const hasHeroImage = heroImage && !isTodo(heroImage);
 <section class="cs-image" aria-label="Project image">
   <div class="wrap">
     <figure>
-      {hasHeroImage
-        ? <img src={heroImage} alt={heroAlt ?? ''} />
-        : <div class="thumb-placeholder hero-ph" role="img" aria-label={`Image placeholder, ${title}`}>Image · {title}</div>}
+      {heroImage && 'src' in heroImage
+        ? <img src={heroImage.src} width={heroImage.width} height={heroImage.height} alt={heroAlt && !isTodo(heroAlt) ? heroAlt : ''} />
+        : heroImage && 'missing' in heroImage
+          ? <div class="thumb-placeholder hero-ph" role="img" aria-label={`Image not found, ${heroImage.missing}`}>Image not found · {heroImage.missing}</div>
+          : <div class="thumb-placeholder hero-ph" role="img" aria-label={`Image placeholder, ${title}`}>Image · {title}</div>}
     </figure>
   </div>
 </section>

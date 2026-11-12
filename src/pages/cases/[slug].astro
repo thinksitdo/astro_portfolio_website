@@ -3,6 +3,7 @@ import { render } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import CaseStudy from '../../components/CaseStudy.astro';
 import { caseUrl, getCases, isTodo, type Case } from '../../lib/content';
+import { HERO_WIDTH, resolveImage } from '../../lib/images';
 
 export async function getStaticPaths() {
   const cases = await getCases();
@@ -22,7 +23,7 @@ const { Content } = await render(entry);
     type={d.type}
     title={d.title}
     intro={d.intro}
-    heroImage={d.heroImage}
+    heroImage={resolveImage(entry.filePath, d.heroImage, HERO_WIDTH)}
     heroAlt={d.heroAlt}
     meta={[
       { label: 'Client', value: d.client },
