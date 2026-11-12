@@ -50,7 +50,8 @@ const publications = defineCollection({
     date: z.coerce.date().optional(),
     order: z.number(),
     summary: z.string(),
-    thumbnail: z.string(),
+    /** Optional: leave out (or TODO) for no thumbnail; then the list shows no popover */
+    thumbnail: z.string().default(''),
     legacyUrl: z.string().url(),
   }),
 });

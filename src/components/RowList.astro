@@ -21,11 +21,13 @@ interface Props {
   filterLabel?: string;
   /** The homepage sets the fourth column in capitals; the Cases and Academic & Artistic pages do not */
   fourthUpper?: boolean;
+  /** Show a "Thumbnail · title" placeholder popover for rows without a thumbnail (false: no popover) */
+  thumbPlaceholders?: boolean;
 }
-const { rows, filters, headings, filterLabel = 'Filter', fourthUpper = false } = Astro.props;
+const { rows, filters, headings, filterLabel = 'Filter', fourthUpper = false, thumbPlaceholders = true } = Astro.props;
 const isTodo = (v: string) => !v || v.trim().toUpperCase() === 'TODO';
 ---
-<div class="row-list" data-row-list>
+<div class="row-list" data-row-list data-thumb-placeholders={thumbPlaceholders ? 'true' : 'false'}>
   <div class="filters" role="group" aria-label={filterLabel}>
     {filters.map((f, i) => (
       <button class="b-chip" type="button" data-filter={f} aria-pressed={i === 0 ? 'true' : 'false'}>{f}</button>
@@ -184,8 +186,11 @@ const isTodo = (v: string) => !v || v.trim().toUpperCase() === 'TODO';
     });
 
     // Thumbnail popover: the cursor sits at its bottom-left corner, and it flips left near the right edge
+    const placeholders = list.dataset.thumbPlaceholders !== 'false';
+    // Returns false when this row has nothing to show
     const show = (row: HTMLAnchorElement) => {
       const src = row.dataset.thumb;
+      if (!src && !placeholders) { pop.hidden = true; return false; }
       if (src) {
         popImg.src = src;
         popImg.hidden = false;
@@ -195,6 +200,7 @@ const isTodo = (v: string) => !v || v.trim().toUpperCase() === 'TODO';
         popText.textContent = `Thumbnail · ${row.dataset.title}`;
       }
       pop.hidden = false;
+      return true;
     };
     const place = (x: number, y: number) => { pop.style.transform = `translate(${x}px, ${y}px)`; };
 
@@ -212,7 +218,7 @@ const isTodo = (v: string) => !v || v.trim().toUpperCase() === 'TODO';
       row.addEventListener('mouseleave', () => { pop.hidden = true; });
       // Keyboard focus has no cursor: park the popover at the row's right edge
       row.addEventListener('focus', () => {
-        show(row);
+        if (!show(row)) return;
         const lr = wrap.getBoundingClientRect();
         const rr = row.getBoundingClientRect();
         place(rr.right - lr.left - (pop.offsetWidth || 440) - 24, rr.top - lr.top + rr.height / 2 - (pop.offsetHeight || 275) / 2);

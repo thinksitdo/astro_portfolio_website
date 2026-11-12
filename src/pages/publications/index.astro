@@ -18,6 +18,7 @@ const pubs = await getPublications();
         rows={publicationRows(pubs)}
         filters={publicationFilters(pubs)}
         headings={['No.', 'Publication', 'Type', 'Year']}
+        thumbPlaceholders={false}
       />
     </div>
   </section>

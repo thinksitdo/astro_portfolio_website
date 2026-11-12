@@ -19,9 +19,12 @@ interface Props {
   heroAlt?: string;
   next?: { label: string; title: string; href: string };
   back?: { label: string; href: string };
+  /** Leave out the pink image band when there is no image, instead of showing a placeholder */
+  imageOptional?: boolean;
 }
 
-const { type, title, intro, meta, heroImage, heroAlt, next, back = { label: '← Back to home', href: '/' } } = Astro.props;
+const { type, title, intro, meta, heroImage, heroAlt, next, back = { label: '← Back to home', href: '/' }, imageOptional = false } = Astro.props;
+const showImageBand = !(imageOptional && !heroImage);
 const showArticle = type !== 'lite';
 ---
 <section class="cs-hero">
@@ -46,7 +49,7 @@ const showArticle = type !== 'lite';
   </div>
 </section>
 
-<section class="cs-image" aria-label="Project image">
+{showImageBand && <section class="cs-image" aria-label="Project image">
   <div class="wrap">
     <figure>
       {heroImage && 'src' in heroImage
@@ -56,7 +59,7 @@ const showArticle = type !== 'lite';
           : <div class="thumb-placeholder hero-ph" role="img" aria-label={`Image placeholder, ${title}`}>Image · {title}</div>}
     </figure>
   </div>
-</section>
+</section>}
 
 {type === 'protected' && <PasswordGate />}
 
