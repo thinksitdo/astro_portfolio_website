@@ -40,4 +40,19 @@ const academicArtistic = defineCollection({
   }),
 });
 
-export const collections = { cases, 'academic-artistic': academicArtistic };
+const publications = defineCollection({
+  loader: glob({ pattern: '**/*.md', base: './src/content/publications' }),
+  schema: z.object({
+    title: z.string(),
+    kind: z.enum(['Book Chapter', 'Conference Paper', 'Thesis', 'Journal Article']),
+    year: z.coerce.string(),
+    /** Publication date from the current site, kept for reference */
+    date: z.coerce.date().optional(),
+    order: z.number(),
+    summary: z.string(),
+    thumbnail: z.string(),
+    legacyUrl: z.string().url(),
+  }),
+});
+
+export const collections = { cases, 'academic-artistic': academicArtistic, publications };

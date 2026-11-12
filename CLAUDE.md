@@ -58,9 +58,11 @@ Fluid type uses `clamp()` and container query units (`cqi`) for the hero headlin
 | `/academic-artistic/` | academic-artistic.dc.html | All `academic` and `artistic` entries only, filters All / Academic / Artistic |
 | `/academic-artistic/[slug]/` | not yet designed | Use the case study Full layout without the gate, and flag it |
 | `/thesis/` | thesis.dc.html | |
-| `/publications/`, `/about/` | not yet designed | Stub pages with the shared layout and a TODO |
+| `/publications/` | as academic-artistic.dc.html | All `publications` entries, filters by type. Intro copy is a TODO |
+| `/publications/[slug]/` | not separately designed | Case study Full layout without the gate, like the project pages |
+| `/about/` | not yet designed | Stub page with the shared layout and a TODO |
 
-Case studies and academic or artistic projects are never mixed in any list, filter or slideshow.
+Case studies, academic or artistic projects and publications are never mixed in any list, filter or slideshow.
 
 ## Content model
 
@@ -72,6 +74,11 @@ activities, year, order: number, task, intro, heroImage, thumbnail, legacyUrl
 `src/content/academic-artistic/*.md`:
 ```
 title, kind: "academic" | "artistic", details, year, order: number, summary, thumbnail, legacyUrl
+```
+`src/content/publications/*.md`:
+```
+title, kind: "Book Chapter" | "Conference Paper" | "Thesis" | "Journal Article", year, date, order: number,
+summary, thumbnail, legacyUrl
 ```
 Starter files are in place, generated from the current site. Fields marked `TODO` need Scott's input.
 

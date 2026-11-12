@@ -1,0 +1,38 @@
+---
+// Publication pages use the case study Full layout (as the academic and artistic project pages do),
+// without the password gate. Not separately designed.
+import { render } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import CaseStudy from '../../components/CaseStudy.astro';
+import { getPublications, publicationUrl, type Publication } from '../../lib/content';
+import { HERO_WIDTH, resolveImage } from '../../lib/images';
+
+export async function getStaticPaths() {
+  const pubs = await getPublications();
+  return pubs.map((entry, i) => ({
+    params: { slug: entry.id },
+    props: { entry, next: pubs[(i + 1) % pubs.length] },
+  }));
+}
+
+interface Props { entry: Publication; next: Publication }
+const { entry, next } = Astro.props;
+const d = entry.data;
+const { Content } = await render(entry);
+---
+<BaseLayout title={d.title} description={d.summary} bodyFont="inter">
+  <CaseStudy
+    type="full"
+    title={d.title}
+    intro={d.summary}
+    heroImage={resolveImage(entry.filePath, d.thumbnail, HERO_WIDTH)}
+    meta={[
+      { label: 'Type', chips: [d.kind] },
+      { label: 'Year', value: d.year },
+    ]}
+    next={{ label: 'TODO', title: next.data.title, href: publicationUrl(next) }}
+    back={{ label: '← Back to home', href: '/' }}
+  >
+    <Content />
+  </CaseStudy>
+</BaseLayout>

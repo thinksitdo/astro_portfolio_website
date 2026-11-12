@@ -39,7 +39,7 @@ export function excerpt(text: string, words = 24) {
 
 import { resolveImageSrc, THUMB_WIDTH } from './images';
 
-const thumbSrc = (entry: Case | Project) => resolveImageSrc(entry.filePath, entry.data.thumbnail, THUMB_WIDTH);
+const thumbSrc = (entry: Case | Project | Publication) => resolveImageSrc(entry.filePath, entry.data.thumbnail, THUMB_WIDTH);
 
 /** Category filters for a set of cases: All, then each category in order of first appearance */
 export const caseFilters = (cases: Case[]) => ['All', ...new Set(cases.flatMap((c) => c.data.categories))];
@@ -70,6 +70,31 @@ export function projectRows(projects: Project[]) {
     tags: [kindLabel(p.data.kind)],
     col3: kindLabel(p.data.kind),
     col4: [p.data.details, p.data.year],
+    thumbnail: thumbSrc(p),
+  }));
+}
+
+export type Publication = CollectionEntry<'publications'>;
+
+/** All publications in Scott's chosen order */
+export async function getPublications(): Promise<Publication[]> {
+  const entries = await getCollection('publications');
+  return entries.sort((a, b) => a.data.order - b.data.order);
+}
+
+export const publicationUrl = (entry: Publication) => `/publications/${entry.id}/`;
+
+/** Publication type filters: All, then each type in order of first appearance */
+export const publicationFilters = (pubs: Publication[]) => ['All', ...new Set(pubs.map((p) => p.data.kind))];
+
+export function publicationRows(pubs: Publication[]) {
+  return pubs.map((p) => ({
+    href: publicationUrl(p),
+    title: p.data.title,
+    summary: excerpt(p.data.summary),
+    tags: [p.data.kind],
+    col3: p.data.kind,
+    col4: [p.data.year],
     thumbnail: thumbSrc(p),
   }));
 }
