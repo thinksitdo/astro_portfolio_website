@@ -1,0 +1,182 @@
+---
+import Logo from './Logo.astro';
+
+const items = [
+  { label: 'Home', href: '/' },
+  { label: 'Cases', href: '/cases/' },
+  { label: 'Academic & Artistic', href: '/academic-artistic/' },
+  { label: 'PhD in Design', href: '/#research' },
+  { label: 'Publications', href: '/publications/' },
+  { label: 'Thesis', href: '/thesis/' },
+  { label: 'About', href: '/about/' },
+];
+
+const current = Astro.url.pathname;
+---
+<dialog id="site-menu" class="sr-menu-wrap" aria-label="Menu">
+  <div class="menu-top">
+    <div class="wrap row">
+      <Logo />
+      <button class="icon-btn menu-close" type="button" aria-label="Close menu">
+        <svg width="20" height="20" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M2 2L18 18M18 2L2 18" stroke="currentColor" stroke-width="3"></path></svg>
+      </button>
+    </div>
+  </div>
+
+  <nav aria-label="Main" class="wrap menu-nav">
+    <ol>
+      {items.map((item, i) => (
+        <li>
+          <a class="sr-menu" href={item.href} aria-current={item.href === current ? 'page' : undefined}>
+            <span class="sr-menu-label">{item.label}</span>
+            <span class="n">({String(i + 1).padStart(2, '0')})</span>
+          </a>
+        </li>
+      ))}
+    </ol>
+  </nav>
+
+  <div class="menu-foot">
+    <div class="wrap row label">
+      <a class="l-mark" href="mailto:hello@scottrobinson.co.uk" style="text-transform: none">hello@scottrobinson.co.uk</a>
+      <a class="l-mark" href="https://www.linkedin.com/in/drscottrobinson/">LinkedIn ↗</a>
+    </div>
+  </div>
+</dialog>
+
+<style>
+  /* Exactly one viewport tall and never scrolls */
+  .sr-menu-wrap {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    max-width: none;
+    height: 100vh;
+    height: 100dvh;
+    max-height: none;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    overflow: hidden;
+    background: var(--bg);
+    color: var(--ink);
+  }
+  .sr-menu-wrap[open] { display: flex; flex-direction: column; }
+  .sr-menu-wrap::backdrop { background: var(--bg); }
+
+  .row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px 24px;
+  }
+  .menu-top { border-bottom: var(--rule) solid var(--ink); }
+  .menu-foot { border-top: var(--rule) solid var(--ink); }
+  .menu-foot .row { padding-top: 20px; padding-bottom: 28px; }
+
+  .menu-nav {
+    flex: 1 1 auto;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    padding-block: clamp(12px, 3vh, 48px);
+  }
+  ol {
+    flex: 1 1 auto;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    border-top: var(--rule) solid var(--ink);
+  }
+  li {
+    flex: 1 1 0;
+    min-height: 0;
+    display: flex;
+    border-bottom: var(--rule) solid var(--ink);
+  }
+
+  .sr-menu {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    padding: 0 8px;
+    color: var(--ink);
+    text-decoration: none;
+    transition: background-color .12s ease;
+  }
+  .sr-menu:hover,
+  .sr-menu:focus-visible { background: var(--accent); color: var(--on-accent); }
+  .sr-menu:focus-visible { outline-offset: -6px; }
+
+  .sr-menu-label {
+    font-family: var(--font-display);
+    font-weight: 900;
+    line-height: 0.9;
+    letter-spacing: -0.035em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    font-size: clamp(20px, min(6.2vw, calc((100vh - 200px) / 7 * 0.62)), 112px);
+  }
+  @supports (height: 100dvh) {
+    .sr-menu-label { font-size: clamp(20px, min(6.2vw, calc((100dvh - 200px) / 7 * 0.62)), 112px); }
+  }
+  .n { font-family: var(--font-mono); font-size: 14px; font-weight: 500; }
+
+  :global(html:has(#site-menu[open])) { overflow: hidden; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .sr-menu { transition: none; }
+  }
+</style>
+
+<script>
+  const dialog = document.getElementById('site-menu') as HTMLDialogElement | null;
+  const openBtn = document.querySelector<HTMLButtonElement>('.menu-open');
+  const closeBtn = dialog?.querySelector<HTMLButtonElement>('.menu-close');
+
+  if (dialog && openBtn) {
+    const focusables = () =>
+      Array.from(dialog.querySelectorAll<HTMLElement>('a[href], button:not([disabled])'));
+
+    openBtn.addEventListener('click', () => {
+      dialog.showModal();
+      openBtn.setAttribute('aria-expanded', 'true');
+      closeBtn?.focus();
+    });
+
+    // Escape triggers 'close' natively; return focus to the menu button
+    dialog.addEventListener('close', () => {
+      openBtn.setAttribute('aria-expanded', 'false');
+      openBtn.focus();
+    });
+
+    closeBtn?.addEventListener('click', () => dialog.close());
+
+    // Keep Tab inside the menu
+    dialog.addEventListener('keydown', (e) => {
+      if (e.key !== 'Tab') return;
+      const items = focusables();
+      const first = items[0];
+      const last = items[items.length - 1];
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault();
+        first.focus();
+      }
+    });
+
+    // Close before following a link, so in-page links (/#research) land with the menu shut
+    dialog.querySelectorAll('a[href]').forEach((link) => {
+      link.addEventListener('click', () => dialog.close());
+    });
+  }
+</script>
