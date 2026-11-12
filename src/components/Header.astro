@@ -7,7 +7,7 @@ import Logo from './Logo.astro';
     <Logo />
     <div class="actions">
       <ThemeSwitch />
-      <a class="b-pri" href="/#contact">Let’s talk →</a>
+      <a class="b-pri talk" href="/#contact">Let’s talk →</a>
       <button class="icon-btn menu-open" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="site-menu">
         <svg width="22" height="16" viewBox="0 0 22 16" aria-hidden="true" focusable="false"><path d="M0 2H22M0 8H22M0 14H22" stroke="currentColor" stroke-width="3"></path></svg>
       </button>
@@ -29,5 +29,10 @@ import Logo from './Logo.astro';
     align-items: center;
     gap: 12px;
     padding: 12px 0;
+  }
+
+  /* On phones Let's talk moves into the menu, so the header stays on one row */
+  @media (max-width: 480px) {
+    .talk { display: none; }
   }
 </style>

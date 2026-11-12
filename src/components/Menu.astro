@@ -17,9 +17,12 @@ const current = Astro.url.pathname;
   <div class="menu-top">
     <div class="wrap row">
       <Logo />
+      <div class="top-actions">
+      <a class="b-pri talk" href="/#contact">Let’s talk →</a>
       <button class="icon-btn menu-close" type="button" aria-label="Close menu">
         <svg width="20" height="20" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M2 2L18 18M18 2L2 18" stroke="currentColor" stroke-width="3"></path></svg>
       </button>
+      </div>
     </div>
   </div>
 
@@ -72,6 +75,13 @@ const current = Astro.url.pathname;
     gap: 12px 24px;
   }
   .menu-top { border-bottom: var(--rule) solid var(--ink); }
+  .top-actions { display: flex; align-items: center; gap: 12px; }
+
+  /* Let's talk only appears here on phones, where the header leaves it out */
+  .talk { display: none; }
+  @media (max-width: 480px) {
+    .talk { display: inline-flex; }
+  }
   .menu-foot { border-top: var(--rule) solid var(--ink); }
   .menu-foot .row { padding-top: 20px; padding-bottom: 28px; }
 
