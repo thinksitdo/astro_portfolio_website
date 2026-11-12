@@ -44,6 +44,8 @@ html {
 }
 
 body {
+  /* Own stacking context, so the dot grid (z-index -1) paints above this background and below content */
+  isolation: isolate;
   margin: 0;
   min-height: 100vh;
   display: flex;
@@ -306,3 +308,21 @@ a, button { cursor: var(--cursor-link); }
   .b-chip, .b-inv, .b-tileP, .b-tileS, .w-row, .l-row, .l-row span[aria-hidden],
   .b-tileP > span:first-child, .b-tileS > span:first-child { transition: none; }
 }
+
+/* ---------- Pink blending with the dot grid ----------
+   Pink blocks multiply (light) or screen (dark) with the page beneath, so the dots show through.
+   .pk marks pink blocks that sit straight on the page background. */
+:root:not([data-theme='dark']) .pk,
+:root:not([data-theme='dark']) .w-row:hover,
+:root:not([data-theme='dark']) .w-row:focus-visible,
+:root:not([data-theme='dark']) .b-chip:not([aria-pressed='true']):hover,
+:root:not([data-theme='dark']) .l-row:hover,
+:root:not([data-theme='dark']) .l-mark:hover,
+:root:not([data-theme='dark']) .l-big:hover { mix-blend-mode: multiply; }
+:root[data-theme='dark'] .pk,
+:root[data-theme='dark'] .w-row:hover,
+:root[data-theme='dark'] .w-row:focus-visible,
+:root[data-theme='dark'] .b-chip:not([aria-pressed='true']):hover,
+:root[data-theme='dark'] .l-row:hover,
+:root[data-theme='dark'] .l-mark:hover,
+:root[data-theme='dark'] .l-big:hover { mix-blend-mode: screen; }
