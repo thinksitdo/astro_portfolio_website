@@ -172,13 +172,13 @@ const payload = type === 'protected' ? encryptArticle(await Astro.slots.render('
   .cs-image { background: var(--accent); }
   .cs-image .wrap { padding-block: 48px; }
   .cs-image figure { margin: 0; }
+  /* The image shows whole, at its own proportions: nothing is cropped. Only the placeholder has a fixed shape */
   .cs-image img, .hero-ph {
     width: 100%;
-    aspect-ratio: 16 / 7;
-    object-fit: cover;
-    object-position: top left;
     border: var(--rule) solid var(--ink);
   }
+  .cs-image img { height: auto; }
+  .hero-ph { aspect-ratio: 16 / 7; }
 
   /* Article: sections and figures come from the Markdown plugins in src/lib/markdown-plugins.mjs */
   .cs-article[hidden] { display: none; }
