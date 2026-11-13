@@ -2,7 +2,8 @@
 //
 // 1. figures: a paragraph holding only one image becomes a full-width <figure>; a paragraph holding
 //    exactly two images (consecutive lines, no blank line) becomes a two-column row of figures.
-//    The image title becomes the <figcaption>; the alt text stays as alt text.
+//    The image title becomes the <figcaption>; the alt text stays as alt text. Each image is a button
+//    that opens the lightbox.
 // 2. sections: the article is split at each h2 into numbered sections (number and heading on the left,
 //    text on the right), as in the case study design. Figures sit between sections at full width.
 
@@ -23,9 +24,11 @@ function imagesOnly(node) {
   return content.length >= 1 && content.length <= 2 && content.every(isImg) ? content : null;
 }
 
+// Each image sits in a button that opens it larger in the lightbox (components/Lightbox.astro)
 function figure(img) {
   const { title, ...props } = img.properties ?? {};
-  const children = [{ ...img, properties: props }];
+  const zoom = el('button', 'cs-zoom', [el('span', 'visually-hidden', [text('View larger image: ')]), { ...img, properties: props }], { type: 'button' });
+  const children = [zoom];
   if (typeof title === 'string' && title.trim()) children.push(el('figcaption', 'cs-cap', [text(title)]));
   return el('figure', 'cs-fig', children);
 }

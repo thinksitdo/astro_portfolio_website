@@ -7,6 +7,7 @@
 // The article is passed in the default slot. The academic and artistic pages reuse this with type "full".
 import PasswordGate from './PasswordGate.astro';
 import ContactBlock from './ContactBlock.astro';
+import Lightbox from './Lightbox.astro';
 import { isTodo } from '../lib/content';
 import { encryptArticle } from '../lib/case-crypto';
 import type { ResolvedImage } from '../lib/images';
@@ -76,6 +77,8 @@ const payload = type === 'protected' ? encryptArticle(await Astro.slots.render('
     </div>
   </section>
 )}
+
+{showArticle && <Lightbox />}
 
 {type === 'protected' && payload && <script type="application/octet-stream" id="case-payload" set:text={payload} />}
 
