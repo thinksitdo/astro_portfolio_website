@@ -183,20 +183,20 @@ const payload = type === 'protected' ? encryptArticle(await Astro.slots.render('
   /* Article: sections and figures come from the Markdown plugins in src/lib/markdown-plugins.mjs */
   .cs-article[hidden] { display: none; }
   .article-wrap { padding-block: clamp(40px, 6vw, 80px); }
+  /* One centred column: the section title sits above its text. Figures stay full width (they sit between sections) */
   .article-wrap :global(.cs-sec) {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 12px 64px;
     padding: 40px 0;
     border-top: var(--rule-thin) solid var(--ink);
   }
+  .article-wrap :global(.cs-sec-h),
+  .article-wrap :global(.cs-sec-b) { max-width: 720px; margin-inline: auto; }
   .article-wrap :global(.cs-sec-h) {
-    flex: 1 1 220px;
-    max-width: 320px;
     display: flex;
     gap: 16px;
     align-items: baseline;
+    margin-bottom: 24px;
   }
+  .article-wrap :global(.cs-sec-h:empty) { display: none; }
   .article-wrap :global(.cs-n) { font: 600 13px var(--font-mono); }
   .article-wrap :global(.cs-sec-h h2) {
     margin: 0;
@@ -206,7 +206,7 @@ const payload = type === 'protected' ? encryptArticle(await Astro.slots.render('
     line-height: 1.1;
     letter-spacing: -0.02em;
   }
-  .article-wrap :global(.cs-sec-b) { flex: 999 1 560px; min-width: 0; max-width: 720px; }
+  .article-wrap :global(.cs-sec-b) { min-width: 0; }
   .article-wrap :global(.cs-sec-b > *) { margin: 0 0 20px; }
   .article-wrap :global(.cs-sec-b > :last-child) { margin-bottom: 0; }
   .article-wrap :global(.cs-sec-b h3) { font-family: var(--font-display); font-weight: 800; font-size: 22px; line-height: 1.2; }
