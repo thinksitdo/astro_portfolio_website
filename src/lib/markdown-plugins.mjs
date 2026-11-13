@@ -30,19 +30,19 @@ function figure(img) {
   return el('figure', 'cs-fig', children);
 }
 
+// Runs in `before`, ahead of the tree walk, so Astro's image step (which runs during the walk) still
+// sees the images inside the new figures and publishes them. Nodes swapped in during the walk are skipped.
 export const figuresPlugin = {
   name: 'case-figures',
-  element: {
-    filter: ['p'],
-    visit(node, ctx) {
+  before(root, ctx) {
+    const children = root.children.map((node) => {
       const content = imagesOnly(node);
-      if (!content) return;
-      if (content.length === 1) {
-        ctx.replaceNode(node, el('div', 'cs-figs cs-figs--one', [figure(content[0])]));
-      } else {
-        ctx.replaceNode(node, el('div', 'cs-figs cs-figs--two', content.map(figure)));
-      }
-    },
+      if (!content) return node;
+      return content.length === 1
+        ? el('div', 'cs-figs cs-figs--one', [figure(content[0])])
+        : el('div', 'cs-figs cs-figs--two', content.map(figure));
+    });
+    ctx.setField(root, 'children', children);
   },
 };
 
@@ -87,5 +87,37 @@ export const sectionsPlugin = {
     }
     close();
     ctx.setField(root, 'children', out);
+  },
+};
+
+// 3. image references (mdast phase): turns reference-style images, ![alt][image-1] with
+//    [image-1]: ./images/x.jpg "Caption" further down (what Google Docs exports), into ordinary
+//    images. Astro only publishes ordinary ![alt](./images/x.jpg) images, so without this the
+//    referenced files are never copied into the site.
+export const imageReferencesPlugin = {
+  name: 'image-references',
+  before(root, ctx) {
+    const defs = new Map();
+    const collect = (node) => {
+      if (node.type === 'definition') defs.set(String(node.identifier).toLowerCase(), node);
+      (node.children ?? []).forEach(collect);
+    };
+    collect(root);
+    if (!defs.size) return;
+
+    let changed = false;
+    const rewrite = (node) => {
+      if (node.type === 'imageReference') {
+        const def = defs.get(String(node.identifier).toLowerCase());
+        if (!def) return node;
+        changed = true;
+        return { type: 'image', url: def.url, title: def.title ?? null, alt: node.alt ?? '' };
+      }
+      if (!node.children) return node;
+      const children = node.children.map(rewrite);
+      return children.some((c, i) => c !== node.children[i]) ? { ...node, children } : node;
+    };
+    const children = root.children.map(rewrite);
+    if (changed) ctx.setField(root, 'children', children);
   },
 };
