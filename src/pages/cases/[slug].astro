@@ -3,7 +3,7 @@ import { render } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import CaseStudy from '../../components/CaseStudy.astro';
 import { caseUrl, getCases, isTodo, type Case } from '../../lib/content';
-import { HERO_WIDTH, resolveImage } from '../../lib/images';
+import { HERO_WIDTH, resolveImage, shareImage } from '../../lib/images';
 
 export async function getStaticPaths() {
   const cases = await getCases();
@@ -18,7 +18,7 @@ const { entry, next } = Astro.props;
 const d = entry.data;
 const { Content } = await render(entry);
 ---
-<BaseLayout title={d.title} description={isTodo(d.task) ? undefined : d.task} bodyFont="inter">
+<BaseLayout title={d.title} description={isTodo(d.task) ? undefined : d.task} image={shareImage(entry.filePath, d.thumbnail)} ogType="article" bodyFont="inter">
   <CaseStudy
     type={d.type}
     title={d.title}

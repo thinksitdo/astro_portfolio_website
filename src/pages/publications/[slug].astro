@@ -5,7 +5,7 @@ import { render } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import CaseStudy from '../../components/CaseStudy.astro';
 import { getPublications, publicationUrl, type Publication } from '../../lib/content';
-import { HERO_WIDTH, resolveImage } from '../../lib/images';
+import { HERO_WIDTH, resolveImage, shareImage } from '../../lib/images';
 import { inlineMarkdown } from '../../lib/inline-markdown';
 
 export async function getStaticPaths() {
@@ -21,7 +21,7 @@ const { entry, next } = Astro.props;
 const d = entry.data;
 const { Content } = await render(entry);
 ---
-<BaseLayout title={d.title} description={d.summary} bodyFont="inter">
+<BaseLayout title={d.title} description={d.summary} image={shareImage(entry.filePath, d.thumbnail)} ogType="article" bodyFont="inter">
   <CaseStudy
     type="full"
     title={d.title}

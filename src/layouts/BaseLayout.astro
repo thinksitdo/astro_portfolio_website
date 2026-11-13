@@ -5,17 +5,32 @@ import Menu from '../components/Menu.astro';
 import Footer from '../components/Footer.astro';
 import BulgeGrid from '../components/BulgeGrid.astro';
 
+import { isTodo } from '../lib/content';
+import { DEFAULT_SHARE_IMAGE, SITE_NAME, isStaging, person } from '../lib/site';
+
 interface Props {
   title: string;
+  /** Search result and link preview text. "TODO" leaves it out and warns in the terminal */
   description?: string;
   /** Body text face: mono on the homepage, Inter on case study and thesis pages (open question for Scott) */
   bodyFont?: 'mono' | 'inter';
+  /** Keep this page out of search results (and out of the sitemap). Staging builds set it on every page */
+  noindex?: boolean;
+  /** Link preview image: the page's thumbnail. Falls back to DEFAULT_SHARE_IMAGE */
+  image?: { src: string; width?: number; height?: number } | null;
+  /** Open Graph type: 'article' for case studies and publications */
+  ogType?: 'website' | 'article';
 }
 
-const { title, description, bodyFont = 'mono' } = Astro.props;
-const siteName = 'Scott Robinson';
-const fullTitle = title === siteName ? title : `${title} · ${siteName}`;
+const { title, description, bodyFont = 'mono', noindex = false, image, ogType = 'website' } = Astro.props;
+const fullTitle = title === SITE_NAME ? title : `${title} · ${SITE_NAME}`;
 const canonical = new URL(Astro.url.pathname, Astro.site);
+const desc = isTodo(description) ? undefined : description!.trim();
+if (!desc) console.warn(`[meta] ${Astro.url.pathname} has no description yet.`);
+const robots = noindex || isStaging ? 'noindex, nofollow' : undefined;
+const share = image ?? (DEFAULT_SHARE_IMAGE ? { src: DEFAULT_SHARE_IMAGE } : null);
+const shareUrl = share ? new URL(share.src, Astro.site).href : undefined;
+const isHome = Astro.url.pathname === '/';
 ---
 <!doctype html>
 <html lang="en-GB">
@@ -23,9 +38,25 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{fullTitle}</title>
-    {description && <meta name="description" content={description} />}
+    {desc && <meta name="description" content={desc} />}
+    {robots && <meta name="robots" content={robots} />}
     <link rel="canonical" href={canonical} />
+    <link rel="sitemap" href="/sitemap-index.xml" />
     <meta name="color-scheme" content="light dark" />
+
+    <!-- Link previews (LinkedIn, Slack, iMessage and others) -->
+    <meta property="og:site_name" content={SITE_NAME} />
+    <meta property="og:type" content={ogType} />
+    <meta property="og:title" content={title} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:locale" content="en_GB" />
+    {desc && <meta property="og:description" content={desc} />}
+    {shareUrl && <meta property="og:image" content={shareUrl} />}
+    {shareUrl && share?.width && <meta property="og:image:width" content={String(share.width)} />}
+    {shareUrl && share?.height && <meta property="og:image:height" content={String(share.height)} />}
+    <meta name="twitter:card" content={shareUrl ? 'summary_large_image' : 'summary'} />
+
+    {isHome && <script type="application/ld+json" set:html={JSON.stringify(person)} />}
 
     <!-- Set the theme before first paint: stored choice, else the system setting -->
     <script is:inline>

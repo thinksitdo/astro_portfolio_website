@@ -63,3 +63,9 @@ function normalise(path: string) {
   }
   return '/' + out.join('/');
 }
+
+/** A page's link preview image: its thumbnail, or null when there is none (or the file is missing) */
+export function shareImage(filePath: string | undefined, value: string | undefined) {
+  const r = resolveImage(filePath, value, THUMB_WIDTH);
+  return r && 'src' in r ? r : null;
+}
