@@ -3,10 +3,12 @@
 //   full:      hero, hero image, article, next case
 //   lite:      hero, hero image, next case
 //   protected: hero, hero image, password box, article once unlocked, next case
+//              (the article is encrypted at build time, see lib/case-crypto.ts)
 // The article is passed in the default slot. The academic and artistic pages reuse this with type "full".
 import PasswordGate from './PasswordGate.astro';
 import ContactBlock from './ContactBlock.astro';
 import { isTodo } from '../lib/content';
+import { encryptArticle } from '../lib/case-crypto';
 import type { ResolvedImage } from '../lib/images';
 
 interface MetaRow { label: string; value?: string; chips?: string[]; /** Pre-escaped HTML (see lib/inline-markdown) */ html?: string }
@@ -26,6 +28,8 @@ interface Props {
 const { type, title, intro, meta, heroImage, heroAlt, next, back = { label: '← Back to home', href: '/' }, imageOptional = false } = Astro.props;
 const showImageBand = !(imageOptional && !heroImage);
 const showArticle = type !== 'lite';
+// Protected articles are rendered to HTML here and only the encrypted form goes into the page
+const payload = type === 'protected' ? encryptArticle(await Astro.slots.render('default')) : null;
 ---
 <section class="cs-hero">
   <div class="wrap">
@@ -68,18 +72,21 @@ const showArticle = type !== 'lite';
 {showArticle && (
   <section class="cs-article" id="case-article" hidden={type === 'protected'} data-protected={type === 'protected' ? '' : undefined}>
     <div class="wrap article-wrap">
-      <slot />
+      {type === 'protected' ? null : <slot />}
     </div>
   </section>
 )}
 
+{type === 'protected' && payload && <script type="application/octet-stream" id="case-payload" set:text={payload} />}
+
 {type === 'protected' && (
   <script is:inline>
-    // Runs as soon as the article is parsed, before first paint: a visitor who has unlocked before sees it straight away
-    if (/(?:^|; )sr_cases=1/.test(document.cookie)) {
-      document.getElementById('case-gate')?.setAttribute('hidden', '');
-      document.getElementById('case-article')?.removeAttribute('hidden');
-    }
+    // Before first paint: a visitor who has unlocked before skips the password box while the article decrypts.
+    // PasswordGate shows the box again if the stored key no longer works.
+    try {
+      var stored = JSON.parse(localStorage.getItem('sr_case_key') || 'null');
+      if (stored && stored.exp > Date.now()) document.getElementById('case-gate')?.setAttribute('hidden', '');
+    } catch (e) {}
   </script>
 )}
 

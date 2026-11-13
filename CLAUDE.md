@@ -87,10 +87,11 @@ Starter files are in place, generated from the current site. Fields marked `TODO
 - `lite`: hero and the first (hero) image only, then next case.
 - `protected`: as `lite`, then the password box, then the article once unlocked.
 
-### Password gate (agreed approach, deliberately simple)
-- Client-side only. The article is in the page but hidden until unlocked. This is not secure and Scott has agreed to that for now.
-- Compare the SHA-256 hash of the entered password with a hash from an environment variable at build time (`PUBLIC_CASE_PASSWORD_SHA256`), so the plain password is not in the source.
-- On success set `sr_cases=1; path=/; max-age=2592000; SameSite=Lax` and reveal. Any protected page checks the cookie on load.
+### Password gate (encrypted, no server needed)
+- The article is encrypted at build time (`src/lib/case-crypto.ts`) with a key made from `CASE_PASSWORD` in `.env`: PBKDF2-SHA256, 600,000 iterations, then AES-256-GCM. The page holds only the encrypted text, so search engines can't read the article and nobody can without the password.
+- The browser makes the same key from the typed password and decrypts (`PasswordGate.astro`). A wrong password fails to decrypt.
+- On success the key is kept in `localStorage` (`sr_case_key`) for 30 days, so other protected cases open without asking. If it stops working (password changed), the box shows again.
+- `CASE_PASSWORD` is never put into the site. Without it, protected cases are published without their article. Use a long password: anyone can try guesses against a saved copy of the page.
 - Copy for the box is in case-study.dc.html. Error message and "Ask for the password" mailto link included.
 
 ### Images in Markdown
@@ -98,6 +99,7 @@ Write a small remark/rehype plugin:
 - A paragraph containing only one image becomes a full-width `<figure>`.
 - A paragraph containing exactly two images (consecutive lines, no blank line) becomes a two-column figure row, stacking on narrow screens.
 - The Markdown image title becomes the `<figcaption>`; the alt text stays as alt text.
+- Reference-style images (`![alt][image-1]` with `[image-1]: ./images/x.jpg "Caption"` below, as Google Docs exports) are turned into ordinary images first. Astro only publishes ordinary ones.
 
 ## Components and behaviour
 
@@ -124,7 +126,12 @@ Scott may supply a shorter 5–10s phrase; re-encode the same way.
 - Real buttons and links; visible focus everywhere; text contrast at least 4.5:1.
 - `prefers-reduced-motion`: no automatic movement; scrubbing still follows the user's input.
 - The scrub video and slideshow need text alternatives (`aria-label` on the region).
-- Meta title and description per page, Open Graph image, sitemap, `robots.txt`, `noindex` on nothing public.
+- Meta title and description per page, Open Graph image, sitemap, `robots.txt`, `noindex` on nothing public. Done:
+  - `BaseLayout` takes `description` ("TODO" warns in the terminal and is left out), `image` (each case, project and publication passes its thumbnail; `DEFAULT_SHARE_IMAGE` in `src/lib/site.ts` covers other pages) and `ogType`.
+  - Person structured data (JSON-LD) on the homepage, from `src/lib/site.ts`.
+  - `src/lib/noindex.mjs` lists pages kept out of search and the sitemap (`/about/` for now).
+  - `@astrojs/sitemap` makes `sitemap-index.xml`. `src/pages/robots.txt.ts` blocks AI training crawlers and links the sitemap.
+  - `SITE_ENV=staging` marks every page noindex and makes robots.txt block everything. Use it for the Cloudways test copy.
 - Test in Safari (video seeking), on a phone, keyboard only, and with reduced motion on.
 
 ## Redirects from WordPress
