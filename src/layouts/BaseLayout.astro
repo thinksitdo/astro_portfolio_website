@@ -7,6 +7,7 @@ import BulgeGrid from '../components/BulgeGrid.astro';
 
 import { isTodo } from '../lib/content';
 import { DEFAULT_SHARE_IMAGE, SITE_NAME, isStaging, person } from '../lib/site';
+import { noindexPaths } from '../lib/noindex.mjs';
 
 interface Props {
   title: string;
@@ -14,7 +15,7 @@ interface Props {
   description?: string;
   /** Body text face: mono on the homepage, Inter on case study and thesis pages (open question for Scott) */
   bodyFont?: 'mono' | 'inter';
-  /** Keep this page out of search results (and out of the sitemap). Staging builds set it on every page */
+  /** Keep this page out of search results. Prefer adding the path to lib/noindex.mjs, which also drops it from the sitemap */
   noindex?: boolean;
   /** Link preview image: the page's thumbnail. Falls back to DEFAULT_SHARE_IMAGE */
   image?: { src: string; width?: number; height?: number } | null;
@@ -27,7 +28,7 @@ const fullTitle = title === SITE_NAME ? title : `${title} · ${SITE_NAME}`;
 const canonical = new URL(Astro.url.pathname, Astro.site);
 const desc = isTodo(description) ? undefined : description!.trim();
 if (!desc) console.warn(`[meta] ${Astro.url.pathname} has no description yet.`);
-const robots = noindex || isStaging ? 'noindex, nofollow' : undefined;
+const robots = noindex || isStaging || noindexPaths.includes(Astro.url.pathname) ? 'noindex, nofollow' : undefined;
 const share = image ?? (DEFAULT_SHARE_IMAGE ? { src: DEFAULT_SHARE_IMAGE } : null);
 const shareUrl = share ? new URL(share.src, Astro.site).href : undefined;
 const isHome = Astro.url.pathname === '/';
