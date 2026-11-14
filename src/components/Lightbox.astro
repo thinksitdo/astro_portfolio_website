@@ -44,6 +44,8 @@
   .lb-bar { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
   .lb-count { font: 600 13px var(--font-mono); letter-spacing: 0.04em; }
   .lb-close, .lb-nav { background: var(--bg); }
+  /* The rule above outranks .icon-btn:hover, so the hover fill is restated here */
+  .lb-close:hover, .lb-nav:hover { background: var(--ink); color: var(--bg); }
   .lb-nav:disabled { visibility: hidden; }
 
   /* Arrows either side of the image; on narrow screens they sit below it */
