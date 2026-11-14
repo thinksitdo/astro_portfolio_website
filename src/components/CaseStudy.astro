@@ -198,6 +198,10 @@ const payload = type === 'protected' ? encryptArticle(await Astro.slots.render('
   }
   .article-wrap :global(.cs-sec-h:empty) { display: none; }
   .article-wrap :global(.cs-n) { font: 600 13px var(--font-mono); }
+  /* Where there is room, the number hangs in the margin so the title lines up with the text below */
+  @media (min-width: 900px) {
+    .article-wrap :global(.cs-n) { flex: 0 0 32px; margin-left: -48px; text-align: right; }
+  }
   .article-wrap :global(.cs-sec-h h2) {
     margin: 0;
     font-family: var(--font-display);
