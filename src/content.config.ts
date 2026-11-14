@@ -5,6 +5,9 @@ import { z } from 'astro/zod';
 // Fields Scott has not filled in yet hold the string "TODO", so everything is a string here
 // and the pages show TODO visibly rather than failing the build.
 
+// The page's address on the old site, for redirects. Left empty ("") for a case with no old page
+const legacyUrl = z.string().url().or(z.literal(''));
+
 const cases = defineCollection({
   loader: glob({ pattern: '**/*.md', base: './src/content/cases' }),
   schema: z.object({
@@ -22,7 +25,7 @@ const cases = defineCollection({
     heroImage: z.string(),
     heroAlt: z.string().optional(),
     thumbnail: z.string(),
-    legacyUrl: z.string().url(),
+    legacyUrl,
   }),
 });
 
@@ -36,7 +39,7 @@ const academicArtistic = defineCollection({
     order: z.number(),
     summary: z.string(),
     thumbnail: z.string(),
-    legacyUrl: z.string().url(),
+    legacyUrl,
   }),
 });
 
@@ -54,7 +57,7 @@ const publications = defineCollection({
     reference: z.string().optional(),
     /** Optional: leave out (or TODO) for no thumbnail; then the list shows no popover */
     thumbnail: z.string().default(''),
-    legacyUrl: z.string().url(),
+    legacyUrl,
   }),
 });
 
