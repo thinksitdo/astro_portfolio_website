@@ -168,7 +168,8 @@ const payload = type === 'protected' ? encryptArticle(await Astro.slots.render('
     letter-spacing: 0.04em;
   }
 
-  /* Hero image: on the page background, in its 3px border, between the section rules */
+  /* Hero image on pink */
+  .cs-image { background: var(--accent); }
   .cs-image .wrap { padding-block: 48px; }
   .cs-image figure { margin: 0; }
   /* The image shows whole, at its own proportions: nothing is cropped. Only the placeholder has a fixed shape */
