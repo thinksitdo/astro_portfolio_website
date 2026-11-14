@@ -226,11 +226,17 @@ const payload = type === 'protected' ? encryptArticle(await Astro.slots.render('
     .article-wrap :global(.cs-figs--two) { grid-template-columns: minmax(0, 1fr); }
   }
   .article-wrap :global(.cs-fig) { margin: 0; }
+  /* The border sits on the lightbox button, which clips the image, so the image can zoom inside a fixed frame */
+  .article-wrap :global(.cs-zoom) { border: var(--rule) solid var(--ink); overflow: hidden; }
   .article-wrap :global(.cs-fig img) {
     width: 100%;
     height: auto;
-    border: var(--rule) solid var(--ink);
     background: var(--thumb);
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .article-wrap :global(.cs-zoom img) { transition: transform 0.4s ease; }
+    .article-wrap :global(.cs-zoom:hover img),
+    .article-wrap :global(.cs-zoom:focus-visible img) { transform: scale(1.03); }
   }
   .article-wrap :global(.cs-cap) {
     margin: 10px 0 0;
