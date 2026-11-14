@@ -1,19 +1,30 @@
 ---
 // Lightbox for images in a case study's write-up. Every figure image is wrapped in a .cs-zoom button
 // (lib/markdown-plugins.mjs); clicking one opens it larger in a modal, with its caption.
+// The previous and next arrows (and the arrow keys) step through every image in the article, in order.
 // Clicks are picked up on the document, so images in a protected article work once it is unlocked.
-// Escape, the close button or a click outside the image closes it, and focus returns to the image.
+// Escape, the close button or a click outside the image closes it, and focus returns to the image
+// that is showing.
 ---
 <dialog id="lightbox" class="lb" aria-label="Image">
   <div class="lb-bar">
+    <span class="lb-count" aria-live="polite"></span>
     <button class="icon-btn lb-close" type="button" aria-label="Close image">
       <svg width="20" height="20" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M2 2L18 18M18 2L2 18" stroke="currentColor" stroke-width="3"></path></svg>
     </button>
   </div>
-  <figure class="lb-fig">
-    <img class="lb-img" alt="" />
-    <figcaption class="lb-cap" hidden></figcaption>
-  </figure>
+  <div class="lb-stage">
+    <button class="icon-btn lb-nav lb-prev" type="button" aria-label="Previous image">
+      <svg width="22" height="20" viewBox="0 0 22 20" aria-hidden="true" focusable="false"><path d="M21 10H3M11 2L3 10L11 18" stroke="currentColor" stroke-width="3" fill="none"></path></svg>
+    </button>
+    <figure class="lb-fig">
+      <img class="lb-img" alt="" />
+      <figcaption class="lb-cap" hidden></figcaption>
+    </figure>
+    <button class="icon-btn lb-nav lb-next" type="button" aria-label="Next image">
+      <svg width="22" height="20" viewBox="0 0 22 20" aria-hidden="true" focusable="false"><path d="M1 10H19M11 2L19 10L11 18" stroke="currentColor" stroke-width="3" fill="none"></path></svg>
+    </button>
+  </div>
 </dialog>
 
 <style>
@@ -28,13 +39,25 @@
     background: transparent;
     color: var(--ink);
   }
-  .lb[open] { display: flex; flex-direction: column; align-items: center; gap: 16px; }
+  .lb[open] { display: flex; flex-direction: column; gap: 16px; }
   .lb::backdrop { background: var(--bg); }
-  .lb-bar { align-self: stretch; display: flex; justify-content: flex-end; }
-  .lb-close { background: var(--bg); }
-  .lb-fig {
+  .lb-bar { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+  .lb-count { font: 600 13px var(--font-mono); letter-spacing: 0.04em; }
+  .lb-close, .lb-nav { background: var(--bg); }
+  .lb-nav:disabled { visibility: hidden; }
+
+  /* Arrows either side of the image; on narrow screens they sit below it */
+  .lb-stage {
     flex: 1 1 auto;
     min-height: 0;
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    align-items: center;
+    gap: clamp(12px, 2vw, 24px);
+  }
+  .lb-fig {
+    min-height: 0;
+    height: 100%;
     margin: 0;
     display: flex;
     flex-direction: column;
@@ -51,6 +74,13 @@
     border: var(--rule) solid var(--ink);
     box-shadow: 10px 10px 0 var(--ink);
     background: var(--thumb);
+  }
+  @media (max-width: 720px) {
+    .lb-stage { grid-template-columns: 1fr 1fr; grid-template-rows: minmax(0, 1fr) auto; }
+    .lb-fig { grid-column: 1 / -1; grid-row: 1; }
+    .lb-prev { grid-row: 2; justify-self: start; }
+    .lb-next { grid-row: 2; justify-self: end; }
+    .lb-img { max-height: calc(100dvh - 230px); }
   }
   .lb-cap {
     margin: 0;
@@ -79,29 +109,56 @@
   const box = document.getElementById('lightbox') as HTMLDialogElement | null;
   const img = box?.querySelector<HTMLImageElement>('.lb-img');
   const cap = box?.querySelector<HTMLElement>('.lb-cap');
-  let opener: HTMLElement | null = null;
+  const count = box?.querySelector<HTMLElement>('.lb-count');
+  const prev = box?.querySelector<HTMLButtonElement>('.lb-prev');
+  const next = box?.querySelector<HTMLButtonElement>('.lb-next');
+  let items: HTMLButtonElement[] = [];
+  let index = 0;
 
-  document.addEventListener('click', (e) => {
-    const btn = (e.target as Element | null)?.closest<HTMLButtonElement>('.cs-zoom');
+  function show(i: number) {
+    const btn = items[i];
     const source = btn?.querySelector('img');
-    if (!box || !img || !cap || !btn || !source) return;
-    opener = btn;
+    if (!img || !cap || !count || !prev || !next || !source) return;
+    index = i;
     img.src = source.currentSrc || source.src;
     img.alt = source.alt;
     const caption = btn.closest('figure')?.querySelector('figcaption')?.textContent?.trim() ?? '';
     cap.textContent = caption;
     cap.hidden = !caption;
+    count.textContent = items.length > 1 ? `${i + 1} / ${items.length}` : '';
+    prev.disabled = i === 0;
+    next.disabled = i === items.length - 1;
+    // Keep focus on a visible control when an arrow hides at either end
+    if (document.activeElement instanceof HTMLButtonElement && document.activeElement.disabled) {
+      (i === 0 ? next : prev).focus();
+    }
+  }
+
+  document.addEventListener('click', (e) => {
+    const btn = (e.target as Element | null)?.closest<HTMLButtonElement>('.cs-zoom');
+    if (!box || !btn) return;
+    // Read the list on every open, so images in an article unlocked after page load are included
+    items = [...document.querySelectorAll<HTMLButtonElement>('.cs-zoom')];
+    show(items.indexOf(btn));
     box.showModal();
     box.querySelector<HTMLButtonElement>('.lb-close')?.focus();
   });
 
-  box?.querySelector('.lb-close')?.addEventListener('click', () => box.close());
-  // A click anywhere but the image or caption closes it
-  box?.addEventListener('click', (e) => {
-    if (!(e.target as Element).closest('.lb-img, .lb-cap, .lb-close')) box.close();
+  prev?.addEventListener('click', () => index > 0 && show(index - 1));
+  next?.addEventListener('click', () => index < items.length - 1 && show(index + 1));
+  box?.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowLeft' && index > 0) { e.preventDefault(); show(index - 1); }
+    if (e.key === 'ArrowRight' && index < items.length - 1) { e.preventDefault(); show(index + 1); }
   });
+
+  box?.querySelector('.lb-close')?.addEventListener('click', () => box.close());
+  // A click anywhere but the image, caption or a button closes it
+  box?.addEventListener('click', (e) => {
+    if (!(e.target as Element).closest('.lb-img, .lb-cap, button')) box.close();
+  });
+  // Focus goes back to the image that was showing, so the reader keeps their place in the article
   box?.addEventListener('close', () => {
-    opener?.focus();
-    opener = null;
+    items[index]?.focus({ preventScroll: false });
+    items = [];
   });
 </script>
