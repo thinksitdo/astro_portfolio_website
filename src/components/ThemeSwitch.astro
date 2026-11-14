@@ -13,15 +13,25 @@
 </button>
 
 <style>
+  /* The border is drawn on top of the halves (::after), not around them, so the filled half always
+     reaches the border. With a normal border, rounding at some widths and zoom levels left a 1px gap */
   .b-switch {
+    position: relative;
     display: inline-flex;
     align-items: stretch;
     height: 44px;
     padding: 0;
-    border: var(--rule-thin) solid var(--ink);
+    border: 0;
     border-radius: 0;
     background: transparent;
     color: var(--ink);
+  }
+  .b-switch::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border: var(--rule-thin) solid var(--ink);
+    pointer-events: none;
   }
   .b-switch:active { transform: translate(1px, 1px); }
 
@@ -29,8 +39,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 44px;
-    height: 40px;
+    width: 46px;
     transition: background-color .12s ease, color .12s ease;
   }
   .sw-divider { width: 2px; background: var(--ink); }
