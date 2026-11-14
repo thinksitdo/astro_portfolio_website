@@ -65,6 +65,13 @@ body.body-inter {
   line-height: 1.6;
 }
 
+/* Selected text: pink with near-black text in both themes (6.1:1 contrast). On pink blocks the
+   highlight swaps to ink, so selected text never disappears into the background */
+::selection { background: var(--accent); color: var(--on-accent); }
+.pk ::selection, .pk::selection,
+.b-pri::selection, .b-pri ::selection,
+.b-tileP::selection, .b-tileP ::selection { background: var(--ink); color: var(--bg); }
+
 main { flex: 1 0 auto; }
 
 img, svg, video { display: block; max-width: 100%; }
