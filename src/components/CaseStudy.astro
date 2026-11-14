@@ -244,6 +244,7 @@ const payload = type === 'protected' ? encryptArticle(await Astro.slots.render('
     letter-spacing: 0.02em;
     color: var(--muted);
   }
+  .article-wrap :global(.cs-cap-n) { font-weight: 600; color: var(--ink); }
 
   /* Next case */
   .next-row { display: block; padding: 0; text-decoration: none; color: var(--ink); }

@@ -3,7 +3,8 @@
 // 1. figures: a paragraph holding only one image becomes a full-width <figure>; a paragraph holding
 //    exactly two images (consecutive lines, no blank line) becomes a two-column row of figures.
 //    The image title becomes the <figcaption>; the alt text stays as alt text. Each image is a button
-//    that opens the lightbox.
+//    that opens the lightbox. Figures are numbered automatically, in order, on each page: the caption
+//    shows "Figure 3 · <title>", and any "Figure 3:" typed at the start of the title is replaced.
 // 2. sections: the article is split at each h2 into numbered sections (number and heading on the left,
 //    text on the right), as in the case study design. Figures sit between sections at full width.
 
@@ -24,13 +25,17 @@ function imagesOnly(node) {
   return content.length >= 1 && content.length <= 2 && content.every(isImg) ? content : null;
 }
 
+// A number typed by hand at the start of a caption ("Figure 3:", "Fig. 3 -", "Figure 3 ·"), replaced by the automatic one
+const typedNumber = /^\s*fig(?:ure|\.)?\s*\d+\s*[:·.\-–—]?\s*/i;
+
 // Each image sits in a button that opens it larger in the lightbox (components/Lightbox.astro)
-function figure(img) {
+function figure(img, n) {
   const { title, ...props } = img.properties ?? {};
   const zoom = el('button', 'cs-zoom', [el('span', 'visually-hidden', [text('View larger image: ')]), { ...img, properties: props }], { type: 'button' });
-  const children = [zoom];
-  if (typeof title === 'string' && title.trim()) children.push(el('figcaption', 'cs-cap', [text(title)]));
-  return el('figure', 'cs-fig', children);
+  const caption = typeof title === 'string' ? title.replace(typedNumber, '').trim() : '';
+  const label = el('span', 'cs-cap-n', [text(`Figure ${n}`)]);
+  const figcaption = el('figcaption', 'cs-cap', caption ? [label, text(` · ${caption}`)] : [label]);
+  return el('figure', 'cs-fig', [zoom, figcaption]);
 }
 
 // Runs in `before`, ahead of the tree walk, so Astro's image step (which runs during the walk) still
@@ -38,12 +43,12 @@ function figure(img) {
 export const figuresPlugin = {
   name: 'case-figures',
   before(root, ctx) {
+    let n = 0; // runs once per Markdown file, so numbering starts at 1 on every page
     const children = root.children.map((node) => {
       const content = imagesOnly(node);
       if (!content) return node;
-      return content.length === 1
-        ? el('div', 'cs-figs cs-figs--one', [figure(content[0])])
-        : el('div', 'cs-figs cs-figs--two', content.map(figure));
+      const figures = content.map((img) => figure(img, ++n));
+      return el('div', content.length === 1 ? 'cs-figs cs-figs--one' : 'cs-figs cs-figs--two', figures);
     });
     ctx.setField(root, 'children', children);
   },
