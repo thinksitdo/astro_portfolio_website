@@ -104,6 +104,9 @@ const isTodo = (v: string) => !v || v.trim().toUpperCase() === 'TODO';
     text-decoration: none;
     color: var(--ink);
   }
+  /* Pressed (and tapped on touch screens): the global rule fills the row ink; the colour above
+     outranks its text colour, so it is set again here, or the text vanishes into the fill */
+  .w-row:active { color: var(--bg); }
   .num {
     font-family: var(--font-mono);
     font-size: 14px;
