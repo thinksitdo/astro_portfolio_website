@@ -5,6 +5,8 @@
 //    The image title becomes the <figcaption>; the alt text stays as alt text. Each image is a button
 //    that opens the lightbox. Figures are numbered automatically, in order, on each page: the caption
 //    shows "Figure 3 · <title>", and any "Figure 3:" typed at the start of the title is replaced.
+//    A video is its poster image wrapped in a link to the file, [![alt](poster.jpg "Caption")](/media/clip.mp4):
+//    the poster shows with a play icon, and the lightbox plays the video.
 // 2. sections: the article is split at each h2 into numbered sections (number and heading on the left,
 //    text on the right), as in the case study design. Figures sit between sections at full width.
 
@@ -18,20 +20,41 @@ const el = (tagName, className, children = [], properties = {}) => ({
 });
 const text = (value) => ({ type: 'text', value });
 
-/** The images in a paragraph that holds one or two images and nothing else, or null */
+const VIDEO = /\.(mp4|webm|mov|m4v)(\?.*)?$/i;
+const kids = (node) => (node.children ?? []).filter((c) => !isWhitespace(c));
+/** A video: a link to a video file holding just its poster image, [![alt](poster.jpg "Caption")](/media/clip.mp4) */
+const isVideoLink = (node) =>
+  node.type === 'element' && node.tagName === 'a' && VIDEO.test(String(node.properties?.href ?? '')) &&
+  kids(node).length === 1 && isImg(kids(node)[0]);
+
+/** The images and videos in a paragraph that holds one or two of them and nothing else, or null */
 function imagesOnly(node) {
   if (node.type !== 'element' || node.tagName !== 'p') return null;
   const content = (node.children ?? []).filter((c) => !isWhitespace(c) && !(c.type === 'element' && c.tagName === 'br'));
-  return content.length >= 1 && content.length <= 2 && content.every(isImg) ? content : null;
+  return content.length >= 1 && content.length <= 2 && content.every((c) => isImg(c) || isVideoLink(c)) ? content : null;
 }
 
 // A number typed by hand at the start of a caption ("Figure 3:", "Fig. 3 -", "Figure 3 ·"), replaced by the automatic one
 const typedNumber = /^\s*fig(?:ure|\.)?\s*\d+\s*[:·.\-–—]?\s*/i;
 
-// Each image sits in a button that opens it larger in the lightbox (components/Lightbox.astro)
-function figure(img, n) {
+// A square play button drawn over a video's poster image
+const playIcon = () =>
+  el('span', 'cs-play', [{
+    type: 'element', tagName: 'svg',
+    properties: { width: 24, height: 24, viewBox: '0 0 24 24', ariaHidden: 'true', focusable: 'false' },
+    children: [{ type: 'element', tagName: 'path', properties: { d: 'M6 3L21 12L6 21Z', fill: 'currentColor' }, children: [] }],
+  }], { ariaHidden: 'true' });
+
+// Each image sits in a button that opens it larger in the lightbox (components/Lightbox.astro).
+// For a video the button holds the poster image and a play icon, and the lightbox plays the video.
+function figure(item, n) {
+  const video = isVideoLink(item) ? String(item.properties.href) : null;
+  const img = video ? kids(item)[0] : item;
   const { title, ...props } = img.properties ?? {};
-  const zoom = el('button', 'cs-zoom', [el('span', 'visually-hidden', [text('View larger image: ')]), { ...img, properties: props }], { type: 'button' });
+  const poster = { ...img, properties: props };
+  const zoom = video
+    ? el('button', 'cs-zoom cs-zoom--video', [el('span', 'visually-hidden', [text('Play video: ')]), poster, playIcon()], { type: 'button', dataVideo: video })
+    : el('button', 'cs-zoom', [el('span', 'visually-hidden', [text('View larger image: ')]), poster], { type: 'button' });
   const caption = typeof title === 'string' ? title.replace(typedNumber, '').trim() : '';
   const label = el('span', 'cs-cap-n', [text(`Figure ${n}`)]);
   const figcaption = el('figcaption', 'cs-cap', caption ? [label, text(` · ${caption}`)] : [label]);
@@ -47,7 +70,7 @@ export const figuresPlugin = {
     const children = root.children.map((node) => {
       const content = imagesOnly(node);
       if (!content) return node;
-      const figures = content.map((img) => figure(img, ++n));
+      const figures = content.map((item) => figure(item, ++n));
       return el('div', content.length === 1 ? 'cs-figs cs-figs--one' : 'cs-figs cs-figs--two', figures);
     });
     ctx.setField(root, 'children', children);

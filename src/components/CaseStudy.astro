@@ -227,7 +227,24 @@ const payload = type === 'protected' ? encryptArticle(await Astro.slots.render('
   }
   .article-wrap :global(.cs-fig) { margin: 0; }
   /* The border sits on the lightbox button, which clips the image, so the image can zoom inside a fixed frame */
-  .article-wrap :global(.cs-zoom) { border: var(--rule) solid var(--ink); overflow: hidden; }
+  .article-wrap :global(.cs-zoom) { position: relative; border: var(--rule) solid var(--ink); overflow: hidden; }
+  /* Video figures: a boxed play button in the middle of the poster, filled ink on hover */
+  .article-wrap :global(.cs-play) {
+    position: absolute;
+    inset: 50% auto auto 50%;
+    translate: -50% -50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 72px;
+    height: 72px;
+    border: var(--rule) solid var(--ink);
+    background: var(--bg);
+    color: var(--ink);
+  }
+  .article-wrap :global(.cs-play svg) { margin-left: 4px; }
+  .article-wrap :global(.cs-zoom--video:hover .cs-play),
+  .article-wrap :global(.cs-zoom--video:focus-visible .cs-play) { background: var(--ink); color: var(--bg); }
   .article-wrap :global(.cs-fig img) {
     width: 100%;
     height: auto;

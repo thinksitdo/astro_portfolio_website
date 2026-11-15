@@ -100,6 +100,7 @@ Write a small remark/rehype plugin:
 - A paragraph containing exactly two images (consecutive lines, no blank line) becomes a two-column figure row, stacking on narrow screens.
 - The Markdown image title becomes the `<figcaption>`; the alt text stays as alt text.
 - Figures are numbered automatically, in order, on each page ("Figure 3 · caption"). A "Figure 3:" typed at the start of a title is replaced, so captions never need renumbering.
+- Video: wrap the poster image in a link to the file, `[![alt](/media/poster.jpg "Caption")](/media/clip.mp4)`. It shows the poster with a play button, numbered and captioned like any figure, and plays in the lightbox. Video files go in `public/media/` (Astro only publishes images from `src/content`).
 - Each figure image is a button that opens it in a lightbox (`Lightbox.astro`), with its caption. It uses the arrow link cursor. Escape, the close button or a click outside closes it.
 - Reference-style images (`![alt][image-1]` with `[image-1]: ./images/x.jpg "Caption"` below, as Google Docs exports) are turned into ordinary images first. Astro only publishes ordinary ones.
 

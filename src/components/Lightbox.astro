@@ -1,5 +1,6 @@
 ---
-// Lightbox for images in a case study's write-up. Every figure image is wrapped in a .cs-zoom button
+// Lightbox for images and videos in a case study's write-up. A video figure (data-video on its button)
+// plays here with the browser's controls, and stops when the lightbox closes or moves on. Every figure image is wrapped in a .cs-zoom button
 // (lib/markdown-plugins.mjs); clicking one opens it larger in a modal, with its caption.
 // The previous and next arrows (and the arrow keys) step through every image in the article, in order.
 // Clicks are picked up on the document, so images in a protected article work once it is unlocked.
@@ -19,6 +20,7 @@
     </button>
     <figure class="lb-fig">
       <img class="lb-img" alt="" />
+      <video class="lb-img lb-video" controls playsinline preload="none" hidden></video>
       <figcaption class="lb-cap" hidden></figcaption>
     </figure>
     <button class="icon-btn lb-nav lb-next" type="button" aria-label="Next image">
@@ -92,7 +94,7 @@
     font: 400 12px var(--font-mono);
     letter-spacing: 0.02em;
   }
-  .lb-cap[hidden] { display: none; }
+  .lb-cap[hidden], .lb-img[hidden] { display: none; }
   :global(html:has(#lightbox[open])) { overflow: hidden; }
 
   /* The figure image buttons in the write-up: no button look, the arrow cursor and a pink focus ring */
@@ -109,7 +111,8 @@
 
 <script>
   const box = document.getElementById('lightbox') as HTMLDialogElement | null;
-  const img = box?.querySelector<HTMLImageElement>('.lb-img');
+  const img = box?.querySelector<HTMLImageElement>('img.lb-img');
+  const video = box?.querySelector<HTMLVideoElement>('.lb-video');
   const cap = box?.querySelector<HTMLElement>('.lb-cap');
   const count = box?.querySelector<HTMLElement>('.lb-count');
   const prev = box?.querySelector<HTMLButtonElement>('.lb-prev');
@@ -117,13 +120,32 @@
   let items: HTMLButtonElement[] = [];
   let index = 0;
 
+  function stopVideo() {
+    if (!video || video.hidden) return;
+    video.pause();
+    video.removeAttribute('src');
+    video.load();
+    video.hidden = true;
+  }
+
   function show(i: number) {
     const btn = items[i];
     const source = btn?.querySelector('img');
-    if (!img || !cap || !count || !prev || !next || !source) return;
+    if (!img || !video || !cap || !count || !prev || !next || !source) return;
     index = i;
-    img.src = source.currentSrc || source.src;
-    img.alt = source.alt;
+    stopVideo();
+    const clip = btn.dataset.video;
+    img.hidden = !!clip;
+    if (clip) {
+      video.poster = source.currentSrc || source.src;
+      video.src = clip;
+      video.setAttribute('aria-label', source.alt);
+      video.hidden = false;
+      video.play().catch(() => { /* autoplay refused: the controls are there */ });
+    } else {
+      img.src = source.currentSrc || source.src;
+      img.alt = source.alt;
+    }
     const caption = btn.closest('figure')?.querySelector('figcaption')?.textContent?.trim() ?? '';
     cap.textContent = caption;
     cap.hidden = !caption;
@@ -149,6 +171,8 @@
   prev?.addEventListener('click', () => index > 0 && show(index - 1));
   next?.addEventListener('click', () => index < items.length - 1 && show(index + 1));
   box?.addEventListener('keydown', (e) => {
+    // Inside the video the arrow keys seek, as usual
+    if ((e.target as Element).closest('video')) return;
     if (e.key === 'ArrowLeft' && index > 0) { e.preventDefault(); show(index - 1); }
     if (e.key === 'ArrowRight' && index < items.length - 1) { e.preventDefault(); show(index + 1); }
   });
@@ -156,10 +180,11 @@
   box?.querySelector('.lb-close')?.addEventListener('click', () => box.close());
   // A click anywhere but the image, caption or a button closes it
   box?.addEventListener('click', (e) => {
-    if (!(e.target as Element).closest('.lb-img, .lb-cap, button')) box.close();
+    if (!(e.target as Element).closest('.lb-img, .lb-video, .lb-cap, button')) box.close();
   });
   // Focus goes back to the image that was showing, so the reader keeps their place in the article
   box?.addEventListener('close', () => {
+    stopVideo();
     items[index]?.focus({ preventScroll: false });
     items = [];
   });
