@@ -69,7 +69,8 @@ const isTodo = (v: string) => !v || v.trim().toUpperCase() === 'TODO';
 </div>
 
 <style>
-  .filters { display: flex; flex-wrap: wrap; gap: 8px; padding: 20px 0; }
+  /* Twice the space below the chips as above, before the column headings */
+  .filters { display: flex; flex-wrap: wrap; gap: 8px; padding: 20px 0 40px; }
 
   .cols {
     display: flex;
