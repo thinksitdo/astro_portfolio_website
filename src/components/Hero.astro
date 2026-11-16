@@ -36,7 +36,7 @@ const pad = (n: number) => String(n).padStart(2, '0');
 
   <a class="hx-tile hx-cta b-tileP" href="#contact"><span class="a">→</span><span class="t">Get in touch</span></a>
 
-  <div class="hx-slides scrub" role="img" aria-label="Slideshow of case study images, advances as you scroll or move across it">
+  <div class="hx-slides" role="group" aria-roledescription="slideshow" aria-label="Case study images">
     <div class="sl-wrap">
       {slides.map((s, i) => (
         <div class="sl" data-i={i} data-title={s.title} style={`opacity: ${i === 0 ? 1 : 0}`}>
@@ -46,7 +46,15 @@ const pad = (n: number) => String(n).padStart(2, '0');
         </div>
       ))}
     </div>
-    <span class="hx-scap"><strong data-scap>01</strong> / {pad(slides.length)} · <span data-sname>{slides[0]?.title}</span></span>
+    <div class="hx-sbar">
+      <span class="hx-scap" aria-live="polite"><strong data-scap>01</strong> / {pad(slides.length)} · <span data-sname>{slides[0]?.title}</span></span>
+      <button class="icon-btn sl-nav" type="button" data-step="-1" aria-label="Previous case image">
+        <svg width="20" height="18" viewBox="0 0 22 20" aria-hidden="true" focusable="false"><path d="M21 10H3M11 2L3 10L11 18" stroke="currentColor" stroke-width="3" fill="none"></path></svg>
+      </button>
+      <button class="icon-btn sl-nav" type="button" data-step="1" aria-label="Next case image">
+        <svg width="20" height="18" viewBox="0 0 22 20" aria-hidden="true" focusable="false"><path d="M1 10H19M11 2L19 10L11 18" stroke="currentColor" stroke-width="3" fill="none"></path></svg>
+      </button>
+    </div>
   </div>
 
   <a class="hx-tile hx-work b-tileS" href="#work"><span class="a">↓</span><span class="t">See my work</span></a>
@@ -56,7 +64,9 @@ const pad = (n: number) => String(n).padStart(2, '0');
   .hx-hero {
     display: grid;
     grid-template-columns: 28fr 32fr 40fr;
-    grid-template-rows: minmax(clamp(460px, 64vh, 780px), auto) clamp(150px, 15vw, 240px);
+    /* On desktop the hero fills the rest of the first screen below the sticky header */
+    grid-template-rows: 1fr clamp(150px, 15vw, 240px);
+    min-height: calc(100svh - var(--header-h, 72px));
     gap: var(--rule);
     background: var(--ink);
     border-bottom: var(--rule) solid var(--ink);
@@ -172,17 +182,39 @@ const pad = (n: number) => String(n).padStart(2, '0');
     filter: grayscale(1) contrast(1.05);
   }
   .sl .thumb-placeholder { width: 100%; height: 100%; padding: 16px; }
-  .hx-scap {
+  /* Caption with the previous and next arrows, boxed and joined like the lightbox controls */
+  .hx-sbar {
     position: absolute;
     left: 12px;
     right: 12px;
     bottom: 12px;
-    padding: 6px 10px;
-    line-height: 1.4;
+    display: flex;
+    align-items: stretch;
     border: var(--rule) solid var(--ink);
     background: var(--bg);
-    font: 500 clamp(11px, .85vw, 12px) var(--font-mono);
   }
+  .hx-scap {
+    flex: 1 1 auto;
+    min-width: 0;
+    align-self: center;
+    padding: 6px 10px;
+    line-height: 1.4;
+    font: 500 clamp(11px, .85vw, 12px) var(--font-mono);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .sl-nav {
+    flex: 0 0 auto;
+    width: 44px;
+    height: 44px;
+    border: 0;
+    border-left: var(--rule) solid var(--ink);
+    background: var(--bg);
+  }
+  /* The rule above outranks .icon-btn:hover, so the hover fill is restated here */
+  .sl-nav:hover { background: var(--ink); color: var(--bg); }
+  .sl-nav:focus-visible { outline: 3px solid var(--accent); outline-offset: -3px; }
 
   .scrub { cursor: var(--cursor-scrub); }
 
@@ -200,7 +232,7 @@ const pad = (n: number) => String(n).padStart(2, '0');
 
 <script>
   // The video never plays by itself. Page scroll and horizontal pointer position each map to the
-  // whole clip. Seeks queue: while one is in progress only the latest target is kept.
+  // whole clip. The case slideshow beside it has arrows instead. Seeks queue: while one is in progress only the latest target is kept.
   const cell = document.querySelector<HTMLElement>('.hx-video');
   const video = cell?.querySelector('video');
   const vcap = cell?.querySelector<HTMLElement>('[data-vcap]');
@@ -211,7 +243,6 @@ const pad = (n: number) => String(n).padStart(2, '0');
   const sname = slidesCell?.querySelector<HTMLElement>('[data-sname]');
 
   const FALLBACK_DURATION = 61.6;
-  const SLIDE_CYCLES = 3; // scrolling the whole page runs through the slides three times
   let target: number | null = null;
   let currentSlide = 0;
 
@@ -274,7 +305,10 @@ const pad = (n: number) => String(n).padStart(2, '0');
   };
 
   cell?.addEventListener('pointermove', (e) => seek(fraction(e, cell) * duration()));
-  slidesCell?.addEventListener('pointermove', (e) => showSlide(Math.floor(fraction(e, slidesCell) * slides.length)));
+  // The slideshow moves only with its arrows, and wraps round at either end
+  slidesCell?.querySelectorAll<HTMLButtonElement>('[data-step]').forEach((btn) => {
+    btn.addEventListener('click', () => showSlide(currentSlide + Number(btn.dataset.step)));
+  });
 
   let queued = false;
   window.addEventListener('scroll', () => {
@@ -285,7 +319,6 @@ const pad = (n: number) => String(n).padStart(2, '0');
       const max = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
       const p = Math.min(1, window.scrollY / max);
       seek(p * duration());
-      showSlide(Math.floor(p * slides.length * SLIDE_CYCLES));
     });
   }, { passive: true });
 </script>
