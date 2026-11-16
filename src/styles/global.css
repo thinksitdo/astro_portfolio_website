@@ -38,8 +38,9 @@
 *, *::before, *::after { box-sizing: border-box; }
 
 html {
-  /* Anchor links and focused elements stop below the sticky header (Header.astro sets --header-h) */
-  scroll-padding-top: var(--header-h, 0px);
+  /* Anchor links and focused elements stop below the compact header (Header.astro), 72px plus its rule */
+  --header-h: 75px;
+  scroll-padding-top: var(--header-h);
   background: var(--bg);
   color: var(--ink);
   -webkit-text-size-adjust: 100%;
