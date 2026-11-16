@@ -100,7 +100,7 @@ Write a small remark/rehype plugin:
 - A paragraph containing exactly two images (consecutive lines, no blank line) becomes a two-column figure row, stacking on narrow screens.
 - The Markdown image title becomes the `<figcaption>`; the alt text stays as alt text.
 - Figures are numbered automatically, in order, on each page ("Figure 3 · caption"). A "Figure 3:" typed at the start of a title is replaced, so captions never need renumbering.
-- Video: wrap the poster image in a link to the file, `[![alt](/media/poster.jpg "Caption")](/media/clip.mp4)`. It shows the poster with a play button, numbered and captioned like any figure, and plays in the lightbox. Video files go in `public/media/` (Astro only publishes images from `src/content`).
+- Video: wrap the poster image in a link to the file, `[![alt](/media/poster.jpg "Caption")](/media/clip.mp4)`. It shows the poster with a play button, numbered and captioned like any figure, and plays in the lightbox. Video files go in `public/media/` (Astro only publishes images from `src/content`). A YouTube address works the same way, `[![alt](/media/poster.jpg "Caption")](https://www.youtube.com/watch?v=ID)`, and plays in the lightbox through youtube-nocookie.com.
 - Each figure image is a button that opens it in a lightbox (`Lightbox.astro`), with its caption. It uses the arrow link cursor. Escape, the close button or a click outside closes it.
 - Reference-style images (`![alt][image-1]` with `[image-1]: ./images/x.jpg "Caption"` below, as Google Docs exports) are turned into ordinary images first. Astro only publishes ordinary ones.
 
@@ -109,11 +109,12 @@ Write a small remark/rehype plugin:
 - **Header**: logo (inverts in dark mode), light/dark switch, "Let's talk" button, menu button.
 - **Light/dark switch**: `<button role="switch" aria-checked>` labelled "Dark mode", sun and moon halves; the active half is filled ink; hover fills the inactive half pink. Respect `prefers-color-scheme` on first visit, remember the choice in `localStorage`, and set the theme in an inline `<head>` script so there is no flash.
 - **Menu**: full-screen dialog, exactly one viewport tall (`100dvh`), never scrolls. Seven items: Home, Cases, Academic & Artistic, PhD in Design, Publications, Thesis, About. Label size `clamp(20px, min(6.2vw, calc((100dvh - 200px) / 7 * 0.62)), 112px)`. Trap focus, Escape closes, return focus to the menu button.
-- **Hero**: grid 28fr / 32fr / 40fr. Headline sized with `cqi` inside its own container so it never overflows. Name box with three lines (see homepage). Bottom row: pink Get in touch tile, slideshow, See my work tile. Below 820px the layout stacks.
+- **Header**: sticky. It publishes its height as `--header-h`, used for `scroll-padding-top` and the hero height.
+- **Hero**: grid 28fr / 32fr / 40fr. On desktop it fills the rest of the first screen (`100svh` less the header). Headline sized with `cqi` inside its own container so it never overflows. Name box with three lines (see homepage). Bottom row: pink Get in touch tile, slideshow, See my work tile. Below 820px the layout stacks.
 - **Scrub video**: `public/media/stepping-scrub.mp4` (every frame a keyframe, see below). Never plays by itself. Page scroll maps to the whole clip; horizontal pointer position over the video maps to the whole clip. Seek with `currentTime`, queueing the latest target while a seek is in progress. Caption shows the time.
-- **Slideshow**: the first five case studies' thumbnails, advanced by scroll and by pointer position. Caption shows number and title.
-- **Cursors**: the two-box scrub cursor over the video and slideshow; the single box with a top-right arrow on links and buttons (SVGs are in homepage-styles.css as data URIs; move them to `public/cursors/*.svg`).
-- **Case lists**: numbered rows; hover or focus fills the row pink and shows a 440 × 275 thumbnail that follows the cursor and flips left near the right edge. Hidden on touch and below 900px.
+- **Slideshow**: the first five case studies' thumbnails, moved only by its previous and next arrows (wrapping round). Caption shows number and title.
+- **Cursors**: the two-box scrub cursor over the video; the single box with a top-right arrow on links and buttons (SVGs are in homepage-styles.css as data URIs; move them to `public/cursors/*.svg`).
+- **Case lists**: rows without numbers (the Academic & Artistic and Publications lists keep them); hover or focus fills the row pink and shows a 440 × 275 thumbnail that follows the cursor and flips left near the right edge. Hidden on touch and below 900px.
 - **States**: copy exactly from homepage-styles.css. Two known gaps to fix: rows have no pressed state, and the password input has no designed focus state (use the standard focus outline).
 
 ### Video encoding
