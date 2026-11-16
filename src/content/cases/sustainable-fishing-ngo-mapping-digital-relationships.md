@@ -13,6 +13,7 @@ task: "Discovery and experience mapping for an international sustainable fishing
 intro: "An international non-profit setting standards for sustainable fishing wanted to know how its digital services could better support its relationships with fisheries, supply-chain partners, researchers, journalists and NGOs. Building on research from a global website redesign, I co-designed and facilitated three participatory workshops with senior staff and turned the material into seven experience maps, one per stakeholder group. When the agency ceased trading partway through, two colleagues and I adapted the brief and saw the project through. The organisation used the maps as foundation knowledge for a CRM project."
 heroImage: "/media/ngo-hero.jpg"
 heroAlt: "Experience map for Suzanne, an ocean programme manager, showing phases, activities, thoughts and ideation"
+heroPortrait: ""
 thumbnail: "/media/ngo-thumbnail.jpg"
 ---
 

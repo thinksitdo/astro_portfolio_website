@@ -12,6 +12,7 @@ order: 7
 task: "TODO"
 intro: "Through acquisitions, Ebiquity’s Strategic Media Consultancy had ended up with several methodologies for scoring digital media efficiency, much of it running on Excel macros.…"   # TODO excerpt from current site, replace with full intro
 heroImage: "TODO"
+heroPortrait: ""
 thumbnail: "TODO"
 ---
 

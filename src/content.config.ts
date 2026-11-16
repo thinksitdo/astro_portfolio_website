@@ -24,6 +24,8 @@ const cases = defineCollection({
     intro: z.string(),
     heroImage: z.string(),
     heroAlt: z.string().optional(),
+    /** Optional portrait image (1200 × 1680) for the homepage slideshow. Empty: the case is left out of it */
+    heroPortrait: z.string().default(''),
     thumbnail: z.string(),
     legacyUrl,
   }),

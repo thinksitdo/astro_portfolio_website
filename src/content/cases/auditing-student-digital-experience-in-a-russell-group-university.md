@@ -13,6 +13,7 @@ task: "Understanding how different groups of students experienced digital servic
 intro: "A Russell Group university wanted to understand how different groups of students, from prospective students to those already studying, experienced its digital services and administrative processes. I designed and led whiteboarding workshops with students and administrative staff, alongside a programme of remote usability testing. The research produced experience maps for four student groups and a short film I edited from the sessions, which we presented to senior stakeholders."
 heroImage: "/media/uol-hero.jpg"
 heroAlt: ""
+heroPortrait: ""
 thumbnail: "/media/uol-thumbnail.jpg"
 ---
 

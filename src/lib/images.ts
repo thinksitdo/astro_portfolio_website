@@ -54,6 +54,7 @@ export function resolveImageSrc(filePath: string | undefined, value: string | un
 /** Recommended widths, matching the layout at double resolution */
 export const THUMB_WIDTH = 1200;
 export const HERO_WIDTH = 2480;
+export const PORTRAIT_WIDTH = 1200;
 
 function normalise(path: string) {
   const out: string[] = [];

@@ -12,6 +12,7 @@ order: 8
 task: "TODO"
 intro: "CAT checks whether Microsoft’s advertising partners follow its brand guidelines. The original tool was over ten years old, and the update coincided with contract…"   # TODO excerpt from current site, replace with full intro
 heroImage: "TODO"
+heroPortrait: ""
 thumbnail: "TODO"
 ---
 

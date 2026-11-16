@@ -12,6 +12,7 @@ order: 6
 task: "TODO"
 intro: "MusiciansFirst was a start-up providing digital services to the music industry, beginning with a searchable directory that connected professional musicians with industry fixers, programmers…"   # TODO excerpt from current site, replace with full intro
 heroImage: "TODO"
+heroPortrait: ""
 thumbnail: "TODO"
 ---
 

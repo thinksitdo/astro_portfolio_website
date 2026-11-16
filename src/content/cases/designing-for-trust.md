@@ -13,6 +13,7 @@ task: "Redesign citations so analysts can trust an AI answer and defend it to so
 intro: "Contours answers asset managers' questions from licensed research. The brief was to update citations, which hadn't changed since the MVP. Testing them, I found a bigger trust problem. When the assistant blended several documents into one paragraph, analysts who might disagree read as consensus. I redesigned the citations and wrote prompt rules to keep each analyst's view visible."
 heroImage: ""
 heroAlt: ""
+heroPortrait: ""
 thumbnail: ""
 ---
 
