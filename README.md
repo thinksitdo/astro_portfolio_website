@@ -64,7 +64,7 @@ The article is shaped by the Markdown plugins in `src/lib/markdown-plugins.mjs`.
 [![Conference talk](/media/talk-poster.jpg "The talk at the conference")](https://www.youtube.com/watch?v=VIDEO_ID)
 ```
 
-Recommended image widths are 2480px for heroes and full-width figures and 1200px for thumbnails. Images are not resized or recompressed, so export them at their final size.
+Recommended image widths are 2480px for heroes and full-width figures and 1200px for thumbnails. Images are not resized or recompressed, so export them at their final size. A case can also have `heroPortrait`, a portrait image (1200 × 1680) that adds it to the homepage hero slideshow; leave it empty to keep the case out.
 
 ## Search and sharing
 

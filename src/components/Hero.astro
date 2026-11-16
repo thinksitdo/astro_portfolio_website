@@ -1,22 +1,32 @@
 ---
 import { caseUrl, getCases } from '../lib/content';
-import { resolveImageSrc, THUMB_WIDTH } from '../lib/images';
+import { resolveImageSrc, PORTRAIT_WIDTH, THUMB_WIDTH } from '../lib/images';
 
 interface Props {
   /** grid: headline and video over a row of Get in touch, the case slideshow and See my work.
-      split: headline on the left with the name box and both tiles joined beneath it, the video
-      the full height on the right, and no slideshow. */
+      split: headline on the left with the name box and both tiles joined beneath it, and the video
+      the full height on the right, as the first slide of a slideshow of case portrait images. */
   layout?: 'grid' | 'split';
 }
 const { layout = 'grid' } = Astro.props;
 const split = layout === 'split';
+const cases = await getCases();
 
-// The slideshow shows the first five case studies' thumbnails
-const slides = (await getCases()).slice(0, 5).map((c) => ({
+// Grid: the slideshow shows the first five case studies' thumbnails
+const slides = cases.slice(0, 5).map((c) => ({
   title: c.data.title,
   href: caseUrl(c),
   thumbnail: resolveImageSrc(c.filePath, c.data.thumbnail, THUMB_WIDTH),
 }));
+// Split: the video, then every case that has a portrait image (heroPortrait), in case order.
+// A case without one is left out, so with none the video shows alone and there are no arrows
+const portraits = split
+  ? cases.flatMap((c) => {
+      const src = resolveImageSrc(c.filePath, c.data.heroPortrait, PORTRAIT_WIDTH);
+      return src ? [{ title: c.data.title, href: caseUrl(c), src }] : [];
+    })
+  : [];
+const stageTotal = portraits.length + 1;
 const pad = (n: number) => String(n).padStart(2, '0');
 ---
 <section class:list={['hx-hero', { 'hx-split': split }]} data-layout={layout} aria-label="Introduction">
@@ -35,7 +45,18 @@ const pad = (n: number) => String(n).padStart(2, '0');
     </div>
   </div>
 
-  <div class="hx-video scrub">
+  <div
+    class="hx-video scrub"
+    data-total={stageTotal}
+    {...(portraits.length ? { role: 'group', 'aria-roledescription': 'slideshow', 'aria-label': 'Stepping video and case study images' } : {})}
+  >
+    <!-- Case portraits, after the video. Each image opens its case; it duplicates the caption link, so it
+         is left out of the tab order and hidden from screen readers -->
+    {portraits.map((p, i) => (
+      <a class="hx-pslide" href={p.href} data-pslide={i + 1} data-title={p.title} tabindex="-1" aria-hidden="true" hidden>
+        <img src={p.src} alt="" loading="lazy" />
+      </a>
+    ))}
     <div class="hx-media" role="img" aria-label="Video of Scott stepping, scrubs as you scroll or move across it" data-media>
     <video
       src="/media/stepping-scrub.mp4"
@@ -70,9 +91,22 @@ const pad = (n: number) => String(n).padStart(2, '0');
           <span class="d-block time">Frame <strong data-zframe>1</strong> of 6</span>
         </span>
       </span>
+      {portraits.length > 0 && (
+        <a class="vcap-case" href={portraits[0].href} aria-live="polite" hidden>
+          <strong data-pnum>02</strong> / {pad(stageTotal)} · <span data-pname>{portraits[0].title}</span>
+        </a>
+      )}
       <button class="zoe-toggle" type="button" aria-pressed="false" aria-label="Show as a zoetrope" title="Zoetrope">
         <svg width="22" height="22" viewBox="0 0 22 22" aria-hidden="true" focusable="false"><path d="M2 2H20V20H2Z M7 6V16 M11 6V16 M15 6V16" stroke="currentColor" stroke-width="2.4" fill="none"></path></svg>
       </button>
+      {portraits.length > 0 && <>
+        <button class="icon-btn vcap-nav" type="button" data-pstep="-1" aria-label="Previous slide">
+          <svg width="20" height="18" viewBox="0 0 22 20" aria-hidden="true" focusable="false"><path d="M21 10H3M11 2L3 10L11 18" stroke="currentColor" stroke-width="3" fill="none"></path></svg>
+        </button>
+        <button class="icon-btn vcap-nav" type="button" data-pstep="1" aria-label="Next slide">
+          <svg width="20" height="18" viewBox="0 0 22 20" aria-hidden="true" focusable="false"><path d="M1 10H19M11 2L19 10L11 18" stroke="currentColor" stroke-width="3" fill="none"></path></svg>
+        </button>
+      </>}
     </div>
   </div>
 
@@ -309,6 +343,45 @@ const pad = (n: number) => String(n).padStart(2, '0');
     background-size: 100% calc(6 * var(--u));
     background-position: 0 calc(var(--f) * var(--u));
   }
+  /* Case portrait slides: filling the cell, grey until pointed at, like the grid slideshow */
+  .hx-pslide { position: absolute; inset: 0; display: block; background: var(--thumb); cursor: var(--cursor-link); }
+  .hx-pslide[hidden], .hx-media[hidden], .vcap-text[hidden], .vcap-case[hidden], .zoe-toggle[hidden] { display: none; }
+  .hx-pslide img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: grayscale(1) contrast(1.05);
+    transition: filter .2s ease;
+  }
+  .hx-video:has(.hx-pslide:hover, .vcap-case:hover, .vcap-case:focus-visible) .hx-pslide img { filter: none; }
+  .vcap-case {
+    flex: 1 1 auto;
+    min-width: 0;
+    display: block;
+    padding: 0 14px;
+    line-height: 44px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    color: var(--ink);
+    text-decoration: none;
+  }
+  .vcap-case:hover, .vcap-case:focus-visible { background: var(--accent); color: var(--on-accent); }
+  .vcap-case:hover [data-pname], .vcap-case:focus-visible [data-pname] { text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 3px; }
+  .vcap-case:focus-visible { outline: 3px solid var(--ink); outline-offset: -3px; }
+  .vcap-nav {
+    flex: 0 0 auto;
+    width: 44px;
+    min-height: 44px;
+    height: auto;
+    border: 0;
+    border-left: var(--rule) solid var(--ink);
+    background: var(--bg);
+  }
+  .vcap-nav:hover { background: var(--ink); color: var(--bg); }
+  .vcap-nav:focus-visible { outline: 3px solid var(--accent); outline-offset: -3px; }
+  .hx-video:not(.scrub) { cursor: auto; }
+
   .d-block { display: block; }
   .time { margin-top: 4px; font-variant-numeric: tabular-nums; }
 
@@ -543,7 +616,39 @@ const pad = (n: number) => String(n).padStart(2, '0');
   window.addEventListener('resize', () => { if (zoetrope) setUnit(); });
   try { if (sessionStorage.getItem('hero-zoetrope') === '1') setZoetrope(true); } catch { /* storage unavailable */ }
 
+  // Split layout: the video (or zoetrope) is slide 0 of a slideshow of case portraits in the same cell,
+  // moved only by the arrows in its caption. On a case slide the caption is a link to the case
+  const pslides = Array.from(cell?.querySelectorAll<HTMLAnchorElement>('[data-pslide]') ?? []);
+  const vtext = cell?.querySelector<HTMLElement>('.vcap-text');
+  const vcase = cell?.querySelector<HTMLAnchorElement>('.vcap-case');
+  const pnum = vcase?.querySelector<HTMLElement>('[data-pnum]');
+  const pname = vcase?.querySelector<HTMLElement>('[data-pname]');
+  let stage = 0;
+  function showStage(i: number) {
+    const n = pslides.length + 1;
+    i = ((i % n) + n) % n;
+    if (i === stage || !cell || !media || !vtext || !vcase || !zoeToggle) return;
+    stage = i;
+    const onCase = i > 0;
+    media.hidden = onCase;
+    vtext.hidden = onCase;
+    zoeToggle.hidden = onCase;
+    vcase.hidden = !onCase;
+    cell.classList.toggle('scrub', !onCase);
+    pslides.forEach((s, k) => { s.hidden = k !== i - 1; });
+    if (onCase) {
+      const s = pslides[i - 1];
+      vcase.href = s.href;
+      if (pnum) pnum.textContent = String(i + 1).padStart(2, '0');
+      if (pname) pname.textContent = s.dataset.title ?? '';
+    }
+  }
+  cell?.querySelectorAll<HTMLButtonElement>('[data-pstep]').forEach((btn) => {
+    btn.addEventListener('click', () => showStage(stage + Number(btn.dataset.pstep)));
+  });
+
   cell?.addEventListener('pointermove', (e) => {
+    if (stage > 0) return;
     // Two turns of the drum across the box
     if (zoetrope) showPose(Math.floor(fraction(e, cell) * POSES * 2));
     else seek(fraction(e, cell) * duration());

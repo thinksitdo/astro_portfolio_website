@@ -69,8 +69,9 @@ Case studies, academic or artistic projects and publications are never mixed in 
 `src/content/cases/*.md`:
 ```
 title, kind: "case", type: "full" | "lite" | "protected", categories: string[], client, role,
-activities, year, order: number, task, intro, heroImage, thumbnail, legacyUrl
+activities, year, order: number, task, intro, heroImage, heroPortrait, thumbnail, legacyUrl
 ```
+`heroPortrait` is optional (empty for none): a portrait image, 1200 × 1680, for the homepage hero slideshow.
 `src/content/academic-artistic/*.md`:
 ```
 title, kind: "academic" | "artistic", details, year, order: number, summary, thumbnail, legacyUrl
@@ -113,7 +114,7 @@ Write a small remark/rehype plugin:
 - **Hero**: grid 28fr / 32fr / 40fr. On desktop it fills the rest of the first screen (`100svh` less the header). Headline sized with `cqi` inside its own container so it never overflows. Name box with three lines (see homepage). Bottom row: pink Get in touch tile, slideshow, See my work tile. Below 820px the layout stacks.
 - **Scrub video**: `public/media/stepping-scrub.mp4` (every frame a keyframe, see below). Never plays by itself. Page scroll maps to the whole clip; horizontal pointer position over the video maps to the whole clip. Seek with `currentTime`, queueing the latest target while a seek is in progress. Caption shows the time.
 - **Zoetrope (easter egg)**: a switch at the end of the video caption swaps the video for the same stepping as a zoetrope (`public/media/stepping-zoetrope.webp`, seven poses in a strip, the first six used). The poses are interleaved in bands one device pixel high, and a slotted mask shows one at a time; scroll and pointer step through them. The choice lasts for the visit (sessionStorage).
-- **Slideshow**: the first five case studies' thumbnails, moved only by its previous and next arrows (wrapping round). Caption shows number and title.
+- **Slideshow**: the homepage uses the split hero (`<Hero layout="split" />`). The right-hand column is a slideshow: the video first, then every case with a `heroPortrait`, in case order, moved only by the arrows in the caption (wrapping round). On a case slide the image and caption link to the case. With no portraits the video shows alone and there are no arrows. (The unused grid layout keeps the older slideshow of the first five thumbnails.)
 - **Cursors**: the two-box scrub cursor over the video; the single box with a top-right arrow on links and buttons (SVGs are in homepage-styles.css as data URIs; move them to `public/cursors/*.svg`).
 - **Case lists**: rows without numbers (the Academic & Artistic and Publications lists keep them); hover or focus fills the row pink and shows a 440 × 275 thumbnail that follows the cursor and flips left near the right edge. Hidden on touch and below 900px.
 - **States**: copy exactly from homepage-styles.css. Two known gaps to fix: rows have no pressed state, and the password input has no designed focus state (use the standard focus outline).
