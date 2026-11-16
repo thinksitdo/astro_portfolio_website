@@ -101,14 +101,19 @@ const current = Astro.url.pathname;
     margin: 0;
     padding: 0;
     list-style: none;
-    border-top: var(--rule) solid var(--ink);
   }
+  /* Rules only between items. The first item's top rule and the last item's bottom rule are there
+     but transparent, so they appear on hover or focus without the layout moving */
   li {
     flex: 1 1 0;
     min-height: 0;
     display: flex;
-    border-bottom: var(--rule) solid var(--ink);
+    border-top: var(--rule) solid var(--ink);
   }
+  li:first-child { border-top-color: transparent; }
+  li:last-child { border-bottom: var(--rule) solid transparent; }
+  li:first-child:hover, li:first-child:focus-within { border-top-color: var(--ink); }
+  li:last-child:hover, li:last-child:focus-within { border-bottom-color: var(--ink); }
 
   .sr-menu {
     flex: 1;
