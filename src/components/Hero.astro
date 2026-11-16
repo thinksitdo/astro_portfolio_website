@@ -31,9 +31,8 @@ const pad = (n: number) => String(n).padStart(2, '0');
       aria-hidden="true"
     ></video>
     <!-- The easter egg: the same stepping, as a zoetrope. Six poses are interleaved in bands one device
-         pixel high. The pose showing is pink; the other five are dark silhouettes, so the figure always
-         reads dark on the page's own background, with the moving pose picked out in pink -->
-    <div class="hx-zoe" hidden data-f="0">
+         pixel high, and a slotted mask over them shows one pose at a time as you scroll or move across -->
+    <div class="hx-zoe" hidden>
       <div class="zoe-fig">
         <span class="zoe-l" style="--k: 0"></span>
         <span class="zoe-l" style="--k: 1"></span>
@@ -41,6 +40,7 @@ const pad = (n: number) => String(n).padStart(2, '0');
         <span class="zoe-l" style="--k: 3"></span>
         <span class="zoe-l" style="--k: 4"></span>
         <span class="zoe-l" style="--k: 5"></span>
+        <span class="zoe-mask"></span>
       </div>
     </div>
     </div>
@@ -250,12 +250,10 @@ const pad = (n: number) => String(n).padStart(2, '0');
   .zoe-toggle:focus-visible { outline: 3px solid var(--accent); outline-offset: -3px; }
   .zoe-toggle:active { transform: translate(1px, 1px); }
 
-  /* Zoetrope. --u is one device pixel (set by the script); data-f is the pose showing, 0 to 5.
-     --zoe-shade turns the hidden poses into dark silhouettes (a lighter dark in the dark theme,
-     so they still show against the black) */
+  /* Zoetrope. --u is one device pixel (set by the script); --f is the pose showing, 0 to 5 */
   .hx-zoe {
     --u: 1px;
-    --zoe-shade: brightness(0);
+    --f: 0;
     position: absolute;
     inset: 0;
     display: flex;
@@ -283,15 +281,14 @@ const pad = (n: number) => String(n).padStart(2, '0');
     -webkit-mask-image: repeating-linear-gradient(180deg, transparent 0 var(--a), #000 var(--a) var(--b), transparent var(--b) calc(6 * var(--u)));
     mask-image: repeating-linear-gradient(180deg, transparent 0 var(--a), #000 var(--a) var(--b), transparent var(--b) calc(6 * var(--u)));
   }
-  .zoe-l { filter: var(--zoe-shade); }
-  :global(:root[data-theme='dark']) .hx-zoe { --zoe-shade: brightness(0) invert(0.24); }
-  /* The pose showing keeps its pink */
-  .hx-zoe[data-f='0'] .zoe-l:nth-child(1),
-  .hx-zoe[data-f='1'] .zoe-l:nth-child(2),
-  .hx-zoe[data-f='2'] .zoe-l:nth-child(3),
-  .hx-zoe[data-f='3'] .zoe-l:nth-child(4),
-  .hx-zoe[data-f='4'] .zoe-l:nth-child(5),
-  .hx-zoe[data-f='5'] .zoe-l:nth-child(6) { filter: none; }
+  /* The slotted drum: covers five bands in six, and moving it a band shows the next pose */
+  .zoe-mask {
+    position: absolute;
+    inset: 0;
+    background-image: repeating-linear-gradient(180deg, transparent 0 var(--u), var(--bg) var(--u) calc(6 * var(--u)));
+    background-size: 100% calc(6 * var(--u));
+    background-position: 0 calc(var(--f) * var(--u));
+  }
   .d-block { display: block; }
   .time { margin-top: 4px; font-variant-numeric: tabular-nums; }
 
@@ -487,7 +484,7 @@ const pad = (n: number) => String(n).padStart(2, '0');
     n = ((n % POSES) + POSES) % POSES;
     if (n === pose || !zoe) return;
     pose = n;
-    zoe.dataset.f = String(n);
+    zoe.style.setProperty('--f', String(n));
     if (zframe) zframe.textContent = String(n + 1);
   }
   function setZoetrope(on: boolean) {
