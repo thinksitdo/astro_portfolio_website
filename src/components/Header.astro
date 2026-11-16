@@ -2,66 +2,76 @@
 import ThemeSwitch from './ThemeSwitch.astro';
 import Logo from './Logo.astro';
 ---
-<!-- The header starts large, in the page, and scrolls away with it. Once it has gone, the same header
-     comes back fixed to the top at its compact height, sliding down into view. Scrolling back up
-     to where the large header sits puts it back in place. The slot keeps its space while it is fixed -->
-<div class="header-slot">
-  <header class="site-header" id="top">
-    <div class="wrap bar">
-      <Logo />
-      <div class="actions">
-        <ThemeSwitch />
-        <a class="b-pri pk talk" href="/#contact">Let’s talk →</a>
-        <button class="icon-btn menu-open" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="site-menu">
-          <svg width="22" height="16" viewBox="0 0 22 16" aria-hidden="true" focusable="false"><path d="M0 2H22M0 8H22M0 14H22" stroke="currentColor" stroke-width="3"></path></svg>
-        </button>
-      </div>
+<!-- Two headers. The large one is part of the page and scrolls away with it. Once it is off screen,
+     a separate compact header (the original height, with its rule) slides down from the top, and
+     slides away again when the large one comes back into view. While hidden it is inert. -->
+<header class="site-header" id="top">
+  <div class="wrap bar">
+    <Logo />
+    <div class="actions">
+      <ThemeSwitch />
+      <a class="b-pri pk talk" href="/#contact">Let’s talk →</a>
+      <button class="icon-btn menu-open" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="site-menu">
+        <svg width="22" height="16" viewBox="0 0 22 16" aria-hidden="true" focusable="false"><path d="M0 2H22M0 8H22M0 14H22" stroke="currentColor" stroke-width="3"></path></svg>
+      </button>
     </div>
-  </header>
+  </div>
+</header>
+
+<div class="site-header-compact" aria-hidden="true" inert>
+  <div class="wrap bar">
+    <Logo />
+    <div class="actions">
+      <ThemeSwitch />
+      <a class="b-pri pk talk" href="/#contact">Let’s talk →</a>
+      <button class="icon-btn menu-open" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="site-menu">
+        <svg width="22" height="16" viewBox="0 0 22 16" aria-hidden="true" focusable="false"><path d="M0 2H22M0 8H22M0 14H22" stroke="currentColor" stroke-width="3"></path></svg>
+      </button>
+    </div>
+  </div>
 </div>
 
 <style>
-  .site-header {
-    position: relative;
-    z-index: 50;
-    background: var(--bg);
-  }
   .bar {
     display: flex;
     flex-wrap: wrap;
-    align-items: flex-start;
     justify-content: space-between;
     gap: 0 24px;
-    padding-block: clamp(16px, 2vw, 24px) 0;
   }
   .actions {
     display: flex;
     align-items: center;
     gap: 12px;
   }
-  /* Large: the logo twice its compact height, the controls level with its top */
-  .site-header :global(.h-logo) { min-height: 0; padding: 0; }
-  .site-header :global(.h-logo img) { height: clamp(56px, 6.2vw, 88px); }
 
-  /* Compact: the original header, fixed to the top with its rule, sliding down into view */
-  .site-header.is-compact {
+  /* Large: the logo about twice the compact size, the controls level with its top, no rule */
+  .site-header { background: var(--bg); }
+  .site-header .bar { align-items: flex-start; padding-block: clamp(16px, 1.8vw, 24px) 0; }
+  .site-header :global(.h-logo) { min-height: 0; padding: 0; }
+  .site-header :global(.h-logo img) { height: clamp(60px, 6.5vw, 92px); }
+
+  /* Compact: the original header, fixed to the top, out of view until the large one has gone */
+  .site-header-compact {
     position: fixed;
     top: 0;
     left: 0;
     right: 0;
+    z-index: 50;
+    background: var(--bg);
     border-bottom: var(--rule) solid var(--ink);
-    animation: header-in .5s cubic-bezier(.22, 1, .36, 1);
+    transform: translateY(calc(-100% - 8px));
+    visibility: hidden;
+    transition: transform .5s cubic-bezier(.22, 1, .36, 1), visibility 0s linear .5s;
   }
-  .is-compact .bar { align-items: stretch; padding-block: 0; }
-  .is-compact .actions { padding: 12px 0; }
-  .is-compact :global(.h-logo) { min-height: 72px; padding: 12px 0; }
-  .is-compact :global(.h-logo img) { height: 44px; }
-  @keyframes header-in {
-    from { transform: translateY(-100%); }
-    to { transform: none; }
+  .site-header-compact.is-shown {
+    transform: none;
+    visibility: visible;
+    transition: transform .5s cubic-bezier(.22, 1, .36, 1), visibility 0s;
   }
+  .site-header-compact .bar { align-items: stretch; }
+  .site-header-compact .actions { padding: 12px 0; }
   @media (prefers-reduced-motion: reduce) {
-    .site-header.is-compact { animation: none; }
+    .site-header-compact, .site-header-compact.is-shown { transition: none; }
   }
 
   /* On phones Let's talk moves into the menu, so the header stays on one row */
@@ -71,44 +81,20 @@ import Logo from './Logo.astro';
 </style>
 
 <script>
-  const slot = document.querySelector<HTMLElement>('.header-slot');
-  const header = slot?.querySelector<HTMLElement>('.site-header');
-  if (slot && header) {
-    const root = document.documentElement.style;
-    let compact = false;
-    let tall = slot.offsetHeight;
-
+  const header = document.querySelector<HTMLElement>('.site-header');
+  const compact = document.querySelector<HTMLElement>('.site-header-compact');
+  if (header && compact) {
     // The large header's height, for the hero filling the rest of the first screen
-    const measure = () => {
-      if (compact) return;
-      tall = slot.offsetHeight;
-      root.setProperty('--header-tall', `${tall}px`);
-    };
+    const publish = () => document.documentElement.style.setProperty('--header-tall', `${header.offsetHeight}px`);
+    publish();
+    new ResizeObserver(publish).observe(header);
 
-    function setCompact(on: boolean) {
-      if (!slot || !header || on === compact) return;
-      if (on) slot.style.height = `${tall}px`;
-      compact = on;
-      header.classList.toggle('is-compact', on);
-      if (!on) { slot.style.height = ''; measure(); }
-    }
-
-    // Compact once the large header has scrolled away; large again once its place is back in view
-    // below the compact one, so the swap is never seen as a jump
-    const update = () => {
-      const y = window.scrollY;
-      if (!compact && y > tall) setCompact(true);
-      else if (compact && y < tall - header.offsetHeight) setCompact(false);
-    };
-
-    measure();
-    update();
-    new ResizeObserver(measure).observe(slot);
-    let queued = false;
-    window.addEventListener('scroll', () => {
-      if (queued) return;
-      queued = true;
-      requestAnimationFrame(() => { queued = false; update(); });
-    }, { passive: true });
+    // Show the compact header once the large one is entirely off screen
+    new IntersectionObserver(([entry]) => {
+      const show = !entry.isIntersecting && entry.boundingClientRect.bottom <= 0;
+      compact.classList.toggle('is-shown', show);
+      compact.inert = !show;
+      compact.setAttribute('aria-hidden', String(!show));
+    }).observe(header);
   }
 </script>
