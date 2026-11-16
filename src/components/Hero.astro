@@ -185,7 +185,8 @@ const pad = (n: number) => String(n).padStart(2, '0');
       const room = window.innerHeight - (header ? header.offsetHeight : 0) - below
         - parseFloat(s.paddingTop) - parseFloat(s.paddingBottom)
         - parseFloat(hs.paddingTop) - parseFloat(hs.paddingBottom)
-        - (parseFloat(s.rowGap) || 0) - bottom.offsetHeight;
+        - (parseFloat(s.rowGap) || 0) - bottom.offsetHeight
+        - (parseFloat(getComputedStyle(h1).marginTop) || 0);
       h1.style.overflowWrap = 'normal'; // so a word too wide for the cell shows up as overflow
       const lineHeight = parseFloat(getComputedStyle(h1).lineHeight) / parseFloat(getComputedStyle(h1).fontSize) || 0.95;
       let lo = 40;
@@ -513,13 +514,15 @@ const pad = (n: number) => String(n).padStart(2, '0');
     grid-template-columns: 58fr 42fr;
     column-gap: clamp(32px, 5vw, 80px);
     padding-inline: max(var(--gutter), calc((100% - var(--max)) / 2 + var(--gutter)));
-    padding-block: clamp(32px, 5.5vh, 64px) clamp(32px, 7vh, 80px);
+    padding-block: clamp(16px, 3vh, 40px) clamp(32px, 7vh, 80px);
     background: none;
     border-bottom: 0;
     overflow-x: clip;
   }
   /* Above the zoetrope, whose drum is drawn in the page colour */
   .hx-open .hx-strap { position: relative; z-index: 1; padding: 0; background: none; }
+  /* A little more space between the logo and the headline, without moving the zoetrope */
+  .hx-open .hx-h1 { margin-top: clamp(16px, 2.5vh, 32px); }
   .hx-open .hx-card {
     gap: clamp(32px, 7vh, 96px) clamp(16px, 2vw, 24px);
     width: min(100%, 680px);
