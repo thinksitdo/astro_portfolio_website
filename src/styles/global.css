@@ -18,7 +18,7 @@
   --rule-thin: 2px;
   --max: 1320px;
   --gutter: clamp(16px, 3vw, 40px);
-  --section-pad: clamp(40px, 6vw, 80px);
+  --section-pad: clamp(56px, 8.4vw, 120px);
 
   --cursor-link: url('/cursors/arrow.svg') 20 8, pointer;
   --cursor-scrub: url('/cursors/scrub.svg') 29 14, ew-resize;
