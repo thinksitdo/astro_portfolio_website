@@ -1,0 +1,232 @@
+---
+// Numbered rows with filter chips and a thumbnail that follows the cursor.
+// Used for the homepage case list, the Cases page and the Academic & Artistic page.
+// Case studies and academic or artistic projects are never mixed in one list.
+export interface Row {
+  href: string;
+  title: string;
+  summary: string;
+  /** Filter keys this row belongs to */
+  tags: string[];
+  /** Third column */
+  col3: string;
+  /** Fourth column; may contain TODO markers, so it is passed as parts */
+  col4: string[];
+  thumbnail: string | null;
+}
+interface Props {
+  rows: Row[];
+  filters: string[];
+  headings: [string, string, string, string];
+  filterLabel?: string;
+  /** The homepage sets the fourth column in capitals; the Cases and Academic & Artistic pages do not */
+  fourthUpper?: boolean;
+  /** Show a "Thumbnail · title" placeholder popover for rows without a thumbnail (false: no popover) */
+  thumbPlaceholders?: boolean;
+}
+const { rows, filters, headings, filterLabel = 'Filter', fourthUpper = false, thumbPlaceholders = true } = Astro.props;
+const isTodo = (v: string) => !v || v.trim().toUpperCase() === 'TODO';
+---
+<div class="row-list" data-row-list data-thumb-placeholders={thumbPlaceholders ? 'true' : 'false'}>
+  <div class="filters" role="group" aria-label={filterLabel}>
+    {filters.map((f, i) => (
+      <button class="b-chip" type="button" data-filter={f} aria-pressed={i === 0 ? 'true' : 'false'}>{f}</button>
+    ))}
+  </div>
+
+  <div class="cols" aria-hidden="true">
+    <span class="c-n">{headings[0]}</span>
+    <span class="c-title">{headings[1]}</span>
+    <span class="c-cat">{headings[2]}</span>
+    <span class="c-year">{headings[3]}</span>
+  </div>
+
+  <div class="rows-wrap">
+    <ol class="rows">
+      {rows.map((r, i) => (
+        <li data-tags={JSON.stringify(r.tags)}>
+          <a class="w-row" href={r.href} data-thumb={r.thumbnail ?? ''} data-title={r.title}>
+            <span class="c-n num">{String(i + 1).padStart(2, '0')}</span>
+            <span class="c-title body">
+              <span class="title">{r.title}</span>
+              <span class="summary">{r.summary}</span>
+            </span>
+            <span class="c-cat meta">{r.col3}</span>
+            <span class:list={['c-year', 'meta', { plain: !fourthUpper }]}>{r.col4.map((part, k) => <>{k > 0 && ' · '}{isTodo(part) ? <span class="todo">TODO</span> : part}</>)}</span>
+          </a>
+        </li>
+      ))}
+    </ol>
+    <div class="sr-pop" aria-hidden="true" hidden>
+      <img alt="" hidden />
+      <span class="pop-text"></span>
+    </div>
+  </div>
+</div>
+
+<style>
+  .filters { display: flex; flex-wrap: wrap; gap: 8px; padding: 20px 0; }
+
+  .cols {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 24px;
+    padding: 10px 0;
+    border-top: var(--rule) solid var(--ink);
+    border-bottom: var(--rule-thin) solid var(--ink);
+    font-family: var(--font-mono);
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+  /* On phones the columns stack, so the column labels no longer line up with anything */
+  @media (max-width: 640px) {
+    .cols { display: none; }
+    .filters { border-bottom: var(--rule) solid var(--ink); }
+  }
+  .c-n { flex: 0 0 56px; }
+  .c-title { flex: 999 1 300px; min-width: 0; }
+  .c-cat { flex: 1 1 180px; }
+  .c-year { flex: 1 1 160px; }
+
+  .rows-wrap { position: relative; }
+  .rows { margin: 0; padding: 0; list-style: none; }
+  .rows li { border-bottom: var(--rule-thin) solid var(--ink); }
+  .rows li[hidden] { display: none; }
+
+  .w-row {
+    position: relative;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 24px;
+    padding: 22px 0;
+    text-decoration: none;
+    color: var(--ink);
+  }
+  /* Pressed (and tapped on touch screens): the global rule fills the row ink; the colour above
+     outranks its text colour, so it is set again here, or the text vanishes into the fill */
+  .w-row:active { color: var(--bg); }
+  .num {
+    font-family: var(--font-mono);
+    font-size: 14px;
+    font-weight: 600;
+    padding: 6px 0 0 8px;
+  }
+  .body { display: flex; flex-direction: column; gap: 6px; }
+  .title {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: clamp(22px, 2.2vw, 30px);
+    line-height: 1.1;
+    letter-spacing: -0.015em;
+  }
+  .summary { font-size: 16px; line-height: 1.5; max-width: 600px; }
+  .meta {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    padding-top: 8px;
+  }
+
+  .meta.plain { text-transform: none; letter-spacing: 0.02em; padding-right: 8px; }
+
+  .sr-pop {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 440px;
+    height: 275px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 12px;
+    background: var(--thumb);
+    color: var(--ink);
+    border: var(--rule) solid var(--ink);
+    box-shadow: 8px 8px 0 var(--ink);
+    font-family: var(--font-mono);
+    font-size: 12px;
+    text-transform: uppercase;
+    pointer-events: none;
+    z-index: 5;
+    will-change: transform;
+    overflow: hidden;
+  }
+  .sr-pop[hidden] { display: none; }
+  .sr-pop img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  .sr-pop img[hidden] { display: none; }
+
+  @media (hover: none), (max-width: 900px) {
+    .sr-pop { display: none !important; }
+  }
+</style>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-row-list]').forEach((list) => {
+    const chips = Array.from(list.querySelectorAll<HTMLButtonElement>('[data-filter]'));
+    const items = Array.from(list.querySelectorAll<HTMLLIElement>('.rows li'));
+    const wrap = list.querySelector<HTMLElement>('.rows-wrap')!;
+    const pop = list.querySelector<HTMLElement>('.sr-pop')!;
+    const popImg = pop.querySelector('img')!;
+    const popText = pop.querySelector<HTMLElement>('.pop-text')!;
+
+    // Filters
+    chips.forEach((chip) => {
+      chip.addEventListener('click', () => {
+        const tag = chip.dataset.filter!;
+        const all = chip === chips[0];
+        chips.forEach((c) => c.setAttribute('aria-pressed', c === chip ? 'true' : 'false'));
+        items.forEach((li) => {
+          const tags: string[] = JSON.parse(li.dataset.tags || '[]');
+          li.hidden = !all && !tags.includes(tag);
+        });
+        pop.hidden = true;
+      });
+    });
+
+    // Thumbnail popover: the cursor sits at its bottom-left corner, and it flips left near the right edge
+    const placeholders = list.dataset.thumbPlaceholders !== 'false';
+    // Returns false when this row has nothing to show
+    const show = (row: HTMLAnchorElement) => {
+      const src = row.dataset.thumb;
+      if (!src && !placeholders) { pop.hidden = true; return false; }
+      if (src) {
+        popImg.src = src;
+        popImg.hidden = false;
+        popText.textContent = '';
+      } else {
+        popImg.hidden = true;
+        popText.textContent = `Thumbnail · ${row.dataset.title}`;
+      }
+      pop.hidden = false;
+      return true;
+    };
+    const place = (x: number, y: number) => { pop.style.transform = `translate(${x}px, ${y}px)`; };
+
+    wrap.addEventListener('mousemove', (e) => {
+      const r = wrap.getBoundingClientRect();
+      const w = pop.offsetWidth || 440;
+      const h = pop.offsetHeight || 275;
+      let x = e.clientX - r.left + 2;
+      if (x + w > r.width) x = e.clientX - r.left - w - 2;
+      place(x, e.clientY - r.top - h - 2);
+    });
+
+    list.querySelectorAll<HTMLAnchorElement>('.w-row').forEach((row) => {
+      row.addEventListener('mouseenter', () => show(row));
+      row.addEventListener('mouseleave', () => { pop.hidden = true; });
+      // Keyboard focus has no cursor: park the popover at the row's right edge
+      row.addEventListener('focus', () => {
+        if (!show(row)) return;
+        const lr = wrap.getBoundingClientRect();
+        const rr = row.getBoundingClientRect();
+        place(rr.right - lr.left - (pop.offsetWidth || 440) - 24, rr.top - lr.top + rr.height / 2 - (pop.offsetHeight || 275) / 2);
+      });
+      row.addEventListener('blur', () => { pop.hidden = true; });
+    });
+  });
+</script>

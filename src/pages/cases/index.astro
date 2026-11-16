@@ -1,0 +1,29 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ListHero from '../../components/ListHero.astro';
+import RowList from '../../components/RowList.astro';
+import ContactBlock from '../../components/ContactBlock.astro';
+import { caseFilters, caseRows, getCases } from '../../lib/content';
+
+const cases = await getCases();
+---
+<BaseLayout title="Cases" description="TODO" bodyFont="inter">
+  <ListHero title="Cases">
+    Some projects link to a fuller case study. The password is on my CV, or <a class="l-mark" href="mailto:hello@scottrobinson.co.uk">contact me</a> for access.
+  </ListHero>
+  <section class="list-section">
+    <div class="wrap">
+      <RowList
+        rows={caseRows(cases, 'client-year')}
+        filters={caseFilters(cases)}
+        headings={['No.', 'Project', 'Category', 'Client · Year']}
+      />
+    </div>
+  </section>
+  <ContactBlock />
+</BaseLayout>
+
+<style>
+  .list-section { border-bottom: var(--rule) solid var(--ink); }
+  .list-section .wrap { padding-block: clamp(40px, 6vw, 80px); }
+</style>

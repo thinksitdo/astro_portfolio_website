@@ -1,0 +1,38 @@
+---
+// NOT YET DESIGNED. Academic and artistic project pages use the case study Full layout, without the
+// password gate, as a stand-in until Scott has a design for them.
+import { render } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import CaseStudy from '../../components/CaseStudy.astro';
+import { getProjects, kindLabel, projectUrl, type Project } from '../../lib/content';
+import { HERO_WIDTH, resolveImage, shareImage } from '../../lib/images';
+
+export async function getStaticPaths() {
+  const projects = await getProjects();
+  return projects.map((entry, i) => ({
+    params: { slug: entry.id },
+    props: { entry, next: projects[(i + 1) % projects.length] },
+  }));
+}
+
+interface Props { entry: Project; next: Project }
+const { entry, next } = Astro.props;
+const d = entry.data;
+const { Content } = await render(entry);
+---
+<BaseLayout title={d.title} description={d.summary} image={shareImage(entry.filePath, d.thumbnail)} ogType="article" bodyFont="inter">
+  <CaseStudy
+    type="full"
+    title={d.title}
+    intro={d.summary}
+    heroImage={resolveImage(entry.filePath, d.thumbnail, HERO_WIDTH)}
+    meta={[
+      { label: 'Type', chips: [kindLabel(d.kind)] },
+      { label: 'Role', value: d.details },
+      { label: 'Year', value: d.year },
+    ]}
+    next={{ label: 'TODO', title: next.data.title, href: projectUrl(next) }}
+  >
+    <Content />
+  </CaseStudy>
+</BaseLayout>

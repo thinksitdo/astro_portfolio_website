@@ -1,0 +1,21 @@
+---
+// A page that exists so links resolve, but has no design or copy yet.
+interface Props {
+  heading: string;
+  note: string;
+}
+const { heading, note } = Astro.props;
+---
+<section class="stub">
+  <div class="wrap">
+    <h1 class="section-heading">{heading}</h1>
+    <p><span class="todo">TODO</span> {note}</p>
+  </div>
+</section>
+
+<style>
+  .stub { border-bottom: var(--rule) solid var(--ink); }
+  .wrap { padding-block: var(--section-pad); }
+  h1 { padding-bottom: 20px; border-bottom: var(--rule) solid var(--ink); }
+  p { margin: 24px 0 0; }
+</style>

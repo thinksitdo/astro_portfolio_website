@@ -1,0 +1,38 @@
+---
+import ThemeSwitch from './ThemeSwitch.astro';
+import Logo from './Logo.astro';
+---
+<header class="site-header" id="top">
+  <div class="wrap bar">
+    <Logo />
+    <div class="actions">
+      <ThemeSwitch />
+      <a class="b-pri pk talk" href="/#contact">Let’s talk →</a>
+      <button class="icon-btn menu-open" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="site-menu">
+        <svg width="22" height="16" viewBox="0 0 22 16" aria-hidden="true" focusable="false"><path d="M0 2H22M0 8H22M0 14H22" stroke="currentColor" stroke-width="3"></path></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<style>
+  .site-header { border-bottom: var(--rule) solid var(--ink); }
+  .bar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: stretch;
+    justify-content: space-between;
+    gap: 0 24px;
+  }
+  .actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 0;
+  }
+
+  /* On phones Let's talk moves into the menu, so the header stays on one row */
+  @media (max-width: 480px) {
+    .talk { display: none; }
+  }
+</style>

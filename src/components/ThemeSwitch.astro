@@ -1,0 +1,90 @@
+---
+// Light/dark switch. The theme itself is set before paint by the inline script in BaseLayout.
+// aria-checked is corrected on load by the script below, so it matches the stored or system theme.
+---
+<button class="b-switch" type="button" role="switch" aria-checked="false" aria-label="Dark mode">
+  <span class="sw-half sw-sun">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="square" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="4.5"></circle><path d="M12 1.5V4.5M12 19.5V22.5M1.5 12H4.5M19.5 12H22.5M4.6 4.6L6.7 6.7M17.3 17.3L19.4 19.4M4.6 19.4L6.7 17.3M17.3 6.7L19.4 4.6"></path></svg>
+  </span>
+  <span class="sw-divider" aria-hidden="true"></span>
+  <span class="sw-half sw-moon">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="square" stroke-linejoin="miter" aria-hidden="true" focusable="false"><path d="M20 14.5A8.5 8.5 0 1 1 9.5 4a7 7 0 0 0 10.5 10.5z"></path></svg>
+  </span>
+</button>
+
+<style>
+  /* The border is drawn on top of the halves (::after), not around them, so the filled half always
+     reaches the border. With a normal border, rounding at some widths and zoom levels left a 1px gap */
+  .b-switch {
+    position: relative;
+    display: inline-flex;
+    align-items: stretch;
+    height: 44px;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    color: var(--ink);
+  }
+  .b-switch::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border: var(--rule-thin) solid var(--ink);
+    pointer-events: none;
+  }
+  .b-switch:active { transform: translate(1px, 1px); }
+
+  .sw-half {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 46px;
+    transition: background-color .12s ease, color .12s ease;
+  }
+  .sw-divider { width: 2px; background: var(--ink); }
+
+  /* The active half is filled ink; the inactive half is transparent */
+  .sw-sun { background: var(--ink); color: var(--bg); }
+  .sw-moon { background: transparent; color: var(--ink); }
+  :global(:root[data-theme='dark']) .sw-sun { background: transparent; color: var(--ink); }
+  :global(:root[data-theme='dark']) .sw-moon { background: var(--ink); color: var(--bg); }
+
+  /* Hover fills the inactive half pink */
+  /* Only the inactive half: the moon in light mode, the sun in dark mode */
+  :global(:root:not([data-theme='dark'])) .b-switch:hover .sw-moon { background: var(--accent); color: var(--on-accent); }
+  :global(:root[data-theme='dark']) .b-switch:hover .sw-sun { background: var(--accent); color: var(--on-accent); }
+
+  @media (prefers-reduced-motion: reduce) {
+    .sw-half { transition: none; }
+  }
+</style>
+
+<script>
+  const STORAGE_KEY = 'theme';
+  const root = document.documentElement;
+
+  function apply(theme: 'light' | 'dark') {
+    root.dataset.theme = theme;
+    document.querySelectorAll<HTMLButtonElement>('.b-switch').forEach((btn) => {
+      btn.setAttribute('aria-checked', theme === 'dark' ? 'true' : 'false');
+    });
+  }
+
+  apply(root.dataset.theme === 'dark' ? 'dark' : 'light');
+
+  document.querySelectorAll<HTMLButtonElement>('.b-switch').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const next = root.dataset.theme === 'dark' ? 'light' : 'dark';
+      apply(next);
+      try { localStorage.setItem(STORAGE_KEY, next); } catch { /* storage unavailable */ }
+    });
+  });
+
+  // Follow the system setting until the visitor makes a choice
+  matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+    let stored: string | null = null;
+    try { stored = localStorage.getItem(STORAGE_KEY); } catch { /* storage unavailable */ }
+    if (!stored) apply(e.matches ? 'dark' : 'light');
+  });
+</script>

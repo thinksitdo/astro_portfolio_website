@@ -1,0 +1,100 @@
+---
+// Dot grid background on every page. The dots swell towards the pointer, then the animation stops
+// to save battery. Never blocks clicks. With reduced motion the dots stay still.
+// Sits at z-index -1 inside the body's stacking context (body has isolation: isolate), so it paints
+// above the page background and below the content; pink blocks blend with it (see global.css).
+---
+<canvas class="bulge" aria-hidden="true"></canvas>
+
+<style>
+  .bulge {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    pointer-events: none;
+    display: block;
+  }
+</style>
+
+<script>
+  const canvas = document.querySelector<HTMLCanvasElement>('canvas.bulge');
+  const ctx = canvas?.getContext('2d');
+
+  if (canvas && ctx) {
+    const cfg = { spacing: 28, baseR: 1.1, maxR: 4.2, radius: 180, ease: 0.12 };
+    const reduce = matchMedia('(prefers-reduced-motion: reduce)');
+    const target = { x: -9999, y: -9999, s: 0 };
+    const cur = { x: -9999, y: -9999, s: 0 };
+    let w = 0;
+    let h = 0;
+    let running = false;
+    let colour = '';
+
+    const setColour = () => {
+      colour = document.documentElement.dataset.theme === 'dark' ? 'rgba(244,244,240,0.08)' : 'rgba(10,10,10,0.1)';
+    };
+
+    // 1 at the pointer, easing to 0 at cfg.radius (smoothstep keeps the edge soft)
+    const falloff = (dx: number, dy: number) => {
+      const t = Math.max(0, 1 - Math.hypot(dx, dy) / cfg.radius);
+      return t * t * (3 - 2 * t) * cur.s;
+    };
+
+    function draw() {
+      if (!w || !h || !ctx) return;
+      const s = cfg.spacing;
+      ctx.clearRect(0, 0, w, h);
+      ctx.fillStyle = colour;
+      for (let y = s / 2; y < h + s; y += s) {
+        for (let x = s / 2; x < w + s; x += s) {
+          const r = cfg.baseR + (cfg.maxR - cfg.baseR) * falloff(x - cur.x, y - cur.y);
+          ctx.beginPath();
+          ctx.arc(x, y, r, 0, Math.PI * 2);
+          ctx.fill();
+        }
+      }
+    }
+
+    function resize() {
+      if (!canvas || !ctx) return;
+      w = window.innerWidth;
+      h = window.innerHeight;
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      canvas.width = Math.round(w * dpr);
+      canvas.height = Math.round(h * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      draw();
+    }
+
+    function tick() {
+      cur.x += (target.x - cur.x) * cfg.ease;
+      cur.y += (target.y - cur.y) * cfg.ease;
+      cur.s += (target.s - cur.s) * cfg.ease;
+      draw();
+      const settled = Math.abs(target.x - cur.x) < 0.1 && Math.abs(target.y - cur.y) < 0.1 && Math.abs(target.s - cur.s) < 0.001;
+      if (settled) { running = false; return; }
+      requestAnimationFrame(tick);
+    }
+    const wake = () => {
+      if (!running && !reduce.matches) { running = true; requestAnimationFrame(tick); }
+    };
+
+    window.addEventListener('pointermove', (e) => {
+      if (cur.s < 0.01) { cur.x = e.clientX; cur.y = e.clientY; } // no swoop in from off screen
+      target.x = e.clientX; target.y = e.clientY; target.s = 1;
+      wake();
+    }, { passive: true });
+    document.addEventListener('pointerout', (e) => { if (!e.relatedTarget) { target.s = 0; wake(); } });
+    window.addEventListener('pointerup', (e) => { if (e.pointerType === 'touch') { target.s = 0; wake(); } });
+    window.addEventListener('resize', resize);
+
+    // Redraw in the new colour when the light/dark switch changes the theme
+    new MutationObserver(() => { setColour(); draw(); })
+      .observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+
+    setColour();
+    resize();
+  }
+</script>

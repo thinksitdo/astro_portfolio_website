@@ -1,0 +1,91 @@
+---
+import '../styles/global.css';
+import Header from '../components/Header.astro';
+import Menu from '../components/Menu.astro';
+import Footer from '../components/Footer.astro';
+import BulgeGrid from '../components/BulgeGrid.astro';
+
+import { isTodo } from '../lib/content';
+import { DEFAULT_SHARE_IMAGE, SITE_NAME, isStaging, person } from '../lib/site';
+import { noindexPaths } from '../lib/noindex.mjs';
+
+interface Props {
+  title: string;
+  /** Search result and link preview text. "TODO" leaves it out and warns in the terminal */
+  description?: string;
+  /** Body text face: mono on the homepage, Inter on case study and thesis pages (open question for Scott) */
+  bodyFont?: 'mono' | 'inter';
+  /** Keep this page out of search results. Prefer adding the path to lib/noindex.mjs, which also drops it from the sitemap */
+  noindex?: boolean;
+  /** Link preview image: the page's thumbnail. Falls back to DEFAULT_SHARE_IMAGE */
+  image?: { src: string; width?: number; height?: number } | null;
+  /** Open Graph type: 'article' for case studies and publications */
+  ogType?: 'website' | 'article';
+}
+
+const { title, description, bodyFont = 'mono', noindex = false, image, ogType = 'website' } = Astro.props;
+const fullTitle = title === SITE_NAME ? title : `${title} · ${SITE_NAME}`;
+const canonical = new URL(Astro.url.pathname, Astro.site);
+const desc = isTodo(description) ? undefined : description!.trim();
+if (!desc) console.warn(`[meta] ${Astro.url.pathname} has no description yet.`);
+const robots = noindex || isStaging || noindexPaths.includes(Astro.url.pathname) ? 'noindex, nofollow' : undefined;
+const share = image ?? (DEFAULT_SHARE_IMAGE ? { src: DEFAULT_SHARE_IMAGE } : null);
+const shareUrl = share ? new URL(share.src, Astro.site).href : undefined;
+const isHome = Astro.url.pathname === '/';
+---
+<!doctype html>
+<html lang="en-GB">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{fullTitle}</title>
+    {desc && <meta name="description" content={desc} />}
+    {robots && <meta name="robots" content={robots} />}
+    <link rel="canonical" href={canonical} />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+    <meta name="color-scheme" content="light dark" />
+
+    <!-- Link previews (LinkedIn, Slack, iMessage and others) -->
+    <meta property="og:site_name" content={SITE_NAME} />
+    <meta property="og:type" content={ogType} />
+    <meta property="og:title" content={title} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:locale" content="en_GB" />
+    {desc && <meta property="og:description" content={desc} />}
+    {shareUrl && <meta property="og:image" content={shareUrl} />}
+    {shareUrl && share?.width && <meta property="og:image:width" content={String(share.width)} />}
+    {shareUrl && share?.height && <meta property="og:image:height" content={String(share.height)} />}
+    <meta name="twitter:card" content={shareUrl ? 'summary_large_image' : 'summary'} />
+
+    {isHome && <script type="application/ld+json" set:html={JSON.stringify(person)} />}
+
+    <!-- Set the theme before first paint: stored choice, else the system setting -->
+    <script is:inline>
+      (function () {
+        var theme;
+        try { theme = localStorage.getItem('theme'); } catch (e) {}
+        if (theme !== 'light' && theme !== 'dark') {
+          theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        }
+        document.documentElement.dataset.theme = theme;
+      })();
+    </script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@800;900&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap"
+    />
+  </head>
+  <body class:list={[{ 'body-inter': bodyFont === 'inter' }]}>
+    <BulgeGrid />
+    <a class="skip-link" href="#main">Skip to content</a>
+    <Header />
+    <Menu />
+    <main id="main" tabindex="-1">
+      <slot />
+    </main>
+    <Footer />
+  </body>
+</html>

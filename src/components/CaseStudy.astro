@@ -1,0 +1,287 @@
+---
+// Case study template (design/reference/case-study.dc.html).
+//   full:      hero, hero image, article, next case
+//   lite:      hero, hero image, next case
+//   protected: hero, hero image, password box, article once unlocked, next case
+//              (the article is encrypted at build time, see lib/case-crypto.ts)
+// The article is passed in the default slot. The academic and artistic pages reuse this with type "full".
+import PasswordGate from './PasswordGate.astro';
+import ContactBlock from './ContactBlock.astro';
+import Lightbox from './Lightbox.astro';
+import { isTodo } from '../lib/content';
+import { encryptArticle } from '../lib/case-crypto';
+import type { ResolvedImage } from '../lib/images';
+
+interface MetaRow { label: string; value?: string; chips?: string[]; /** Pre-escaped HTML (see lib/inline-markdown) */ html?: string }
+interface Props {
+  type: 'full' | 'lite' | 'protected';
+  title: string;
+  intro: string;
+  meta: MetaRow[];
+  heroImage?: ResolvedImage | null;
+  heroAlt?: string;
+  next?: { label: string; title: string; href: string };
+  back?: { label: string; href: string };
+  /** Leave out the pink image band when there is no image, instead of showing a placeholder */
+  imageOptional?: boolean;
+}
+
+const { type, title, intro, meta, heroImage, heroAlt, next, back = { label: '← Back to home', href: '/' }, imageOptional = false } = Astro.props;
+const showImageBand = !(imageOptional && !heroImage);
+const showArticle = type !== 'lite';
+// Protected articles are rendered to HTML here and only the encrypted form goes into the page
+const payload = type === 'protected' ? encryptArticle(await Astro.slots.render('default')) : null;
+---
+<section class="cs-hero">
+  <div class="wrap">
+    <a class="l-mark back" href={back.href}>{back.label}</a>
+    <h1 class="cs-title">{title}</h1>
+    <div class="cs-top">
+      <p class="cs-intro">{isTodo(intro) ? <span class="todo">TODO</span> : intro}</p>
+      <dl class="cs-meta">
+        {meta.map((row) => (
+          <div class="cs-row">
+            <dt>{row.label}</dt>
+            <dd>
+              {row.html
+                ? <Fragment set:html={row.html} />
+                : row.chips
+                ? <span class="chips">{row.chips.map((c) => <span class="chip">{c}</span>)}</span>
+                : isTodo(row.value) ? <span class="todo">TODO</span> : row.value}
+            </dd>
+          </div>
+        ))}
+      </dl>
+    </div>
+  </div>
+</section>
+
+{showImageBand && <section class="cs-image" aria-label="Project image">
+  <div class="wrap">
+    <figure>
+      {heroImage && 'src' in heroImage
+        ? <img src={heroImage.src} width={heroImage.width} height={heroImage.height} alt={heroAlt && !isTodo(heroAlt) ? heroAlt : ''} />
+        : heroImage && 'missing' in heroImage
+          ? <div class="thumb-placeholder hero-ph" role="img" aria-label={`Image not found, ${heroImage.missing}`}>Image not found · {heroImage.missing}</div>
+          : <div class="thumb-placeholder hero-ph" role="img" aria-label={`Image placeholder, ${title}`}>Image · {title}</div>}
+    </figure>
+  </div>
+</section>}
+
+{type === 'protected' && <PasswordGate />}
+
+{showArticle && (
+  <section class="cs-article" id="case-article" hidden={type === 'protected'} data-protected={type === 'protected' ? '' : undefined}>
+    <div class="wrap article-wrap">
+      {type === 'protected' ? null : <slot />}
+    </div>
+  </section>
+)}
+
+{showArticle && <Lightbox />}
+
+{type === 'protected' && payload && <script type="application/octet-stream" id="case-payload" set:text={payload} />}
+
+{type === 'protected' && (
+  <script is:inline>
+    // Before first paint: a visitor who has unlocked before skips the password box while the article decrypts.
+    // PasswordGate shows the box again if the stored key no longer works.
+    try {
+      var stored = JSON.parse(localStorage.getItem('sr_case_key') || 'null');
+      if (stored && stored.exp > Date.now()) document.getElementById('case-gate')?.setAttribute('hidden', '');
+    } catch (e) {}
+  </script>
+)}
+
+{next && (
+  <section class="cs-next">
+    <a class="l-row next-row" href={next.href}>
+      <span class="wrap next-inner">
+        <span class="next-text">
+          <span class="next-label">{isTodo(next.label) ? <span class="todo">TODO</span> : next.label}</span>
+          <span class="next-title">{next.title}</span>
+        </span>
+        <span class="next-arrow" aria-hidden="true">→</span>
+      </span>
+    </a>
+  </section>
+)}
+
+<ContactBlock />
+
+<style>
+  section { border-bottom: var(--rule) solid var(--ink); }
+
+  /* Hero */
+  .cs-hero .wrap { padding-top: clamp(32px, 5vw, 64px); padding-bottom: clamp(40px, 6vw, 72px); }
+  .back {
+    font: 500 13px var(--font-mono);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--ink);
+  }
+  .cs-title {
+    margin: clamp(24px, 3vw, 40px) 0 0;
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: clamp(44px, 7.6vw, 128px);
+    line-height: 0.95;
+    letter-spacing: -0.03em;
+    overflow-wrap: break-word;
+  }
+  .cs-top { display: flex; flex-wrap: wrap; gap: 40px 64px; margin-top: clamp(32px, 4vw, 56px); }
+  .cs-intro {
+    flex: 1 1 420px;
+    min-width: 0;
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: clamp(20px, 1.8vw, 24px);
+    line-height: 1.4;
+  }
+  .cs-meta { flex: 1 1 420px; min-width: 0; margin: 0; border-top: var(--rule) solid var(--ink); }
+  .cs-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 16px;
+    padding: 14px 0;
+    border-bottom: var(--rule-thin) solid var(--ink);
+  }
+  .cs-row dt {
+    flex: 0 0 110px;
+    padding-top: 3px;
+    font: 600 12px var(--font-mono);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+  .cs-row dd { flex: 1 1 200px; min-width: 0; margin: 0; font-size: 15px; line-height: 1.55; overflow-wrap: anywhere; }
+  .cs-row dd :global(a) { color: var(--ink); text-underline-offset: 3px; }
+  .chips { display: flex; flex-wrap: wrap; gap: 6px; }
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    min-height: 32px;
+    padding: 0 10px;
+    border: var(--rule-thin) solid var(--ink);
+    font: 500 12px var(--font-mono);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  /* Hero image on pink */
+  .cs-image { background: var(--accent); }
+  .cs-image .wrap { padding-block: 48px; }
+  .cs-image figure { margin: 0; }
+  /* The image shows whole, at its own proportions: nothing is cropped. Only the placeholder has a fixed shape */
+  .cs-image img, .hero-ph {
+    width: 100%;
+    border: var(--rule) solid var(--ink);
+  }
+  .cs-image img { height: auto; }
+  .hero-ph { aspect-ratio: 16 / 7; }
+
+  /* Article: sections and figures come from the Markdown plugins in src/lib/markdown-plugins.mjs */
+  .cs-article[hidden] { display: none; }
+  .article-wrap { padding-block: clamp(40px, 6vw, 80px); }
+  /* One centred column: the section title sits above its text. Figures stay full width (they sit between sections) */
+  .article-wrap :global(.cs-sec) {
+    padding: 40px 0;
+    border-top: var(--rule-thin) solid var(--ink);
+  }
+  .article-wrap :global(.cs-sec-h),
+  .article-wrap :global(.cs-sec-b) { max-width: 720px; margin-inline: auto; }
+  .article-wrap :global(.cs-sec-h) {
+    display: flex;
+    gap: 16px;
+    align-items: baseline;
+    margin-bottom: 24px;
+  }
+  .article-wrap :global(.cs-sec-h:empty) { display: none; }
+  .article-wrap :global(.cs-n) { font: 600 13px var(--font-mono); }
+  /* Where there is room, the number hangs in the margin so the title lines up with the text below */
+  @media (min-width: 900px) {
+    .article-wrap :global(.cs-n) { flex: 0 0 32px; margin-left: -48px; text-align: right; }
+  }
+  .article-wrap :global(.cs-sec-h h2) {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: 34px;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+  }
+  .article-wrap :global(.cs-sec-b) { min-width: 0; }
+  .article-wrap :global(.cs-sec-b > *) { margin: 0 0 20px; }
+  .article-wrap :global(.cs-sec-b > :last-child) { margin-bottom: 0; }
+  .article-wrap :global(.cs-sec-b h3) { font-family: var(--font-display); font-weight: 800; font-size: 22px; line-height: 1.2; }
+  .article-wrap :global(.cs-sec-b a) { text-underline-offset: 3px; }
+
+  .article-wrap :global(.cs-figs) { padding-bottom: 40px; }
+  .article-wrap :global(.cs-figs--two) {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 24px;
+  }
+  @media (max-width: 720px) {
+    .article-wrap :global(.cs-figs--two) { grid-template-columns: minmax(0, 1fr); }
+  }
+  .article-wrap :global(.cs-fig) { margin: 0; }
+  /* The border sits on the lightbox button, which clips the image, so the image can zoom inside a fixed frame */
+  .article-wrap :global(.cs-zoom) { position: relative; border: var(--rule) solid var(--ink); overflow: hidden; }
+  /* Video figures: a boxed play button in the middle of the poster, filled ink on hover */
+  .article-wrap :global(.cs-play) {
+    position: absolute;
+    inset: 50% auto auto 50%;
+    translate: -50% -50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 72px;
+    height: 72px;
+    border: var(--rule) solid var(--ink);
+    background: var(--bg);
+    color: var(--ink);
+  }
+  .article-wrap :global(.cs-play svg) { margin-left: 4px; }
+  .article-wrap :global(.cs-zoom--video:hover .cs-play),
+  .article-wrap :global(.cs-zoom--video:focus-visible .cs-play) { background: var(--ink); color: var(--bg); }
+  .article-wrap :global(.cs-fig img) {
+    width: 100%;
+    height: auto;
+    background: var(--thumb);
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .article-wrap :global(.cs-zoom img) { transition: transform 0.4s ease; }
+    .article-wrap :global(.cs-zoom:hover img),
+    .article-wrap :global(.cs-zoom:focus-visible img) { transform: scale(1.03); }
+  }
+  .article-wrap :global(.cs-cap) {
+    margin: 10px 0 0;
+    font: 400 12px var(--font-mono);
+    letter-spacing: 0.02em;
+    color: var(--muted);
+  }
+  .article-wrap :global(.cs-cap-n) { font-weight: 600; color: var(--ink); }
+
+  /* Next case */
+  .next-row { display: block; padding: 0; text-decoration: none; color: var(--ink); }
+  .next-inner {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding-block: 40px;
+  }
+  .next-text { display: flex; flex-direction: column; gap: 8px; }
+  .next-label { font: 500 13px var(--font-mono); text-transform: uppercase; letter-spacing: 0.04em; }
+  .next-title, .next-arrow {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: clamp(32px, 4vw, 60px);
+    line-height: 1;
+    letter-spacing: -0.03em;
+  }
+  .next-arrow { font-size: 60px; }
+
+</style>

@@ -1,0 +1,31 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ListHero from '../../components/ListHero.astro';
+import RowList from '../../components/RowList.astro';
+import ContactBlock from '../../components/ContactBlock.astro';
+import { getPublications, publicationFilters, publicationRows } from '../../lib/content';
+
+// Same layout as the Academic & Artistic list. There is no intro copy yet, so it shows a TODO.
+const pubs = await getPublications();
+---
+<BaseLayout title="Publications" description="TODO" bodyFont="inter">
+  <ListHero title="Publications">
+    <span class="todo">TODO</span>
+  </ListHero>
+  <section class="list-section">
+    <div class="wrap">
+      <RowList
+        rows={publicationRows(pubs)}
+        filters={publicationFilters(pubs)}
+        headings={['No.', 'Publication', 'Type', 'Year']}
+        thumbPlaceholders={false}
+      />
+    </div>
+  </section>
+  <ContactBlock />
+</BaseLayout>
+
+<style>
+  .list-section { border-bottom: var(--rule) solid var(--ink); }
+  .list-section .wrap { padding-block: clamp(40px, 6vw, 80px); }
+</style>

@@ -1,0 +1,191 @@
+---
+// Lightbox for images and videos in a case study's write-up. A video figure (data-video on its button)
+// plays here with the browser's controls, and stops when the lightbox closes or moves on. Every figure image is wrapped in a .cs-zoom button
+// (lib/markdown-plugins.mjs); clicking one opens it larger in a modal, with its caption.
+// The previous and next arrows (and the arrow keys) step through every image in the article, in order.
+// Clicks are picked up on the document, so images in a protected article work once it is unlocked.
+// Escape, the close button or a click outside the image closes it, and focus returns to the image
+// that is showing.
+---
+<dialog id="lightbox" class="lb" aria-label="Image">
+  <div class="lb-bar">
+    <span class="lb-count" aria-live="polite"></span>
+    <button class="icon-btn lb-close" type="button" aria-label="Close image">
+      <svg width="20" height="20" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M2 2L18 18M18 2L2 18" stroke="currentColor" stroke-width="3"></path></svg>
+    </button>
+  </div>
+  <div class="lb-stage">
+    <button class="icon-btn lb-nav lb-prev" type="button" aria-label="Previous image">
+      <svg width="22" height="20" viewBox="0 0 22 20" aria-hidden="true" focusable="false"><path d="M21 10H3M11 2L3 10L11 18" stroke="currentColor" stroke-width="3" fill="none"></path></svg>
+    </button>
+    <figure class="lb-fig">
+      <img class="lb-img" alt="" />
+      <video class="lb-img lb-video" controls playsinline preload="none" hidden></video>
+      <figcaption class="lb-cap" hidden></figcaption>
+    </figure>
+    <button class="icon-btn lb-nav lb-next" type="button" aria-label="Next image">
+      <svg width="22" height="20" viewBox="0 0 22 20" aria-hidden="true" focusable="false"><path d="M1 10H19M11 2L19 10L11 18" stroke="currentColor" stroke-width="3" fill="none"></path></svg>
+    </button>
+  </div>
+</dialog>
+
+<style>
+  .lb {
+    width: 100%;
+    max-width: none;
+    height: 100%;
+    max-height: none;
+    margin: 0;
+    padding: clamp(16px, 3vw, 40px);
+    border: 0;
+    background: transparent;
+    color: var(--ink);
+  }
+  .lb[open] { display: flex; flex-direction: column; gap: 16px; }
+  .lb::backdrop { background: var(--bg); }
+  .lb-bar { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+  .lb-count { font: 600 13px var(--font-mono); letter-spacing: 0.04em; }
+  .lb-close, .lb-nav { background: var(--bg); }
+  /* The rule above outranks .icon-btn:hover, so the hover fill is restated here */
+  .lb-close:hover, .lb-nav:hover { background: var(--ink); color: var(--bg); }
+  .lb-nav:disabled { visibility: hidden; }
+
+  /* Arrows either side of the image; on narrow screens they sit below it */
+  .lb-stage {
+    flex: 1 1 auto;
+    min-height: 0;
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    align-items: center;
+    gap: clamp(12px, 2vw, 24px);
+  }
+  .lb-fig {
+    min-height: 0;
+    height: 100%;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+  }
+  .lb-img {
+    max-width: 100%;
+    max-height: calc(100dvh - 160px);
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    border: var(--rule) solid var(--ink);
+    box-shadow: 10px 10px 0 var(--ink);
+    background: var(--thumb);
+  }
+  @media (max-width: 720px) {
+    .lb-stage { grid-template-columns: 1fr 1fr; grid-template-rows: minmax(0, 1fr) auto; }
+    .lb-fig { grid-column: 1 / -1; grid-row: 1; }
+    .lb-prev { grid-row: 2; justify-self: start; }
+    .lb-next { grid-row: 2; justify-self: end; }
+    .lb-img { max-height: calc(100dvh - 230px); }
+  }
+  .lb-cap {
+    margin: 0;
+    padding: 6px 10px;
+    background: var(--bg);
+    border: var(--rule-thin) solid var(--ink);
+    font: 400 12px var(--font-mono);
+    letter-spacing: 0.02em;
+  }
+  .lb-cap[hidden], .lb-img[hidden] { display: none; }
+  :global(html:has(#lightbox[open])) { overflow: hidden; }
+
+  /* The figure image buttons in the write-up: no button look, the arrow cursor and a pink focus ring */
+  :global(.cs-zoom) {
+    display: block;
+    width: 100%;
+    padding: 0;
+    border: 0;
+    background: none;
+    cursor: var(--cursor-link);
+  }
+  :global(.cs-zoom:focus-visible) { outline: 3px solid var(--ink); outline-offset: 3px; }
+</style>
+
+<script>
+  const box = document.getElementById('lightbox') as HTMLDialogElement | null;
+  const img = box?.querySelector<HTMLImageElement>('img.lb-img');
+  const video = box?.querySelector<HTMLVideoElement>('.lb-video');
+  const cap = box?.querySelector<HTMLElement>('.lb-cap');
+  const count = box?.querySelector<HTMLElement>('.lb-count');
+  const prev = box?.querySelector<HTMLButtonElement>('.lb-prev');
+  const next = box?.querySelector<HTMLButtonElement>('.lb-next');
+  let items: HTMLButtonElement[] = [];
+  let index = 0;
+
+  function stopVideo() {
+    if (!video || video.hidden) return;
+    video.pause();
+    video.removeAttribute('src');
+    video.load();
+    video.hidden = true;
+  }
+
+  function show(i: number) {
+    const btn = items[i];
+    const source = btn?.querySelector('img');
+    if (!img || !video || !cap || !count || !prev || !next || !source) return;
+    index = i;
+    stopVideo();
+    const clip = btn.dataset.video;
+    img.hidden = !!clip;
+    if (clip) {
+      video.poster = source.currentSrc || source.src;
+      video.src = clip;
+      video.setAttribute('aria-label', source.alt);
+      video.hidden = false;
+      video.play().catch(() => { /* autoplay refused: the controls are there */ });
+    } else {
+      img.src = source.currentSrc || source.src;
+      img.alt = source.alt;
+    }
+    const caption = btn.closest('figure')?.querySelector('figcaption')?.textContent?.trim() ?? '';
+    cap.textContent = caption;
+    cap.hidden = !caption;
+    count.textContent = items.length > 1 ? `${i + 1} / ${items.length}` : '';
+    prev.disabled = i === 0;
+    next.disabled = i === items.length - 1;
+    // Keep focus on a visible control when an arrow hides at either end
+    if (document.activeElement instanceof HTMLButtonElement && document.activeElement.disabled) {
+      (i === 0 ? next : prev).focus();
+    }
+  }
+
+  document.addEventListener('click', (e) => {
+    const btn = (e.target as Element | null)?.closest<HTMLButtonElement>('.cs-zoom');
+    if (!box || !btn) return;
+    // Read the list on every open, so images in an article unlocked after page load are included
+    items = [...document.querySelectorAll<HTMLButtonElement>('.cs-zoom')];
+    show(items.indexOf(btn));
+    box.showModal();
+    box.querySelector<HTMLButtonElement>('.lb-close')?.focus();
+  });
+
+  prev?.addEventListener('click', () => index > 0 && show(index - 1));
+  next?.addEventListener('click', () => index < items.length - 1 && show(index + 1));
+  box?.addEventListener('keydown', (e) => {
+    // Inside the video the arrow keys seek, as usual
+    if ((e.target as Element).closest('video')) return;
+    if (e.key === 'ArrowLeft' && index > 0) { e.preventDefault(); show(index - 1); }
+    if (e.key === 'ArrowRight' && index < items.length - 1) { e.preventDefault(); show(index + 1); }
+  });
+
+  box?.querySelector('.lb-close')?.addEventListener('click', () => box.close());
+  // A click anywhere but the image, caption or a button closes it
+  box?.addEventListener('click', (e) => {
+    if (!(e.target as Element).closest('.lb-img, .lb-video, .lb-cap, button')) box.close();
+  });
+  // Focus goes back to the image that was showing, so the reader keeps their place in the article
+  box?.addEventListener('close', () => {
+    stopVideo();
+    items[index]?.focus({ preventScroll: false });
+    items = [];
+  });
+</script>
