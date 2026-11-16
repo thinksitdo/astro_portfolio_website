@@ -4,7 +4,7 @@
   <div class="wrap row">
     <span>© 2025–2026 Scott Robinson. All rights reserved</span>
     <span>From design to code, built with <a class="l-mark" href="https://astro.build/" rel="external">Astro</a></span>
-    <a class="l-mark" href="#top">Back to top ↑</a>
+    <a class="l-mark" href="#top" data-to-top>Back to top ↑</a>
   </div>
 </footer>
 
@@ -22,3 +22,39 @@
     letter-spacing: 0.04em;
   }
 </style>
+
+<script>
+  // Back to top glides up rather than jumping: fast at first, then easing into the top.
+  // The time grows with the distance but stays short. Any wheel, touch or key press hands control back.
+  // With reduced motion, or without script, it is an ordinary jump to #top.
+  const link = document.querySelector<HTMLAnchorElement>('[data-to-top]');
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)');
+  const easeOutQuint = (t: number) => 1 - Math.pow(1 - t, 5);
+
+  link?.addEventListener('click', (e) => {
+    if (reduce.matches) return;
+    e.preventDefault();
+    const start = window.scrollY;
+    const duration = Math.min(1400, 500 + start * 0.12);
+    const t0 = performance.now();
+    let frame = 0;
+    const stop = () => {
+      cancelAnimationFrame(frame);
+      ['wheel', 'touchstart', 'keydown'].forEach((t) => window.removeEventListener(t, stop));
+    };
+    ['wheel', 'touchstart', 'keydown'].forEach((t) => window.addEventListener(t, stop, { passive: true }));
+    const step = (now: number) => {
+      const t = Math.min(1, (now - t0) / duration);
+      window.scrollTo(0, Math.round(start * (1 - easeOutQuint(t))));
+      if (t < 1) { frame = requestAnimationFrame(step); return; }
+      stop();
+      // Move focus to the top too, as the jump would, so the next Tab starts from the header
+      const top = document.getElementById('top');
+      if (top) {
+        if (!top.hasAttribute('tabindex')) top.setAttribute('tabindex', '-1');
+        top.focus({ preventScroll: true });
+      }
+    };
+    frame = requestAnimationFrame(step);
+  });
+</script>
