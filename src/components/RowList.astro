@@ -93,7 +93,7 @@ const isTodo = (v: string) => !v || v.trim().toUpperCase() === 'TODO';
   .c-n { flex: 0 0 56px; }
   /* Without the number column the title keeps the same inset from the edge as the number had,
      so the text does not touch the edge of the pink hover fill */
-  .unnumbered .c-title { padding-left: 8px; }
+  .unnumbered .c-title { padding-left: 16px; }
   .c-title { flex: 999 1 300px; min-width: 0; }
   .c-cat { flex: 1 1 180px; }
   .c-year { flex: 1 1 160px; }
@@ -119,7 +119,7 @@ const isTodo = (v: string) => !v || v.trim().toUpperCase() === 'TODO';
     font-family: var(--font-mono);
     font-size: 14px;
     font-weight: 600;
-    padding: 6px 0 0 8px;
+    padding: 6px 0 0 16px;
   }
   .body { display: flex; flex-direction: column; gap: 6px; }
   .title {
