@@ -6,7 +6,8 @@
 //    that opens the lightbox. Figures are numbered automatically, in order, on each page: the caption
 //    shows "Figure 3 · <title>", and any "Figure 3:" typed at the start of the title is replaced.
 //    A video is its poster image wrapped in a link to the file, [![alt](poster.jpg "Caption")](/media/clip.mp4):
-//    the poster shows with a play icon, and the lightbox plays the video.
+//    the poster shows with a play icon, and the lightbox plays the video. A YouTube link works the same
+//    way, [![alt](poster.jpg "Caption")](https://www.youtube.com/watch?v=ID), and plays in the lightbox.
 // 2. sections: the article is split at each h2 into numbered sections (number and heading on the left,
 //    text on the right), as in the case study design. Figures sit between sections at full width.
 
@@ -22,10 +23,26 @@ const text = (value) => ({ type: 'text', value });
 
 const VIDEO = /\.(mp4|webm|mov|m4v)(\?.*)?$/i;
 const kids = (node) => (node.children ?? []).filter((c) => !isWhitespace(c));
-/** A video: a link to a video file holding just its poster image, [![alt](poster.jpg "Caption")](/media/clip.mp4) */
-const isVideoLink = (node) =>
-  node.type === 'element' && node.tagName === 'a' && VIDEO.test(String(node.properties?.href ?? '')) &&
-  kids(node).length === 1 && isImg(kids(node)[0]);
+
+/** The video ID in a YouTube address (watch?v=, youtu.be/, shorts/, embed/), or null */
+export function youtubeId(href) {
+  let url;
+  try { url = new URL(href); } catch { return null; }
+  const host = url.hostname.replace(/^(www|m)\./, '');
+  let id = null;
+  if (host === 'youtu.be') id = url.pathname.slice(1);
+  else if (host === 'youtube.com' || host === 'youtube-nocookie.com') {
+    id = url.searchParams.get('v') ?? url.pathname.match(/^\/(?:embed|shorts|live)\/([^/]+)/)?.[1] ?? null;
+  }
+  return id && /^[\w-]{6,}$/.test(id) ? id : null;
+}
+
+/** A video: a link to a video file or a YouTube video holding just its poster image, [![alt](poster.jpg "Caption")](/media/clip.mp4) */
+const isVideoLink = (node) => {
+  if (node.type !== 'element' || node.tagName !== 'a') return false;
+  const href = String(node.properties?.href ?? '');
+  return (VIDEO.test(href) || !!youtubeId(href)) && kids(node).length === 1 && isImg(kids(node)[0]);
+};
 
 /** The images and videos in a paragraph that holds one or two of them and nothing else, or null */
 function imagesOnly(node) {
@@ -48,12 +65,14 @@ const playIcon = () =>
 // Each image sits in a button that opens it larger in the lightbox (components/Lightbox.astro).
 // For a video the button holds the poster image and a play icon, and the lightbox plays the video.
 function figure(item, n) {
-  const video = isVideoLink(item) ? String(item.properties.href) : null;
+  const href = isVideoLink(item) ? String(item.properties.href) : null;
+  const yt = href ? youtubeId(href) : null;
+  const video = href;
   const img = video ? kids(item)[0] : item;
   const { title, ...props } = img.properties ?? {};
   const poster = { ...img, properties: props };
   const zoom = video
-    ? el('button', 'cs-zoom cs-zoom--video', [el('span', 'visually-hidden', [text('Play video: ')]), poster, playIcon()], { type: 'button', dataVideo: video })
+    ? el('button', 'cs-zoom cs-zoom--video', [el('span', 'visually-hidden', [text('Play video: ')]), poster, playIcon()], yt ? { type: 'button', dataYoutube: yt } : { type: 'button', dataVideo: video })
     : el('button', 'cs-zoom', [el('span', 'visually-hidden', [text('View larger image: ')]), poster], { type: 'button' });
   const caption = typeof title === 'string' ? title.replace(typedNumber, '').trim() : '';
   const label = el('span', 'cs-cap-n', [text(`Figure ${n}`)]);

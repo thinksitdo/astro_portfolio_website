@@ -1,6 +1,7 @@
 ---
 // Lightbox for images and videos in a case study's write-up. A video figure (data-video on its button)
-// plays here with the browser's controls, and stops when the lightbox closes or moves on. Every figure image is wrapped in a .cs-zoom button
+// plays here with the browser's controls, and stops when the lightbox closes or moves on. A YouTube figure
+// (data-youtube) plays in YouTube's privacy-enhanced player (youtube-nocookie.com), loaded only on play. Every figure image is wrapped in a .cs-zoom button
 // (lib/markdown-plugins.mjs); clicking one opens it larger in a modal, with its caption.
 // The previous and next arrows (and the arrow keys) step through every image in the article, in order.
 // Clicks are picked up on the document, so images in a protected article work once it is unlocked.
@@ -21,6 +22,7 @@
     <figure class="lb-fig">
       <img class="lb-img" alt="" />
       <video class="lb-img lb-video" controls playsinline preload="none" hidden></video>
+      <div class="lb-img lb-yt" hidden></div>
       <figcaption class="lb-cap" hidden></figcaption>
     </figure>
     <button class="icon-btn lb-nav lb-next" type="button" aria-label="Next image">
@@ -94,6 +96,16 @@
     font: 400 12px var(--font-mono);
     letter-spacing: 0.02em;
   }
+  /* YouTube: a 16:9 box as large as fits, the player inside it */
+  .lb-yt {
+    width: min(100%, calc((100dvh - 160px) * 16 / 9));
+    aspect-ratio: 16 / 9;
+    background: var(--ink);
+  }
+  .lb-yt :global(iframe) { display: block; width: 100%; height: 100%; border: 0; }
+  @media (max-width: 720px) {
+    .lb-yt { width: min(100%, calc((100dvh - 230px) * 16 / 9)); }
+  }
   .lb-cap[hidden], .lb-img[hidden] { display: none; }
   :global(html:has(#lightbox[open])) { overflow: hidden; }
 
@@ -113,6 +125,7 @@
   const box = document.getElementById('lightbox') as HTMLDialogElement | null;
   const img = box?.querySelector<HTMLImageElement>('img.lb-img');
   const video = box?.querySelector<HTMLVideoElement>('.lb-video');
+  const yt = box?.querySelector<HTMLElement>('.lb-yt');
   const cap = box?.querySelector<HTMLElement>('.lb-cap');
   const count = box?.querySelector<HTMLElement>('.lb-count');
   const prev = box?.querySelector<HTMLButtonElement>('.lb-prev');
@@ -121,6 +134,8 @@
   let index = 0;
 
   function stopVideo() {
+    // Removing the player stops a YouTube video
+    if (yt && !yt.hidden) { yt.replaceChildren(); yt.hidden = true; }
     if (!video || video.hidden) return;
     video.pause();
     video.removeAttribute('src');
@@ -131,12 +146,22 @@
   function show(i: number) {
     const btn = items[i];
     const source = btn?.querySelector('img');
-    if (!img || !video || !cap || !count || !prev || !next || !source) return;
+    if (!img || !video || !yt || !cap || !count || !prev || !next || !source) return;
     index = i;
     stopVideo();
     const clip = btn.dataset.video;
-    img.hidden = !!clip;
-    if (clip) {
+    const ytId = btn.dataset.youtube;
+    img.hidden = !!(clip || ytId);
+    if (ytId) {
+      const frame = document.createElement('iframe');
+      frame.src = `https://www.youtube-nocookie.com/embed/${encodeURIComponent(ytId)}?autoplay=1&rel=0&playsinline=1`;
+      frame.title = source.alt || 'YouTube video';
+      frame.allow = 'autoplay; encrypted-media; picture-in-picture; fullscreen';
+      frame.allowFullscreen = true;
+      frame.referrerPolicy = 'strict-origin-when-cross-origin';
+      yt.replaceChildren(frame);
+      yt.hidden = false;
+    } else if (clip) {
       video.poster = source.currentSrc || source.src;
       video.src = clip;
       video.setAttribute('aria-label', source.alt);
@@ -180,7 +205,7 @@
   box?.querySelector('.lb-close')?.addEventListener('click', () => box.close());
   // A click anywhere but the image, caption or a button closes it
   box?.addEventListener('click', (e) => {
-    if (!(e.target as Element).closest('.lb-img, .lb-video, .lb-cap, button')) box.close();
+    if (!(e.target as Element).closest('.lb-img, .lb-video, .lb-yt, .lb-cap, button')) box.close();
   });
   // Focus goes back to the image that was showing, so the reader keeps their place in the article
   box?.addEventListener('close', () => {

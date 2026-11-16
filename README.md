@@ -54,12 +54,14 @@ The article is shaped by the Markdown plugins in `src/lib/markdown-plugins.mjs`.
 - An image on its own line becomes a full-width figure, and two on consecutive lines sit side by side. The text in quotes becomes the caption.
 - Figures are numbered automatically on each page.
 - Every figure opens in a lightbox, which steps through the article's images with the arrows or arrow keys.
-- A video is its poster image wrapped in a link to the file. It shows with a play button and plays in the lightbox.
+- A video is its poster image wrapped in a link to the file, or to a YouTube address. It shows with a play button and plays in the lightbox.
 
 ```markdown
 ![Workshop groups sorting cards](/media/ngo-workshop.jpg "Breakout groups making departmental posters")
 
 [![Mapping session](/media/ngo-mapping-poster.jpg "Mapping the journey live")](/media/ngo-mapping.mp4)
+
+[![Conference talk](/media/talk-poster.jpg "The talk at the conference")](https://www.youtube.com/watch?v=VIDEO_ID)
 ```
 
 Recommended image widths are 2480px for heroes and full-width figures and 1200px for thumbnails. Images are not resized or recompressed, so export them at their final size.
