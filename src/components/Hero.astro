@@ -20,7 +20,8 @@ const pad = (n: number) => String(n).padStart(2, '0');
     </div>
   </div>
 
-  <div class="hx-video scrub" role="img" aria-label="Video of Scott stepping, scrubs as you scroll or move across it">
+  <div class="hx-video scrub">
+    <div class="hx-media" role="img" aria-label="Video of Scott stepping, scrubs as you scroll or move across it" data-media>
     <video
       src="/media/stepping-scrub.mp4"
       poster="/media/stepping-poster.jpg"
@@ -29,10 +30,35 @@ const pad = (n: number) => String(n).padStart(2, '0');
       preload="auto"
       aria-hidden="true"
     ></video>
-    <span class="hx-vcap">
-      <span class="d-block">Becoming Tortoise: Designing a Participatory Installation on the action of stepping</span>
-      <span class="d-block time"><strong data-vcap>0:00.0</strong> / <span data-vdur>1:01.6</span></span>
-    </span>
+    <!-- The easter egg: the same stepping, as a zoetrope. Six poses are interleaved in bands one device
+         pixel high, and a slotted mask over them shows one pose at a time as you scroll or move across -->
+    <div class="hx-zoe" hidden>
+      <div class="zoe-fig">
+        <span class="zoe-l" style="--k: 0"></span>
+        <span class="zoe-l" style="--k: 1"></span>
+        <span class="zoe-l" style="--k: 2"></span>
+        <span class="zoe-l" style="--k: 3"></span>
+        <span class="zoe-l" style="--k: 4"></span>
+        <span class="zoe-l" style="--k: 5"></span>
+        <span class="zoe-mask"></span>
+      </div>
+    </div>
+    </div>
+    <div class="hx-vcap">
+      <span class="vcap-text">
+        <span data-cap="video">
+          <span class="d-block">Becoming Tortoise: Designing a Participatory Installation on the action of stepping</span>
+          <span class="d-block time"><strong data-vcap>0:00.0</strong> / <span data-vdur>1:01.6</span></span>
+        </span>
+        <span data-cap="zoetrope" hidden>
+          <span class="d-block">Zoetrope image of <em>Stepping</em></span>
+          <span class="d-block time">Frame <strong data-zframe>1</strong> of 6</span>
+        </span>
+      </span>
+      <button class="zoe-toggle" type="button" aria-pressed="false" aria-label="Show as a zoetrope" title="Zoetrope">
+        <svg width="22" height="22" viewBox="0 0 22 22" aria-hidden="true" focusable="false"><path d="M2 2H20V20H2Z M7 6V16 M11 6V16 M15 6V16" stroke="currentColor" stroke-width="2.4" fill="none"></path></svg>
+      </button>
+    </div>
   </div>
 
   <a class="hx-tile hx-cta b-tileP" href="#contact"><span class="a">→</span><span class="t">Get in touch</span></a>
@@ -189,18 +215,79 @@ const pad = (n: number) => String(n).padStart(2, '0');
     height: 102.4%;
     object-fit: cover;
   }
+  .hx-media { position: absolute; inset: 0; }
   .hx-vcap {
     position: absolute;
     left: clamp(10px, 1.2vw, 16px);
     right: clamp(10px, 1.2vw, 16px);
     bottom: clamp(10px, 1.2vw, 16px);
-    max-width: 420px;
-    padding: 10px 14px;
-    line-height: 1.4;
+    max-width: 466px;
+    display: flex;
     border: var(--rule) solid var(--ink);
     background: var(--bg);
-    font: 500 clamp(11px, .85vw, 12px) var(--font-mono);
+    font: 500 clamp(11px, .85vw, 12px) / 1.4 var(--font-mono);
     letter-spacing: .02em;
+  }
+  .vcap-text { flex: 1 1 auto; min-width: 0; padding: 10px 14px; }
+  .vcap-text [hidden] { display: none; }
+
+  /* The zoetrope switch: a small boxed button at the end of the caption, filled when it is on */
+  .zoe-toggle {
+    flex: 0 0 auto;
+    width: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    border: 0;
+    border-left: var(--rule) solid var(--ink);
+    border-radius: 0;
+    background: var(--bg);
+    color: var(--ink);
+  }
+  .zoe-toggle:hover { background: var(--accent); color: var(--on-accent); }
+  .zoe-toggle[aria-pressed='true'] { background: var(--ink); color: var(--bg); }
+  .zoe-toggle:focus-visible { outline: 3px solid var(--accent); outline-offset: -3px; }
+  .zoe-toggle:active { transform: translate(1px, 1px); }
+
+  /* Zoetrope. --u is one device pixel (set by the script); --f is the pose showing, 0 to 5 */
+  .hx-zoe {
+    --u: 1px;
+    --f: 0;
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px 24px 110px;
+    background: var(--bg);
+    container-type: size;
+  }
+  .hx-zoe[hidden] { display: none; }
+  .zoe-fig {
+    position: relative;
+    width: min(100cqw, 100cqh * 880 / 850);
+    aspect-ratio: 880 / 850;
+  }
+  /* Each layer is one pose from the strip, kept only on its own band of every six */
+  .zoe-l {
+    position: absolute;
+    inset: 0;
+    background: url('/media/stepping-zoetrope.webp') no-repeat;
+    background-size: 700% 100%;
+    background-position: calc(var(--k) * 100% / 6) 0;
+    --a: calc(var(--k) * var(--u));
+    --b: calc((var(--k) + 1) * var(--u));
+    -webkit-mask-image: repeating-linear-gradient(180deg, transparent 0 var(--a), #000 var(--a) var(--b), transparent var(--b) calc(6 * var(--u)));
+    mask-image: repeating-linear-gradient(180deg, transparent 0 var(--a), #000 var(--a) var(--b), transparent var(--b) calc(6 * var(--u)));
+  }
+  /* The slotted drum: covers five bands in six, and moving it a band shows the next pose */
+  .zoe-mask {
+    position: absolute;
+    inset: 0;
+    background-image: repeating-linear-gradient(180deg, transparent 0 var(--u), var(--bg) var(--u) calc(6 * var(--u)));
+    background-size: 100% calc(6 * var(--u));
+    background-position: 0 calc(var(--f) * var(--u));
   }
   .d-block { display: block; }
   .time { margin-top: 4px; font-variant-numeric: tabular-nums; }
@@ -380,7 +467,50 @@ const pad = (n: number) => String(n).padStart(2, '0');
     return Math.min(0.9999, Math.max(0, (e.clientX - r.left) / r.width));
   };
 
-  cell?.addEventListener('pointermove', (e) => seek(fraction(e, cell) * duration()));
+  // Zoetrope easter egg: the switch in the caption swaps the video for the same stepping as a
+  // zoetrope. Scroll and pointer drive it as they drive the video. The choice lasts for the visit.
+  const media = cell?.querySelector<HTMLElement>('[data-media]');
+  const zoe = cell?.querySelector<HTMLElement>('.hx-zoe');
+  const zoeToggle = cell?.querySelector<HTMLButtonElement>('.zoe-toggle');
+  const zframe = cell?.querySelector<HTMLElement>('[data-zframe]');
+  const POSES = 6;
+  const SCROLL_PER_POSE = 28; // px of page scroll per pose
+  let zoetrope = false;
+  let pose = -1;
+
+  // One band is one device pixel, so the bands line up with the screen's pixels at any zoom
+  const setUnit = () => zoe?.style.setProperty('--u', `${1 / (window.devicePixelRatio || 1)}px`);
+  function showPose(n: number) {
+    n = ((n % POSES) + POSES) % POSES;
+    if (n === pose || !zoe) return;
+    pose = n;
+    zoe.style.setProperty('--f', String(n));
+    if (zframe) zframe.textContent = String(n + 1);
+  }
+  function setZoetrope(on: boolean) {
+    if (!zoe || !video || !zoeToggle || !media) return;
+    zoetrope = on;
+    zoe.hidden = !on;
+    video.hidden = on;
+    zoeToggle.setAttribute('aria-pressed', String(on));
+    zoeToggle.setAttribute('aria-label', on ? 'Show as video' : 'Show as a zoetrope');
+    zoeToggle.title = on ? 'Video' : 'Zoetrope';
+    media.setAttribute('aria-label', on
+      ? 'Zoetrope of Scott stepping, six frames, turns as you scroll or move across it'
+      : 'Video of Scott stepping, scrubs as you scroll or move across it');
+    cell?.querySelectorAll<HTMLElement>('[data-cap]').forEach((c) => { c.hidden = c.dataset.cap !== (on ? 'zoetrope' : 'video'); });
+    if (on) { setUnit(); pose = -1; showPose(Math.floor(window.scrollY / SCROLL_PER_POSE)); }
+    try { sessionStorage.setItem('hero-zoetrope', on ? '1' : ''); } catch { /* storage unavailable */ }
+  }
+  zoeToggle?.addEventListener('click', () => setZoetrope(!zoetrope));
+  window.addEventListener('resize', () => { if (zoetrope) setUnit(); });
+  try { if (sessionStorage.getItem('hero-zoetrope') === '1') setZoetrope(true); } catch { /* storage unavailable */ }
+
+  cell?.addEventListener('pointermove', (e) => {
+    // Two turns of the drum across the box
+    if (zoetrope) showPose(Math.floor(fraction(e, cell) * POSES * 2));
+    else seek(fraction(e, cell) * duration());
+  });
   // The slideshow moves only with its arrows, and wraps round at either end
   slidesCell?.querySelectorAll<HTMLButtonElement>('[data-step]').forEach((btn) => {
     btn.addEventListener('click', () => showSlide(currentSlide + Number(btn.dataset.step)));
@@ -394,7 +524,8 @@ const pad = (n: number) => String(n).padStart(2, '0');
       queued = false;
       const max = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
       const p = Math.min(1, window.scrollY / max);
-      seek(p * duration());
+      if (zoetrope) showPose(Math.floor(window.scrollY / SCROLL_PER_POSE));
+      else seek(p * duration());
     });
   }, { passive: true });
 </script>
