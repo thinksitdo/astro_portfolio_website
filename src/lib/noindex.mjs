@@ -2,5 +2,4 @@
 // Paths end in a slash, as the site's URLs do.
 export const noindexPaths = [
   '/about/', // stub until the About page is designed
-  '/hero-split/', // preview of the split hero layout
 ];
