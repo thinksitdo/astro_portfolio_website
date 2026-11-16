@@ -165,7 +165,10 @@ const pad = (n: number) => String(n).padStart(2, '0');
     const strap = hero && hero.querySelector('.hx-strap');
     const h1 = strap && strap.querySelector('.hx-h1');
     const bottom = strap && strap.querySelector('.hx-bottom');
-    const grid = hero && hero.dataset.layout !== 'split';
+    const grid = hero && hero.dataset.layout === 'grid';
+    // The open layout keeps the headline to four lines, as designed, so its size follows the width
+    // steadily instead of jumping as extra lines fit on a taller window. The height is only a ceiling
+    const maxLines = hero && hero.dataset.layout === 'open' ? 4 : Infinity;
     // In the grid layout the tile row sits below the headline's cell; in the split layout the cell is the full height
     const row2 = grid ? hero.querySelector('.hx-cta') : null;
     if (!h1 || !bottom || (grid && !row2)) return;
@@ -184,12 +187,14 @@ const pad = (n: number) => String(n).padStart(2, '0');
         - parseFloat(hs.paddingTop) - parseFloat(hs.paddingBottom)
         - (parseFloat(s.rowGap) || 0) - bottom.offsetHeight;
       h1.style.overflowWrap = 'normal'; // so a word too wide for the cell shows up as overflow
+      const lineHeight = parseFloat(getComputedStyle(h1).lineHeight) / parseFloat(getComputedStyle(h1).fontSize) || 0.95;
       let lo = 40;
       let hi = 200;
       for (let k = 0; k < 14; k++) {
         const mid = (lo + hi) / 2;
         h1.style.fontSize = mid + 'px';
-        if (h1.scrollHeight <= room && h1.scrollWidth <= h1.clientWidth) lo = mid; else hi = mid;
+        const lines = Math.round(h1.scrollHeight / (mid * lineHeight));
+        if (h1.scrollHeight <= room && h1.scrollWidth <= h1.clientWidth && lines <= maxLines) lo = mid; else hi = mid;
       }
       h1.style.fontSize = Math.floor(lo) + 'px';
     }
