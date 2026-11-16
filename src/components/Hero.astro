@@ -2,6 +2,15 @@
 import { caseUrl, getCases } from '../lib/content';
 import { resolveImageSrc, THUMB_WIDTH } from '../lib/images';
 
+interface Props {
+  /** grid: headline and video over a row of Get in touch, the case slideshow and See my work.
+      split: headline on the left with the name box and both tiles joined beneath it, the video
+      the full height on the right, and no slideshow. */
+  layout?: 'grid' | 'split';
+}
+const { layout = 'grid' } = Astro.props;
+const split = layout === 'split';
+
 // The slideshow shows the first five case studies' thumbnails
 const slides = (await getCases()).slice(0, 5).map((c) => ({
   title: c.data.title,
@@ -10,13 +19,19 @@ const slides = (await getCases()).slice(0, 5).map((c) => ({
 }));
 const pad = (n: number) => String(n).padStart(2, '0');
 ---
-<section class="hx-hero" aria-label="Introduction">
+<section class:list={['hx-hero', { 'hx-split': split }]} data-layout={layout} aria-label="Introduction">
   <div class="hx-strap">
     <h1 class="hx-h1">I research encounters between people and technology, to better designed products.</h1>
+    <div class:list={['hx-bottom', { 'hx-card': split }]}>
     <div class="hx-name">
       <span class="l1">Dr Scott Robinson</span>
       <span class="l2">London, UK • Hybrid or Remote • Permanent or Contract</span>
       <span class="l3">User Research <span aria-hidden="true">⇄</span><span class="visually-hidden">, moving back and forth with </span> UX and Product Design <span aria-hidden="true">⇄</span><span class="visually-hidden">, moving back and forth with </span> Product Strategy</span>
+    </div>
+    {split && <>
+      <a class="hx-tile hx-cta b-tileP" href="#contact"><span class="t">Get in touch</span></a>
+      <a class="hx-tile hx-work b-tileS" href="#work"><span class="t">See my work</span></a>
+    </>}
     </div>
   </div>
 
@@ -61,6 +76,7 @@ const pad = (n: number) => String(n).padStart(2, '0');
     </div>
   </div>
 
+  {!split && <>
   <a class="hx-tile hx-cta b-tileP" href="#contact"><span class="a">→</span><span class="t">Get in touch</span></a>
 
   <div class="hx-slides" role="group" aria-roledescription="slideshow" aria-label="Case study images">
@@ -87,6 +103,7 @@ const pad = (n: number) => String(n).padStart(2, '0');
   </div>
 
   <a class="hx-tile hx-work b-tileS" href="#work"><span class="a">↓</span><span class="t">See my work</span></a>
+  </>}
 </section>
 
 <script is:inline>
@@ -99,9 +116,11 @@ const pad = (n: number) => String(n).padStart(2, '0');
     const hero = document.querySelector('.hx-hero');
     const strap = hero && hero.querySelector('.hx-strap');
     const h1 = strap && strap.querySelector('.hx-h1');
-    const nameBox = strap && strap.querySelector('.hx-name');
-    const cta = hero && hero.querySelector('.hx-cta');
-    if (!h1 || !nameBox || !cta) return;
+    const bottom = strap && strap.querySelector('.hx-bottom');
+    const grid = hero && hero.dataset.layout !== 'split';
+    // In the grid layout the tile row sits below the headline's cell; in the split layout the cell is the full height
+    const row2 = grid ? hero.querySelector('.hx-cta') : null;
+    if (!h1 || !bottom || (grid && !row2)) return;
     const desktop = matchMedia('(min-width: 821px)');
 
     function fit() {
@@ -110,9 +129,10 @@ const pad = (n: number) => String(n).padStart(2, '0');
       if (!desktop.matches) return;
       const header = document.querySelector('.site-header');
       const s = getComputedStyle(strap);
-      const room = window.innerHeight - (header ? header.offsetHeight : 0) - cta.offsetHeight
-        - (parseFloat(getComputedStyle(hero).rowGap) || 0) - parseFloat(s.paddingTop) - parseFloat(s.paddingBottom)
-        - (parseFloat(s.rowGap) || 0) - nameBox.offsetHeight;
+      const below = row2 ? row2.offsetHeight + (parseFloat(getComputedStyle(hero).rowGap) || 0) : 0;
+      const room = window.innerHeight - (header ? header.offsetHeight : 0) - below
+        - parseFloat(s.paddingTop) - parseFloat(s.paddingBottom)
+        - (parseFloat(s.rowGap) || 0) - bottom.offsetHeight;
       h1.style.overflowWrap = 'normal'; // so a word too wide for the cell shows up as overflow
       let lo = 40;
       let hi = 200;
@@ -180,8 +200,8 @@ const pad = (n: number) => String(n).padStart(2, '0');
     letter-spacing: -.035em;
     overflow-wrap: break-word;
   }
+  .hx-bottom { align-self: flex-start; }
   .hx-name {
-    align-self: flex-start;
     display: flex;
     flex-direction: column;
     gap: 8px;
@@ -378,6 +398,21 @@ const pad = (n: number) => String(n).padStart(2, '0');
 
   .scrub { cursor: var(--cursor-scrub); }
 
+  /* Split layout: headline column and full-height video, the name box and tiles joined in one ruled card */
+  .hx-split { grid-template-columns: 59fr 41fr; grid-template-rows: 1fr; }
+  .hx-split .hx-strap { grid-column: 1; grid-row: 1; }
+  .hx-split .hx-video { grid-column: 2; grid-row: 1; }
+  .hx-card {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--rule);
+    width: min(100%, 760px);
+    background: var(--ink);
+    border: var(--rule) solid var(--ink);
+  }
+  .hx-card .hx-name { grid-column: 1 / -1; border: 0; }
+  .hx-card .hx-tile { grid-column: auto; grid-row: auto; min-height: clamp(96px, 9vw, 136px); justify-content: flex-end; }
+
   @media (max-width: 820px) {
     .hx-hero { grid-template-columns: 1fr 1fr; grid-template-rows: auto auto auto auto; }
     .hx-strap { grid-column: 1 / -1; grid-row: 1; }
@@ -387,6 +422,8 @@ const pad = (n: number) => String(n).padStart(2, '0');
     .hx-cta { grid-column: 1; grid-row: 3; min-height: 150px; }
     .hx-work { grid-column: 2; grid-row: 3; min-height: 150px; }
     .hx-slides { grid-column: 1 / -1; grid-row: 4; aspect-ratio: 4 / 3; }
+    .hx-split { grid-template-columns: 1fr; grid-template-rows: auto auto; }
+    .hx-split .hx-video { grid-column: 1; grid-row: 2; }
   }
 </style>
 
