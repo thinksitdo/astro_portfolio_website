@@ -41,6 +41,7 @@ const pad = (n: number) => String(n).padStart(2, '0');
         <span class="zoe-l" style="--k: 4"></span>
         <span class="zoe-l" style="--k: 5"></span>
         <span class="zoe-mask"></span>
+        <span class="zoe-shade"></span>
       </div>
     </div>
     </div>
@@ -288,6 +289,21 @@ const pad = (n: number) => String(n).padStart(2, '0');
     background-image: repeating-linear-gradient(180deg, transparent 0 var(--u), var(--bg) var(--u) calc(6 * var(--u)));
     background-size: 100% calc(6 * var(--u));
     background-position: 0 calc(var(--f) * var(--u));
+  }
+  /* Where the drum's bars cross the pose showing, they are dark rather than background colour, so the
+     pose reads as a solid dark figure with its pink rows running through it. This is the pose's
+     silhouette, filled dark, on every band except the open one */
+  .zoe-shade {
+    position: absolute;
+    inset: 0;
+    background: url('/media/stepping-zoetrope.webp') no-repeat;
+    background-size: 700% 100%;
+    background-position: calc(var(--f) * 100% / 6) 0;
+    filter: brightness(0);
+    --a: calc(var(--f) * var(--u));
+    --b: calc((var(--f) + 1) * var(--u));
+    -webkit-mask-image: repeating-linear-gradient(180deg, #000 0 var(--a), transparent var(--a) var(--b), #000 var(--b) calc(6 * var(--u)));
+    mask-image: repeating-linear-gradient(180deg, #000 0 var(--a), transparent var(--a) var(--b), #000 var(--b) calc(6 * var(--u)));
   }
   .d-block { display: block; }
   .time { margin-top: 4px; font-variant-numeric: tabular-nums; }
