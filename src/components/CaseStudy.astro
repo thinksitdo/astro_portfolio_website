@@ -113,7 +113,8 @@ const payload = type === 'protected' ? encryptArticle(await Astro.slots.render('
   section { border-bottom: var(--rule) solid var(--ink); }
 
   /* Hero */
-  .cs-hero .wrap { padding-top: clamp(32px, 5vw, 64px); padding-bottom: clamp(40px, 6vw, 72px); }
+  /* Twice the gap between the title and the intro (.cs-top), before the image band */
+  .cs-hero .wrap { padding-top: clamp(32px, 5vw, 64px); padding-bottom: clamp(64px, 8vw, 112px); }
   .back {
     font: 500 13px var(--font-mono);
     text-transform: uppercase;
