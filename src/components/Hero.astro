@@ -1,10 +1,11 @@
 ---
-import { getCases } from '../lib/content';
+import { caseUrl, getCases } from '../lib/content';
 import { resolveImageSrc, THUMB_WIDTH } from '../lib/images';
 
 // The slideshow shows the first five case studies' thumbnails
 const slides = (await getCases()).slice(0, 5).map((c) => ({
   title: c.data.title,
+  href: caseUrl(c),
   thumbnail: resolveImageSrc(c.filePath, c.data.thumbnail, THUMB_WIDTH),
 }));
 const pad = (n: number) => String(n).padStart(2, '0');
@@ -37,17 +38,19 @@ const pad = (n: number) => String(n).padStart(2, '0');
   <a class="hx-tile hx-cta b-tileP" href="#contact"><span class="a">→</span><span class="t">Get in touch</span></a>
 
   <div class="hx-slides" role="group" aria-roledescription="slideshow" aria-label="Case study images">
-    <div class="sl-wrap">
+    <!-- The image and the caption both open the case showing. The image link is a duplicate of the
+         caption link, so it is left out of the tab order and hidden from screen readers -->
+    <a class="sl-wrap" href={slides[0]?.href} data-slink tabindex="-1" aria-hidden="true">
       {slides.map((s, i) => (
-        <div class="sl" data-i={i} data-title={s.title} style={`opacity: ${i === 0 ? 1 : 0}`}>
+        <div class="sl" data-i={i} data-title={s.title} data-href={s.href} style={`opacity: ${i === 0 ? 1 : 0}`}>
           {s.thumbnail
             ? <img src={s.thumbnail} alt="" loading={i === 0 ? 'eager' : 'lazy'} />
             : <div class="thumb-placeholder">Image · {s.title}</div>}
         </div>
       ))}
-    </div>
+    </a>
     <div class="hx-sbar">
-      <span class="hx-scap" aria-live="polite"><strong data-scap>01</strong> / {pad(slides.length)} · <span data-sname>{slides[0]?.title}</span></span>
+      <a class="hx-scap" href={slides[0]?.href} data-slink aria-live="polite"><strong data-scap>01</strong> / {pad(slides.length)} · <span data-sname>{slides[0]?.title}</span></a>
       <button class="icon-btn sl-nav" type="button" data-step="-1" aria-label="Previous case image">
         <svg width="20" height="18" viewBox="0 0 22 20" aria-hidden="true" focusable="false"><path d="M21 10H3M11 2L3 10L11 18" stroke="currentColor" stroke-width="3" fill="none"></path></svg>
       </button>
@@ -117,11 +120,14 @@ const pad = (n: number) => String(n).padStart(2, '0');
     touch-action: pan-y;
     min-height: 0;
   }
+  /* The clip and its poster have a few dark rows at the top and bottom, which read as extra rules
+     against the header and the tiles below. The video is drawn a little taller so the cell crops them */
   .hx-video video {
     position: absolute;
-    inset: 0;
+    top: -1.2%;
+    left: 0;
     width: 100%;
-    height: 100%;
+    height: 102.4%;
     object-fit: cover;
   }
   .hx-vcap {
@@ -174,13 +180,17 @@ const pad = (n: number) => String(n).padStart(2, '0');
     min-width: 0;
   }
   .sl-wrap, .sl { position: absolute; inset: 0; }
+  .sl-wrap { display: block; }
   .sl img {
     width: 100%;
     height: 100%;
     object-fit: cover;
     object-position: top left;
     filter: grayscale(1) contrast(1.05);
+    transition: filter .2s ease;
   }
+  /* Pointing at the image or caption brings the image into colour */
+  .hx-slides:has(.sl-wrap:hover, .hx-scap:hover, .hx-scap:focus-visible) .sl img { filter: none; }
   .sl .thumb-placeholder { width: 100%; height: 100%; padding: 16px; }
   /* Caption with the previous and next arrows, boxed and joined like the lightbox controls */
   .hx-sbar {
@@ -196,14 +206,18 @@ const pad = (n: number) => String(n).padStart(2, '0');
   .hx-scap {
     flex: 1 1 auto;
     min-width: 0;
-    align-self: center;
-    padding: 6px 10px;
-    line-height: 1.4;
-    font: 500 clamp(11px, .85vw, 12px) var(--font-mono);
+    display: block;
+    padding: 0 10px;
+    font: 500 clamp(11px, .85vw, 12px) / 44px var(--font-mono);
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+    color: var(--ink);
+    text-decoration: none;
   }
+  .hx-scap:hover, .hx-scap:focus-visible { background: var(--accent); color: var(--on-accent); }
+  .hx-scap:hover [data-sname], .hx-scap:focus-visible [data-sname] { text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 3px; }
+  .hx-scap:focus-visible { outline: 3px solid var(--ink); outline-offset: -3px; }
   .sl-nav {
     flex: 0 0 auto;
     width: 44px;
@@ -288,6 +302,47 @@ const pad = (n: number) => String(n).padStart(2, '0');
     if (vdur) vdur.textContent = fmt(duration());
   });
 
+  // On desktop the headline grows to fill the space above the name box: the largest size at which
+  // it fits the cell's width without breaking a word and the height left on the first screen.
+  // Stacked (820px and below) it keeps the CSS size, which matches the case study titles.
+  const hero = document.querySelector<HTMLElement>('.hx-hero');
+  const strap = hero?.querySelector<HTMLElement>('.hx-strap');
+  const h1 = strap?.querySelector<HTMLElement>('.hx-h1');
+  const nameBox = strap?.querySelector<HTMLElement>('.hx-name');
+  const cta = hero?.querySelector<HTMLElement>('.hx-cta');
+  const desktop = matchMedia('(min-width: 821px)');
+  const MIN_SIZE = 40;
+  const MAX_SIZE = 200;
+  function fitHeadline() {
+    if (!hero || !strap || !h1 || !nameBox || !cta) return;
+    h1.style.fontSize = '';
+    h1.style.overflowWrap = '';
+    if (!desktop.matches) return;
+    const header = document.querySelector<HTMLElement>('.site-header')?.offsetHeight ?? 0;
+    const s = getComputedStyle(strap);
+    const room = window.innerHeight - header - cta.offsetHeight - parseFloat(getComputedStyle(hero).rowGap || '0')
+      - parseFloat(s.paddingTop) - parseFloat(s.paddingBottom) - parseFloat(s.rowGap || '0') - nameBox.offsetHeight;
+    h1.style.overflowWrap = 'normal'; // so a word too wide for the cell shows up as overflow
+    let lo = MIN_SIZE;
+    let hi = MAX_SIZE;
+    for (let k = 0; k < 14; k++) {
+      const mid = (lo + hi) / 2;
+      h1.style.fontSize = `${mid}px`;
+      if (h1.scrollHeight <= room && h1.scrollWidth <= h1.clientWidth) lo = mid; else hi = mid;
+    }
+    h1.style.fontSize = `${Math.floor(lo)}px`;
+  }
+  fitHeadline();
+  document.fonts?.ready.then(fitHeadline);
+  let fitQueued = false;
+  window.addEventListener('resize', () => {
+    if (fitQueued) return;
+    fitQueued = true;
+    requestAnimationFrame(() => { fitQueued = false; fitHeadline(); });
+  });
+
+  const slideLinks = slidesCell?.querySelectorAll<HTMLAnchorElement>('[data-slink]') ?? [];
+
   function showSlide(i: number) {
     const n = slides.length;
     if (!n) return;
@@ -297,6 +352,7 @@ const pad = (n: number) => String(n).padStart(2, '0');
     slides.forEach((el, k) => { el.style.opacity = k === i ? '1' : '0'; });
     if (scap) scap.textContent = String(i + 1).padStart(2, '0');
     if (sname) sname.textContent = slides[i].dataset.title ?? '';
+    slideLinks.forEach((a) => { a.href = slides[i].dataset.href ?? a.href; });
   }
 
   const fraction = (e: PointerEvent, el: HTMLElement) => {
