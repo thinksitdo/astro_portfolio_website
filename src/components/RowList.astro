@@ -31,7 +31,7 @@ const { rows, filters, headings, numbered = true, filterLabel = 'Filter', fourth
 const [hNum, hTitle, h3, h4] = numbered ? headings : ['', ...headings];
 const isTodo = (v: string) => !v || v.trim().toUpperCase() === 'TODO';
 ---
-<div class="row-list" data-row-list data-thumb-placeholders={thumbPlaceholders ? 'true' : 'false'}>
+<div class:list={['row-list', { unnumbered: !numbered }]} data-row-list data-thumb-placeholders={thumbPlaceholders ? 'true' : 'false'}>
   <div class="filters" role="group" aria-label={filterLabel}>
     {filters.map((f, i) => (
       <button class="b-chip" type="button" data-filter={f} aria-pressed={i === 0 ? 'true' : 'false'}>{f}</button>
@@ -90,6 +90,9 @@ const isTodo = (v: string) => !v || v.trim().toUpperCase() === 'TODO';
     .filters { border-bottom: var(--rule) solid var(--ink); }
   }
   .c-n { flex: 0 0 56px; }
+  /* Without the number column the title keeps the same inset from the edge as the number had,
+     so the text does not touch the edge of the pink hover fill */
+  .unnumbered .c-title { padding-left: 8px; }
   .c-title { flex: 999 1 300px; min-width: 0; }
   .c-cat { flex: 1 1 180px; }
   .c-year { flex: 1 1 160px; }
