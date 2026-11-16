@@ -16,7 +16,8 @@ const cases = await getCases();
       <RowList
         rows={caseRows(cases, 'client-year')}
         filters={caseFilters(cases)}
-        headings={['No.', 'Project', 'Category', 'Client · Year']}
+        headings={['Project', 'Category', 'Client · Year']}
+        numbered={false}
       />
     </div>
   </section>

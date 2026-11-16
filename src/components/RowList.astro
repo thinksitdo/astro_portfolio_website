@@ -17,14 +17,18 @@ export interface Row {
 interface Props {
   rows: Row[];
   filters: string[];
-  headings: [string, string, string, string];
+  /** Column labels: number, title, third, fourth; without the number when numbered is false */
+  headings: string[];
+  /** Show the 01, 02… column (false on the case lists) */
+  numbered?: boolean;
   filterLabel?: string;
   /** The homepage sets the fourth column in capitals; the Cases and Academic & Artistic pages do not */
   fourthUpper?: boolean;
   /** Show a "Thumbnail · title" placeholder popover for rows without a thumbnail (false: no popover) */
   thumbPlaceholders?: boolean;
 }
-const { rows, filters, headings, filterLabel = 'Filter', fourthUpper = false, thumbPlaceholders = true } = Astro.props;
+const { rows, filters, headings, numbered = true, filterLabel = 'Filter', fourthUpper = false, thumbPlaceholders = true } = Astro.props;
+const [hNum, hTitle, h3, h4] = numbered ? headings : ['', ...headings];
 const isTodo = (v: string) => !v || v.trim().toUpperCase() === 'TODO';
 ---
 <div class="row-list" data-row-list data-thumb-placeholders={thumbPlaceholders ? 'true' : 'false'}>
@@ -35,10 +39,10 @@ const isTodo = (v: string) => !v || v.trim().toUpperCase() === 'TODO';
   </div>
 
   <div class="cols" aria-hidden="true">
-    <span class="c-n">{headings[0]}</span>
-    <span class="c-title">{headings[1]}</span>
-    <span class="c-cat">{headings[2]}</span>
-    <span class="c-year">{headings[3]}</span>
+    {numbered && <span class="c-n">{hNum}</span>}
+    <span class="c-title">{hTitle}</span>
+    <span class="c-cat">{h3}</span>
+    <span class="c-year">{h4}</span>
   </div>
 
   <div class="rows-wrap">
@@ -46,7 +50,7 @@ const isTodo = (v: string) => !v || v.trim().toUpperCase() === 'TODO';
       {rows.map((r, i) => (
         <li data-tags={JSON.stringify(r.tags)}>
           <a class="w-row" href={r.href} data-thumb={r.thumbnail ?? ''} data-title={r.title}>
-            <span class="c-n num">{String(i + 1).padStart(2, '0')}</span>
+            {numbered && <span class="c-n num">{String(i + 1).padStart(2, '0')}</span>}
             <span class="c-title body">
               <span class="title">{r.title}</span>
               <span class="summary">{r.summary}</span>

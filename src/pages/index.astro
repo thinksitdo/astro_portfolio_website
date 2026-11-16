@@ -35,7 +35,7 @@ const research = [
 
   <section id="about" class="section">
     <div class="wrap">
-      <SectionHead label="Section 1">In short</SectionHead>
+      <SectionHead>In short</SectionHead>
       <div class="split">
         <div class="split-main">
           <p class="lead">Designer, researcher and product strategist with 25+ years’ experience and a practice-based PhD.</p>
@@ -45,9 +45,9 @@ const research = [
           <div class="fact">
             <h3 class="fact-h">Specialisms</h3>
             <ul class="fact-list">
-              <li>Design Research</li>
-              <li>Product Strategy</li>
-              <li>Experience Design (UX)</li>
+              <li>User Research</li>
+              <li>UX Design</li>
+              <li>Product Design and Strategy</li>
               <li>Human–AI Decision-Making</li>
             </ul>
           </div>
@@ -62,7 +62,7 @@ const research = [
 
   <section id="focus" class="section focus pk">
     <div class="wrap">
-      <SectionHead label="Section 2" onAccent>Current focus</SectionHead>
+      <SectionHead onAccent>Current focus</SectionHead>
       <div class="split">
         <div class="focus-a">
           <p class="focus-title">Human + AI decision-making</p>
@@ -79,11 +79,12 @@ const research = [
 
   <section id="work" class="section">
     <div class="wrap">
-      <SectionHead label="Section 3">Cases</SectionHead>
+      <SectionHead>Cases</SectionHead>
       <RowList
         rows={caseRows(homeCases, 'year-read')}
         filters={caseFilters(homeCases)}
-        headings={['No.', 'Project', 'Category', 'Year · Read']}
+        headings={['Project', 'Category', 'Year · Read']}
+        numbered={false}
         filterLabel="Filter work by category"
         fourthUpper
       />
@@ -93,7 +94,7 @@ const research = [
 
   <section id="how" class="section">
     <div class="wrap">
-      <SectionHead label="Section 4">How I work</SectionHead>
+      <SectionHead>How I work</SectionHead>
       <p class="lead how-lead">The question determines the method.</p>
       <p class="muted how-sub">I don’t begin with a particular design method. I begin by asking what we need to understand.</p>
       <div class="box-grid questions">
@@ -111,7 +112,7 @@ const research = [
 
   <section id="design-research" class="section">
     <div class="wrap">
-      <SectionHead label="Section 5">Design as research</SectionHead>
+      <SectionHead>Design as research</SectionHead>
       <div class="split dr">
         <p class="lead dr-lead">Research doesn’t end with a report.</p>
         <p class="muted dr-body">Research can take many forms, and it doesn’t stop when designing or making begins. Mapping relationships, sketching an idea, staging an encounter or building working software can all be ways of investigating a question. What I make — and how I make it — depends on what I’m trying to understand.</p>
@@ -134,11 +135,11 @@ const research = [
 
   <section id="research" class="section">
     <div class="wrap">
-      <SectionHead label="Section 6">PhD in Design</SectionHead>
+      <SectionHead>PhD in Design</SectionHead>
       <div class="split">
         <div class="phd-a">
           <p class="lead">A practice-based PhD in embodied and somatic design</p>
-          <p class="muted phd-body"><strong>My research starts with people whose practices are deeply embodied.</strong> I work with practitioners from disciplines such as theatre and climbing to explore what their ways of working can teach us about design, and how thinking about design activities as encounters might change the way we understand embodied experience.</p>
+          <p class="muted phd-body">My research starts with people whose practices are deeply embodied. I work with practitioners from disciplines such as theatre and climbing to explore what their ways of working can teach us about design, and how thinking about design activities as encounters might change the way we understand embodied experience.</p>
         </div>
         <ul class="phd-list">
           {research.map((r) => (
@@ -159,7 +160,7 @@ const research = [
 
   <section id="contact" class="section">
     <div class="wrap">
-      <SectionHead label="Section 7">Get in touch</SectionHead>
+      <SectionHead>Get in touch</SectionHead>
       <a class="l-big" href="mailto:hello@scottrobinson.co.uk">hello@scottrobinson.co.uk</a>
       <div class="contact-actions">
         <a class="b-pri pk lg" href="mailto:hello@scottrobinson.co.uk">Get in touch →</a>
@@ -277,7 +278,6 @@ const research = [
   /* PhD in Design */
   .phd-a { flex: 1 1 420px; min-width: 0; }
   .phd-body { margin: 20px 0 0; }
-  .phd-body strong { font-family: var(--font-display); font-weight: 700; color: var(--ink); }
   .phd-list {
     flex: 1 1 420px;
     min-width: 0;
