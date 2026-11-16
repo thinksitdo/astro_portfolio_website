@@ -231,7 +231,7 @@ const pad = (n: number) => String(n).padStart(2, '0');
   .vcap-text { flex: 1 1 auto; min-width: 0; padding: 10px 14px; }
   .vcap-text [hidden] { display: none; }
 
-  /* The zoetrope switch: a small boxed button at the end of the caption, filled when it is on */
+  /* The zoetrope switch: a small boxed button at the end of the caption, filled pink when it is on */
   .zoe-toggle {
     flex: 0 0 auto;
     width: 44px;
@@ -246,21 +246,24 @@ const pad = (n: number) => String(n).padStart(2, '0');
     color: var(--ink);
   }
   .zoe-toggle:hover { background: var(--accent); color: var(--on-accent); }
-  .zoe-toggle[aria-pressed='true'] { background: var(--ink); color: var(--bg); }
-  .zoe-toggle:focus-visible { outline: 3px solid var(--accent); outline-offset: -3px; }
+  /* On: pink, so it stands out against the zoetrope's dark ground in both themes */
+  .zoe-toggle[aria-pressed='true'] { background: var(--accent); color: var(--on-accent); }
+  .zoe-toggle:focus-visible { outline: 3px solid var(--ink); outline-offset: -3px; }
   .zoe-toggle:active { transform: translate(1px, 1px); }
 
-  /* Zoetrope. --u is one device pixel (set by the script); --f is the pose showing, 0 to 5 */
+  /* Zoetrope. --u is one device pixel (set by the script); --f is the pose showing, 0 to 5.
+     It is always on the dark ground (the dark theme's background), where the pink bands read best */
   .hx-zoe {
     --u: 1px;
     --f: 0;
+    --zoe-bg: #0A0A0A;
     position: absolute;
     inset: 0;
     display: flex;
     align-items: center;
     justify-content: center;
     padding: 24px 24px 110px;
-    background: var(--bg);
+    background: var(--zoe-bg);
     container-type: size;
   }
   .hx-zoe[hidden] { display: none; }
@@ -285,7 +288,7 @@ const pad = (n: number) => String(n).padStart(2, '0');
   .zoe-mask {
     position: absolute;
     inset: 0;
-    background-image: repeating-linear-gradient(180deg, transparent 0 var(--u), var(--bg) var(--u) calc(6 * var(--u)));
+    background-image: repeating-linear-gradient(180deg, transparent 0 var(--u), var(--zoe-bg) var(--u) calc(6 * var(--u)));
     background-size: 100% calc(6 * var(--u));
     background-position: 0 calc(var(--f) * var(--u));
   }
