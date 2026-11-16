@@ -16,7 +16,15 @@ import Logo from './Logo.astro';
 </header>
 
 <style>
-  .site-header { border-bottom: var(--rule) solid var(--ink); }
+  /* Sticky: stays at the top of the window. Its height is published as --header-h (script below),
+     so the hero can fill the rest of the first screen and anchor links land below the header */
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: var(--bg);
+    border-bottom: var(--rule) solid var(--ink);
+  }
   .bar {
     display: flex;
     flex-wrap: wrap;
@@ -36,3 +44,12 @@ import Logo from './Logo.astro';
     .talk { display: none; }
   }
 </style>
+
+<script>
+  const header = document.querySelector<HTMLElement>('.site-header');
+  if (header) {
+    const publish = () => document.documentElement.style.setProperty('--header-h', `${header.offsetHeight}px`);
+    publish();
+    new ResizeObserver(publish).observe(header);
+  }
+</script>
