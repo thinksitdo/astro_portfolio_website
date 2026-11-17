@@ -32,6 +32,7 @@ const { Content } = await render(entry);
       { label: 'Year', value: d.year },
     ]}
     next={{ label: 'TODO', title: next.data.title, href: projectUrl(next) }}
+    back={{ label: '← Back to academic and artistic', href: '/academic-artistic/' }}
   >
     <Content />
   </CaseStudy>

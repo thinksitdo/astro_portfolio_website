@@ -33,6 +33,7 @@ const { Content } = await render(entry);
       { label: 'Task', value: d.task },
     ]}
     next={{ label: 'Next case', title: next.data.title, href: caseUrl(next) }}
+    back={{ label: '← Back to cases', href: '/cases/' }}
   >
     <Content />
   </CaseStudy>

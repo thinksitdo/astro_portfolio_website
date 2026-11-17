@@ -33,7 +33,7 @@ const { Content } = await render(entry);
       ...(d.reference ? [{ label: 'Reference', html: inlineMarkdown(d.reference) }] : []),
     ]}
     next={{ label: 'TODO', title: next.data.title, href: publicationUrl(next) }}
-    back={{ label: '← Back to home', href: '/' }}
+    back={{ label: '← Back to publications', href: '/publications/' }}
     imageOptional
   >
     <Content />
