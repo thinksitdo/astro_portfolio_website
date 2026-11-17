@@ -9,9 +9,9 @@ const homeCases = (await getCases()).slice(0, 6);
 
 const questions = [
   { n: '01', title: 'What is actually happening?', body: 'I use research to understand how people work, what they need, where things break down, and the organisational and technical context around them.', methods: 'Interviews · Observation · Workshops · Stakeholder engagement · Qualitative research · Experience mapping · Information architecture · Data evaluation' },
-  { n: '02', title: 'What have we learned, and where is the opportunity?', body: 'I make sense of what we’ve learned, identify where meaningful change is possible, and turn evidence into opportunities, propositions and product direction.', methods: 'Synthesis · Relationship mapping · Product discovery · Proposition development · Product vision · Product strategy' },
+  { n: '02', title: 'What have we learned?', body: 'I make sense of what we’ve learned, identify where meaningful change is possible, and turn evidence into opportunities, propositions and product direction.', methods: 'Synthesis · Relationship mapping · Product discovery · Proposition development · Product vision · Product strategy' },
   { n: '03', title: 'What might the answer look like?', body: 'I make things to explore ideas and answer questions, choosing the level of fidelity according to what we need to learn — from maps and staged experiences to prototypes and working software.', methods: 'Concept development · Embodied ideation · Wizard of Oz · Prototyping · AI-assisted prototyping' },
-  { n: '04', title: 'Are we right?', body: 'I put ideas in front of people to understand what works, what doesn’t, and what we need to learn next.', methods: 'Usability testing · Remote testing · Prototype evaluation · Iteration · Product feedback · Market evidence' },
+  { n: '04', title: 'Is our approach right?', body: 'I put ideas in front of people to understand what works, what doesn’t, and what we need to learn next.', methods: 'Usability testing · Remote testing · Prototype evaluation · Iteration · Product feedback · Market evidence' },
 ];
 
 // img is null where Scott still has to supply the picture; the placeholder text names what goes there
@@ -240,6 +240,8 @@ const research = [
     font-size: 24px;
     --lh: 1.1;
     letter-spacing: -0.01em;
+    /* Two lines reserved, so the bodies line up across the boxes */
+    min-height: 2lh;
   }
   .q-body { margin: 0; font-size: 16px; --lh: 1.55; }
   .q-methods {
