@@ -82,6 +82,7 @@ const pad = (n: number) => String(n).padStart(2, '0');
         <span class="zoe-l" style="--k: 5"></span>
         <span class="zoe-mask"></span>
       </div>
+      <span class="zoe-scale" aria-hidden="true"></span>
     </div>
     </div>
     <div class="hx-vcap">
@@ -365,6 +366,21 @@ const pad = (n: number) => String(n).padStart(2, '0');
     background-size: 100% calc(6 * var(--u));
     background-position: 0 calc(var(--f) * var(--u));
   }
+  /* A scale down the right-hand side: an 8px tick in ink every ten slits. It moves with the drum, so
+     the slits' movement, too fine to see on the figure, shows here as ticks running up and down.
+     --t counts poses without wrapping, so the ticks keep travelling rather than jumping back */
+  .zoe-scale {
+    --t: 0;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    width: 8px;
+    background-image: linear-gradient(180deg, var(--ink) 0 1px, transparent 1px);
+    background-size: 8px calc(60 * var(--u));
+    background-position: 0 calc(var(--t) * var(--u));
+    pointer-events: none;
+  }
   /* Case portrait slides: filling the cell, grey until pointed at, like the grid slideshow */
   .hx-pslide { position: absolute; inset: 0; display: block; background: var(--thumb); cursor: var(--cursor-link); }
   .hx-pslide[hidden], .hx-media[hidden], .vcap-text[hidden], .vcap-case[hidden], .zoe-toggle[hidden] { display: none; }
@@ -642,7 +658,9 @@ const pad = (n: number) => String(n).padStart(2, '0');
 
   // One band is one device pixel, so the bands line up with the screen's pixels at any zoom
   const setUnit = () => zoe?.style.setProperty('--u', `${1 / (window.devicePixelRatio || 1)}px`);
+  const zscale = zoe?.querySelector<HTMLElement>('.zoe-scale');
   function showPose(n: number) {
+    zscale?.style.setProperty('--t', String(n));
     n = ((n % POSES) + POSES) % POSES;
     if (n === pose || !zoe) return;
     pose = n;
