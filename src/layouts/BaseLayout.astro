@@ -34,7 +34,7 @@ const shareUrl = share ? new URL(share.src, Astro.site).href : undefined;
 const isHome = Astro.url.pathname === '/';
 ---
 <!doctype html>
-<html lang="en-GB">
+<html lang="en-GB" data-theme="dark">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -43,7 +43,7 @@ const isHome = Astro.url.pathname === '/';
     {robots && <meta name="robots" content={robots} />}
     <link rel="canonical" href={canonical} />
     <link rel="sitemap" href="/sitemap-index.xml" />
-    <meta name="color-scheme" content="light dark" />
+    <meta name="color-scheme" content="dark light" />
 
     <!-- Link previews (LinkedIn, Slack, iMessage and others) -->
     <meta property="og:site_name" content={SITE_NAME} />
@@ -59,14 +59,12 @@ const isHome = Astro.url.pathname === '/';
 
     {isHome && <script type="application/ld+json" set:html={JSON.stringify(person)} />}
 
-    <!-- Set the theme before first paint: stored choice, else the system setting -->
+    <!-- Set the theme before first paint: the stored choice, else dark. The html tag says dark too, for visitors without JavaScript -->
     <script is:inline>
       (function () {
         var theme;
         try { theme = localStorage.getItem('theme'); } catch (e) {}
-        if (theme !== 'light' && theme !== 'dark') {
-          theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-        }
+        if (theme !== 'light' && theme !== 'dark') theme = 'dark';
         document.documentElement.dataset.theme = theme;
       })();
     </script>

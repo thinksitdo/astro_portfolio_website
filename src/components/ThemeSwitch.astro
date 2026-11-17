@@ -80,11 +80,4 @@
       try { localStorage.setItem(STORAGE_KEY, next); } catch { /* storage unavailable */ }
     });
   });
-
-  // Follow the system setting until the visitor makes a choice
-  matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
-    let stored: string | null = null;
-    try { stored = localStorage.getItem(STORAGE_KEY); } catch { /* storage unavailable */ }
-    if (!stored) apply(e.matches ? 'dark' : 'light');
-  });
 </script>
