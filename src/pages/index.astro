@@ -16,10 +16,10 @@ const questions = [
 
 // img is null where Scott still has to supply the picture; the placeholder text names what goes there
 const making = [
-  { title: 'Mapping complex relationships', img: '/media/ngo-experience-map.jpg', placeholder: 'NGO mapping', body: 'Bringing interviews and workshops together into a form that allowed relationships between people, processes, data and digital services to be seen and questioned.' },
-  { title: 'Staging an encounter', img: null, placeholder: 'Staging an encounter', body: 'Sometimes the thing being investigated is experiential. Staging an experience makes it possible to encounter and question something before deciding what should be built.' },
-  { title: 'Making an idea testable', img: null, placeholder: 'Sketch', body: 'From sketches and interactive prototypes to working technology, giving an idea form creates something that can be experienced and questioned.' },
-  { title: 'Building to investigate', img: null, placeholder: 'Citations React interface', body: 'AI-assisted development lets me take those questions into functional React interfaces, where encounters can be experienced and tested rather than imagined.' },
+  { title: 'Mapping complex relationships', diagram: 1, body: 'Bringing interviews and workshops together into a form that allowed relationships between people, processes, data and digital services to be seen and questioned.' },
+  { title: 'Staging an encounter', diagram: 2, body: 'Sometimes the thing being investigated is experiential. Staging an experience makes it possible to encounter and question something before deciding what should be built.' },
+  { title: 'Making an idea testable', diagram: 3, body: 'From sketches and interactive prototypes to working technology, giving an idea form creates something that can be experienced and questioned.' },
+  { title: 'Building to investigate', diagram: 4, body: 'AI-assisted development lets me take those questions into functional React interfaces, where encounters can be experienced and tested rather than imagined.' },
 ];
 
 const research = [
@@ -120,9 +120,8 @@ const research = [
       <div class="box-grid making">
         {making.map((m) => (
           <div class="m">
-            {m.img
-              ? <img class="m-img" src={m.img} alt="" loading="lazy" />
-              : <div class="m-img thumb-placeholder">Image · {m.placeholder}</div>}
+            {/* Decorative diagram, light and dark versions. A CSS background, so only the current theme's file is downloaded */}
+            <div class="m-img m-diagram" style={`--d-light: url(/media/research-diagrams/diagram-${m.diagram}-light.png); --d-dark: url(/media/research-diagrams/diagram-${m.diagram}-dark.png)`}></div>
             <div class="m-text">
               <h3 class="m-title">{m.title}</h3>
               <p class="muted m-body">{m.body}</p>
@@ -263,9 +262,11 @@ const research = [
   .m-img {
     aspect-ratio: 4 / 3;
     width: 100%;
-    object-fit: cover;
     border-bottom: var(--rule) solid var(--ink);
   }
+  /* The diagrams are a little wider than 4:3; fitted, not cropped */
+  .m-diagram { background: var(--d-light) center / contain no-repeat; }
+  :global(:root[data-theme='dark']) .m-diagram { background-image: var(--d-dark); }
   .m-text { padding: 16px 32px 32px; }
   .m-title {
     margin: 0 0 8px;
