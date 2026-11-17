@@ -155,8 +155,9 @@ const pad = (n: number) => String(n).padStart(2, '0');
 </section>
 
 <script is:inline>
-  // On desktop the headline grows to fill the space above the name box: the largest size at which
-  // it fits the cell's width without breaking a word and the height left on the first screen.
+  // On desktop the headline takes a fixed size on the 8px grid, set by the window width:
+  // 72px from 1600px, 64px from 1280px, 56px below. If a short window cannot fit it above the
+  // name box, or a word would not fit the cell's width, it drops 8px at a time until it does.
   // Stacked (820px and below) it keeps the CSS size, which matches the case study titles.
   // This runs inline, before the first paint, so the size never visibly changes. If the web fonts
   // are not loaded yet (a first visit), the headline stays invisible until they are and it is sized.
@@ -166,9 +167,6 @@ const pad = (n: number) => String(n).padStart(2, '0');
     const h1 = strap && strap.querySelector('.hx-h1');
     const bottom = strap && strap.querySelector('.hx-bottom');
     const grid = hero && hero.dataset.layout === 'grid';
-    // The open layout keeps the headline to four lines, as designed, so its size follows the width
-    // steadily instead of jumping as extra lines fit on a taller window. The height is only a ceiling
-    const maxLines = hero && hero.dataset.layout === 'open' ? 4 : Infinity;
     // In the grid layout the tile row sits below the headline's cell; in the split layout the cell is the full height
     const row2 = grid ? hero.querySelector('.hx-cta') : null;
     if (!h1 || !bottom || (grid && !row2)) return;
@@ -188,16 +186,13 @@ const pad = (n: number) => String(n).padStart(2, '0');
         - (parseFloat(s.rowGap) || 0) - bottom.offsetHeight
         - (parseFloat(getComputedStyle(h1).marginTop) || 0);
       h1.style.overflowWrap = 'normal'; // so a word too wide for the cell shows up as overflow
-      const lineHeight = parseFloat(getComputedStyle(h1).lineHeight) / parseFloat(getComputedStyle(h1).fontSize) || 0.95;
-      let lo = 40;
-      let hi = 200;
-      for (let k = 0; k < 14; k++) {
-        const mid = (lo + hi) / 2;
-        h1.style.fontSize = mid + 'px';
-        const lines = Math.round(h1.scrollHeight / (mid * lineHeight));
-        if (h1.scrollHeight <= room && h1.scrollWidth <= h1.clientWidth && lines <= maxLines) lo = mid; else hi = mid;
+      const w = window.innerWidth;
+      let size = w >= 1600 ? 72 : w >= 1280 ? 64 : 56;
+      for (; size > 40; size -= 8) {
+        h1.style.fontSize = size + 'px';
+        if (h1.scrollHeight <= room && h1.scrollWidth <= h1.clientWidth) break;
       }
-      h1.style.fontSize = Math.floor(lo) + 'px';
+      h1.style.fontSize = size + 'px';
     }
 
     const show = () => { fit(); h1.style.visibility = ''; };
