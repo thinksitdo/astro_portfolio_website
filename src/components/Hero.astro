@@ -89,7 +89,7 @@ const pad = (n: number) => String(n).padStart(2, '0');
         {open && (
           <span>
             <span class="d-block">Becoming Tortoise: Designing a Participatory Installation on the action of stepping (Zoetrope animation)</span>
-            <span class="d-block time">Frame <strong data-zframe>1</strong> of 6</span>
+            <span class="d-block time"><span class="zc">Mask position Y <strong data-zmask>0</strong></span> <span class="zc">Lenticular frame <strong data-zframe>1</strong> of 6</span></span>
           </span>
         )}
         {!open && <>
@@ -99,7 +99,7 @@ const pad = (n: number) => String(n).padStart(2, '0');
         </span>
         <span data-cap="zoetrope" hidden>
           <span class="d-block">Zoetrope image of <em>Stepping</em></span>
-          <span class="d-block time">Frame <strong data-zframe>1</strong> of 6</span>
+          <span class="d-block time"><span class="zc">Mask position Y <strong data-zmask>0</strong></span> <span class="zc">Lenticular frame <strong data-zframe>1</strong> of 6</span></span>
         </span>
         </>}
       </span>
@@ -406,6 +406,8 @@ const pad = (n: number) => String(n).padStart(2, '0');
 
   .d-block { display: block; }
   .time { margin-top: 4px; font-variant-numeric: tabular-nums; }
+  .zc { white-space: nowrap; }
+  .zc + .zc { margin-left: 16px; }
 
   .hx-tile {
     container-type: inline-size;
@@ -635,6 +637,7 @@ const pad = (n: number) => String(n).padStart(2, '0');
   const zoe = cell?.querySelector<HTMLElement>('.hx-zoe');
   const zoeToggle = cell?.querySelector<HTMLButtonElement>('.zoe-toggle');
   const zframe = cell?.querySelector<HTMLElement>('[data-zframe]');
+  const zmask = cell?.querySelector<HTMLElement>('[data-zmask]');
   const POSES = 6;
   const SCROLL_PER_POSE = 28; // px of page scroll per pose
   let zoetrope = false;
@@ -643,6 +646,8 @@ const pad = (n: number) => String(n).padStart(2, '0');
   // One band is one device pixel, so the bands line up with the screen's pixels at any zoom
   const setUnit = () => zoe?.style.setProperty('--u', `${1 / (window.devicePixelRatio || 1)}px`);
   function showPose(n: number) {
+    // The mask's position before it wraps, so it reads as travelling, not swapping
+    if (zmask) zmask.textContent = String(n);
     n = ((n % POSES) + POSES) % POSES;
     if (n === pose || !zoe) return;
     pose = n;
