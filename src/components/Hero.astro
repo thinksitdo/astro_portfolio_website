@@ -180,7 +180,8 @@ const pad = (n: number) => String(n).padStart(2, '0');
       const s = getComputedStyle(strap);
       const hs = getComputedStyle(hero);
       const below = row2 ? row2.offsetHeight + (parseFloat(getComputedStyle(hero).rowGap) || 0) : 0;
-      const room = window.innerHeight - (header ? header.offsetHeight : 0) - below
+      // The hero's own height: the first screen below the header, but never more than 1024px
+      const room = Math.min(window.innerHeight - (header ? header.offsetHeight : 0), 1024) - below
         - parseFloat(s.paddingTop) - parseFloat(s.paddingBottom)
         - parseFloat(hs.paddingTop) - parseFloat(hs.paddingBottom)
         - (parseFloat(s.rowGap) || 0) - bottom.offsetHeight
@@ -225,7 +226,8 @@ const pad = (n: number) => String(n).padStart(2, '0');
     grid-template-columns: 28fr 32fr 40fr;
     /* On desktop the hero fills the rest of the first screen below the sticky header */
     grid-template-rows: 1fr clamp(150px, 15vw, 240px);
-    min-height: calc(100svh - var(--header-tall, 72px));
+    /* Fills the first screen, up to 1024px deep; on taller windows the next section shows below */
+    min-height: min(calc(100svh - var(--header-tall, 72px)), 1024px);
     gap: var(--rule);
     background: var(--ink);
     border-bottom: var(--rule) solid var(--ink);
