@@ -70,7 +70,7 @@ Line heights snap to 4px. Never write `line-height`: set the ratio in `--lh` (or
 | `/publications/` | as academic-artistic.dc.html | All `publications` entries, filters by type. Intro copy is a TODO |
 | `/publications/[slug]/` | not separately designed | Case study Full layout without the gate, like the project pages |
 | `/about/` | not yet designed | Stub page with the shared layout and a TODO |
-| `/contact/` | not separately designed | Form posting to Formspree (`xvkaarey`), emailed to Scott. Let's talk links here. Intro, thank-you and error copy are TODOs |
+| `/contact/` | not separately designed | Form posting to Formspree (`xvkaarey`), emailed to Scott. Let's talk, Get in touch, CV available on request and Ask for the password link here |
 
 Case studies, academic or artistic projects and publications are never mixed in any list, filter or slideshow.
 

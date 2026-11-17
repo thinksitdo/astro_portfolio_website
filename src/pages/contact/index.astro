@@ -7,11 +7,11 @@ import ContactBlock from '../../components/ContactBlock.astro';
 
 const FORMSPREE = 'https://formspree.io/f/xvkaarey';
 ---
-<BaseLayout title="Contact" description="TODO">
+<BaseLayout title="Contact" description="Get in touch with Scott Robinson about a role, a project, or his research and design work.">
   <section class="contact">
     <div class="wrap">
       <h1 class="section-heading">Contact</h1>
-      <p class="intro"><span class="todo">TODO</span> Introduction to the form.</p>
+      <p class="intro">Whether it’s a role, a project or a question about my research, I’d like to hear from you. If you’d like my CV or the password for the full case studies, just say so here. I usually reply within two working days.</p>
 
       <form class="c-form" action={FORMSPREE} method="POST" novalidate data-contact>
         <input type="hidden" name="_subject" value="Portfolio contact form" />
@@ -36,14 +36,17 @@ const FORMSPREE = 'https://formspree.io/f/xvkaarey';
 
         <button class="b-pri pk send" type="submit" data-send>Send →</button>
 
-        <!-- Result of sending. The wording is Scott's to write -->
+        <!-- Problems sending. The script picks the message: a missing field, or a failed send -->
         <p class="c-msg c-error" role="alert" data-error hidden>
-          <span aria-hidden="true" class="bang">!</span><span data-error-text><span class="todo">TODO</span> Message when sending fails or a field is missing.</span>
+          <span aria-hidden="true" class="bang">!</span><span data-error-text></span>
         </p>
+        <template data-msg-missing>Please add your name, a valid email address and a message.</template>
+        <template data-msg-failed>Your message didn’t send. Please try again, or email me at <a class="l-mark" href="mailto:hello@scottrobinson.co.uk">hello@scottrobinson.co.uk</a>.</template>
       </form>
 
       <div class="c-done" role="status" tabindex="-1" data-done hidden>
-        <p><span class="todo">TODO</span> Thank-you message once the form has sent.</p>
+        <p class="done-head">Thank you, your message is on its way.</p>
+        <p>I’ll get back to you soon, usually within two working days.</p>
       </div>
     </div>
   </section>
@@ -66,6 +69,8 @@ const FORMSPREE = 'https://formspree.io/f/xvkaarey';
   }
   .c-form[hidden], .c-done[hidden] { display: none; }
   .c-done p { margin: 0; }
+  .c-done .done-head { margin-bottom: 8px; font-family: var(--font-display); font-weight: 800; font-size: 24px; --lh: 1.1; }
+  .c-error a { color: inherit; font-weight: 600; }
 
   .field + .field { margin-top: 32px; }
   label {
@@ -120,7 +125,10 @@ const FORMSPREE = 'https://formspree.io/f/xvkaarey';
   const send = form?.querySelector<HTMLButtonElement>('[data-send]');
   const fields = form ? [...form.querySelectorAll<HTMLInputElement | HTMLTextAreaElement>('.field input, .field textarea')] : [];
 
-  function showError() {
+  const errorText = error?.querySelector<HTMLElement>('[data-error-text]');
+  function showError(kind: 'missing' | 'failed') {
+    const tpl = form?.querySelector<HTMLTemplateElement>(`[data-msg-${kind}]`);
+    if (errorText && tpl) errorText.replaceChildren(tpl.content.cloneNode(true));
     if (error) error.hidden = false;
   }
 
@@ -133,7 +141,7 @@ const FORMSPREE = 'https://formspree.io/f/xvkaarey';
     // Check the fields here first, so a missing one is marked without a round trip
     const invalid = fields.filter((f) => !f.checkValidity());
     fields.forEach((f) => f.setAttribute('aria-invalid', String(invalid.includes(f))));
-    if (invalid.length) { showError(); invalid[0].focus(); return; }
+    if (invalid.length) { showError('missing'); invalid[0].focus(); return; }
 
     if (send) send.disabled = true;
     try {
@@ -146,7 +154,7 @@ const FORMSPREE = 'https://formspree.io/f/xvkaarey';
       form.hidden = true;
       if (done) { done.hidden = false; done.focus(); }
     } catch {
-      showError();
+      showError('failed');
     } finally {
       if (send) send.disabled = false;
     }
