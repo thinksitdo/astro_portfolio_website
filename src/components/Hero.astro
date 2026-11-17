@@ -409,6 +409,8 @@ const pad = (n: number) => String(n).padStart(2, '0');
   /* The zoetrope readout stays on one line */
   .zt { white-space: nowrap; }
   .zc { margin-left: 16px; }
+  /* Room for three digits, so Lenticular stays put as the number grows */
+  .zt [data-zmask] { display: inline-block; min-width: 3.5ch; }
 
   .hx-tile {
     container-type: inline-size;
