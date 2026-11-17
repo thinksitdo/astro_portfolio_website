@@ -10,7 +10,7 @@
   --accent: #FF3EA5;
   --on-accent: #0A0A0A;
 
-  --font-display: 'Inter Tight', Arial, sans-serif;
+  --font-display: 'Castoro', Georgia, 'Times New Roman', serif;
   --font-mono: 'JetBrains Mono', ui-monospace, monospace;
   --font-body: var(--font-mono);
 
@@ -185,10 +185,10 @@ a, button { cursor: var(--cursor-link); }
 .section-heading {
   margin: 0;
   font-family: var(--font-display);
-  font-weight: 900;
+  font-weight: 400;
   font-size: clamp(48px, 7vw, 112px);
-  --lh: 0.88;
-  letter-spacing: -0.03em;
+  --lh: 1.05;
+  letter-spacing: -0.01em;
   text-transform: uppercase;
 }
 
@@ -256,10 +256,10 @@ a, button { cursor: var(--cursor-link); }
 .lead {
   margin: 0;
   font-family: var(--font-display);
-  font-weight: 700;
+  font-weight: 400;
   font-size: clamp(24px, 2.6vw, 38px);
   --lh: 1.1;
-  letter-spacing: -0.015em;
+  letter-spacing: -0.01em;
 }
 .muted { color: var(--muted); }
 
