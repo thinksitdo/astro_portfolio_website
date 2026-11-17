@@ -16,7 +16,8 @@ const projects = await getProjects();
       <RowList
         rows={projectRows(projects)}
         filters={['All', 'Academic', 'Artistic']}
-        headings={['No.', 'Project', 'Type', 'Role · Year']}
+        headings={['Project', 'Type', 'Role · Year']}
+        numbered={false}
       />
     </div>
   </section>

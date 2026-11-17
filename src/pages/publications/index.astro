@@ -17,7 +17,8 @@ const pubs = await getPublications();
       <RowList
         rows={publicationRows(pubs)}
         filters={publicationFilters(pubs)}
-        headings={['No.', 'Publication', 'Type', 'Year']}
+        headings={['Publication', 'Type', 'Year']}
+        numbered={false}
         thumbPlaceholders={false}
       />
     </div>

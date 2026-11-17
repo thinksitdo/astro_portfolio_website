@@ -34,7 +34,7 @@ const pad = (n: number) => String(n).padStart(2, '0');
 ---
 <section class:list={['hx-hero', { 'hx-split': split, 'hx-open': open }]} data-layout={layout} aria-label="Introduction">
   <div class="hx-strap">
-    <h1 class="hx-h1">I research the messy encounters between people and technology to design better products.</h1>
+    <h1 class="hx-h1">I research encounters between people and technology, and use what I learn to design better products.</h1>
     <div class:list={['hx-bottom', { 'hx-card': split }]}>
     <div class="hx-name">
       <span class="l1">Dr Scott Robinson</span>
@@ -554,6 +554,9 @@ const pad = (n: number) => String(n).padStart(2, '0');
     .hx-split { grid-template-columns: 1fr; grid-template-rows: auto auto; }
     .hx-split .hx-video { grid-column: 1; grid-row: 2; }
     .hx-open { row-gap: 32px; }
+    /* Stacked, the figure sits centred and the caption runs the full width, like the tiles above */
+    .hx-open .zoe-fig { transform: none; }
+    .hx-open .hx-vcap { left: 0; width: 100%; max-width: none; }
   }
 </style>
 

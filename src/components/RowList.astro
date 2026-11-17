@@ -76,7 +76,7 @@ const isTodo = (v: string) => !v || v.trim().toUpperCase() === 'TODO';
     display: flex;
     flex-wrap: wrap;
     gap: 0 32px;
-    padding: 8px 0;
+    padding: 8px 16px;
     border-top: var(--rule) solid var(--ink);
     border-bottom: var(--rule-thin) solid var(--ink);
     font-family: var(--font-mono);
@@ -91,9 +91,8 @@ const isTodo = (v: string) => !v || v.trim().toUpperCase() === 'TODO';
     .filters { border-bottom: var(--rule) solid var(--ink); }
   }
   .c-n { flex: 0 0 56px; }
-  /* Without the number column the title keeps the same inset from the edge as the number had,
-     so the text does not touch the edge of the pink hover fill */
-  .unnumbered .c-title { padding-left: 16px; }
+  /* The rows and headings are inset 16px on both sides, so text never touches the edge of the
+     pink hover fill, including the meta when it wraps under the title on phones */
   .c-title { flex: 999 1 300px; min-width: 0; }
   .c-cat { flex: 1 1 180px; }
   .c-year { flex: 1 1 160px; }
@@ -108,7 +107,7 @@ const isTodo = (v: string) => !v || v.trim().toUpperCase() === 'TODO';
     display: flex;
     flex-wrap: wrap;
     gap: 8px 32px;
-    padding: 16px 0;
+    padding: 16px;
     text-decoration: none;
     color: var(--ink);
   }
@@ -119,7 +118,7 @@ const isTodo = (v: string) => !v || v.trim().toUpperCase() === 'TODO';
     font-family: var(--font-mono);
     font-size: 14px;
     font-weight: 600;
-    padding: 8px 0 0 16px;
+    padding: 8px 0 0;
   }
   .body { display: flex; flex-direction: column; gap: 8px; }
   .title {
@@ -139,7 +138,7 @@ const isTodo = (v: string) => !v || v.trim().toUpperCase() === 'TODO';
     padding-top: 8px;
   }
 
-  .meta.plain { text-transform: none; letter-spacing: 0.02em; padding-right: 8px; }
+  .meta.plain { text-transform: none; letter-spacing: 0.02em; }
 
   .sr-pop {
     position: absolute;
