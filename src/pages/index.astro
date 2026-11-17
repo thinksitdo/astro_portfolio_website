@@ -267,8 +267,19 @@ const research = [
     border-bottom: var(--rule) solid var(--ink);
   }
   /* The diagrams are a little wider than 4:3; fitted, not cropped */
-  .m-diagram { background: var(--d-light) center / contain no-repeat; }
-  :global(:root[data-theme='dark']) .m-diagram { background-image: var(--d-dark); }
+  /* The diagram sits on a layer of its own, so it can zoom inside the frame as the case study images do */
+  .m-diagram { position: relative; overflow: hidden; }
+  .m-diagram::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--d-light) center / contain no-repeat;
+  }
+  :global(:root[data-theme='dark']) .m-diagram::before { background-image: var(--d-dark); }
+  @media (prefers-reduced-motion: no-preference) {
+    .m-diagram::before { transition: transform 0.4s ease; }
+    .m-diagram:hover::before { transform: scale(1.03); }
+  }
   .m-text { padding: 16px 32px 32px; }
   .m-title {
     margin: 0 0 8px;
