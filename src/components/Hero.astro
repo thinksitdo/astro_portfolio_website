@@ -365,6 +365,22 @@ const pad = (n: number) => String(n).padStart(2, '0');
     background-size: 100% calc(6 * var(--u));
     background-position: 0 calc(var(--f) * var(--u));
   }
+  /* PROTOTYPE (?zoe=sheet, ?zoe=ink): the slits made visible. Bands 4px wide and upright, and the slotted
+     sheet slides sideways with the pointer, continuously, by --x. The sheet is a little larger than the
+     figure so its edges show; in the page colour with a rule round it, or (ink) drawn in ink */
+  .hx-zoe[data-sheet] .zoe-l {
+    -webkit-mask-image: repeating-linear-gradient(90deg, transparent 0 var(--a), #000 var(--a) var(--b), transparent var(--b) calc(6 * var(--u)));
+    mask-image: repeating-linear-gradient(90deg, transparent 0 var(--a), #000 var(--a) var(--b), transparent var(--b) calc(6 * var(--u)));
+  }
+  .hx-zoe[data-sheet] .zoe-mask {
+    --sheet: var(--bg);
+    inset: -16px;
+    border: var(--rule-thin) solid var(--ink);
+    background-image: repeating-linear-gradient(90deg, transparent 0 var(--u), var(--sheet) var(--u) calc(6 * var(--u)));
+    background-size: calc(6 * var(--u)) 100%;
+    background-position: calc(var(--x, 0px) + 16px - var(--rule-thin)) 0;
+  }
+  .hx-zoe[data-sheet='ink'] .zoe-mask { --sheet: var(--ink); border-color: var(--ink); }
   /* Case portrait slides: filling the cell, grey until pointed at, like the grid slideshow */
   .hx-pslide { position: absolute; inset: 0; display: block; background: var(--thumb); cursor: var(--cursor-link); }
   .hx-pslide[hidden], .hx-media[hidden], .vcap-text[hidden], .vcap-case[hidden], .zoe-toggle[hidden] { display: none; }
@@ -641,13 +657,27 @@ const pad = (n: number) => String(n).padStart(2, '0');
   let pose = -1;
 
   // One band is one device pixel, so the bands line up with the screen's pixels at any zoom
-  const setUnit = () => zoe?.style.setProperty('--u', `${1 / (window.devicePixelRatio || 1)}px`);
+  const setUnit = () => zoe?.style.setProperty('--u', sheet ? `${BAND}px` : `${1 / (window.devicePixelRatio || 1)}px`);
   function showPose(n: number) {
     n = ((n % POSES) + POSES) % POSES;
     if (n === pose || !zoe) return;
     pose = n;
     zoe.style.setProperty('--f', String(n));
     if (zframe) zframe.textContent = String(n + 1);
+  }
+  // PROTOTYPE: ?zoe=sheet or ?zoe=ink shows the slits as a visible sheet that slides with the pointer
+  const sheetStyle = new URLSearchParams(location.search).get('zoe');
+  const sheet = sheetStyle === 'sheet' || sheetStyle === 'ink';
+  const BAND = 4; // px, one slit
+  if (sheet && zoe) zoe.dataset.sheet = sheetStyle!;
+  // p is a position in poses, not rounded: the sheet moves continuously, the pose follows from where it is
+  function moveTo(p: number) {
+    if (!sheet || !zoe) { showPose(Math.floor(p)); return; }
+    const dpr = window.devicePixelRatio || 1;
+    const x = Math.round(p * BAND * dpr) / dpr;
+    zoe.style.setProperty('--x', `${x}px`);
+    const n = ((Math.floor(p) % POSES) + POSES) % POSES;
+    if (zframe && n !== pose) { pose = n; zframe.textContent = String(n + 1); }
   }
   function setZoetrope(on: boolean) {
     if (!zoe || !video || !zoeToggle || !media) return;
@@ -661,7 +691,7 @@ const pad = (n: number) => String(n).padStart(2, '0');
       ? 'Zoetrope of Scott stepping, six frames, turns as you scroll or move across it'
       : 'Video of Scott stepping, scrubs as you scroll or move across it');
     cell?.querySelectorAll<HTMLElement>('[data-cap]').forEach((c) => { c.hidden = c.dataset.cap !== (on ? 'zoetrope' : 'video'); });
-    if (on) { setUnit(); pose = -1; showPose(Math.floor(window.scrollY / SCROLL_PER_POSE)); }
+    if (on) { setUnit(); pose = -1; moveTo(window.scrollY / SCROLL_PER_POSE); }
     try { sessionStorage.setItem('hero-zoetrope', on ? '1' : ''); } catch { /* storage unavailable */ }
   }
   zoeToggle?.addEventListener('click', () => setZoetrope(!zoetrope));
@@ -671,7 +701,7 @@ const pad = (n: number) => String(n).padStart(2, '0');
   if (cell?.dataset.zoe === 'only' && zoe) {
     zoetrope = true;
     setUnit();
-    showPose(Math.floor(window.scrollY / SCROLL_PER_POSE));
+    moveTo(window.scrollY / SCROLL_PER_POSE);
   }
 
   // Split layout: the video (or zoetrope) is slide 0 of a slideshow of case portraits in the same cell,
@@ -708,7 +738,7 @@ const pad = (n: number) => String(n).padStart(2, '0');
   cell?.addEventListener('pointermove', (e) => {
     if (stage > 0) return;
     // Two turns of the drum across the box
-    if (zoetrope) showPose(Math.floor(fraction(e, cell) * POSES * 2));
+    if (zoetrope) moveTo(fraction(e, cell) * POSES * 2);
     else seek(fraction(e, cell) * duration());
   });
   // The slideshow moves only with its arrows, and wraps round at either end
@@ -724,7 +754,7 @@ const pad = (n: number) => String(n).padStart(2, '0');
       queued = false;
       const max = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
       const p = Math.min(1, window.scrollY / max);
-      if (zoetrope) showPose(Math.floor(window.scrollY / SCROLL_PER_POSE));
+      if (zoetrope) moveTo(window.scrollY / SCROLL_PER_POSE);
       else seek(p * duration());
     });
   }, { passive: true });
