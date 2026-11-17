@@ -48,6 +48,15 @@ Structure: 3px rules between sections and around boxes, 2px for row dividers and
 Grids are drawn by a 3px `gap` over an ink background. Focus: `outline: 3px solid currentColor; outline-offset: 3px`.
 Fluid type uses `clamp()` and container query units (`cqi`) for the hero headline and tiles.
 
+Spacing is on an 8px grid that doubles at each step: 8, 16, 32, 64, 128, with 4 and 2 for fine
+adjustments (Scott's choice). Every margin, padding, gap and offset uses one of these; the 3px and 2px
+rule widths are not spacing. No fluid `clamp()` spacing: a space that grows with the screen uses a
+`--step-a-b` token, which is `a` below 1024px and `b` from 1024px. Section rhythm: heading to rule 16,
+rule to content `--head-gap` 32, opening text to the next part `--part-gap` 64, section padding
+`--section-pad` 64/128.
+Line heights snap to 4px. Never write `line-height`: set the ratio in `--lh` (or a fixed length in
+`--lh-fixed`) and the `*` rule in global.css rounds it. `font:` shorthands are followed by `--lh`.
+
 ## Pages and routes
 
 | Route | Source | Notes |

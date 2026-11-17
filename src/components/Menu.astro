@@ -72,10 +72,10 @@ const current = Astro.url.pathname;
     flex-wrap: wrap;
     align-items: center;
     justify-content: space-between;
-    gap: 12px 24px;
+    gap: 16px 32px;
   }
   .menu-top { border-bottom: var(--rule) solid var(--ink); }
-  .top-actions { display: flex; align-items: center; gap: 12px; }
+  .top-actions { display: flex; align-items: center; gap: 16px; }
 
   /* Let's talk only appears here on phones, where the header leaves it out */
   .talk { display: none; }
@@ -83,7 +83,7 @@ const current = Astro.url.pathname;
     .talk { display: inline-flex; }
   }
   .menu-foot { border-top: var(--rule) solid var(--ink); }
-  .menu-foot .row { padding-top: 20px; padding-bottom: 28px; }
+  .menu-foot .row { padding-top: 16px; padding-bottom: 32px; }
 
   .menu-nav {
     flex: 1 1 auto;
@@ -91,7 +91,7 @@ const current = Astro.url.pathname;
     display: flex;
     flex-direction: column;
     width: 100%;
-    padding-block: clamp(12px, 3vh, 48px);
+    padding-block: var(--step-16-32);
   }
   ol {
     flex: 1 1 auto;
@@ -120,7 +120,7 @@ const current = Astro.url.pathname;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 24px;
+    gap: 32px;
     padding: 0 8px;
     color: var(--ink);
     text-decoration: none;
@@ -133,7 +133,7 @@ const current = Astro.url.pathname;
   .sr-menu-label {
     font-family: var(--font-display);
     font-weight: 900;
-    line-height: 0.9;
+    --lh: 0.9;
     letter-spacing: -0.035em;
     text-transform: uppercase;
     white-space: nowrap;

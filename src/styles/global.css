@@ -17,16 +17,36 @@
   --rule: 3px;
   --rule-thin: 2px;
   --max: 1320px;
-  --gutter: clamp(16px, 3vw, 40px);
-  --section-pad: clamp(56px, 8.4vw, 120px);
+  /* Spacing scale. An 8px base that doubles at each step: 8, 16, 32, 64, 128, with 4 (and 2)
+     for fine adjustments. Every margin, padding and gap is one of these. Where a space grows with
+     the screen it steps up one place at 1024px rather than scaling smoothly (--step-a-b below).
+     Line heights snap to 4px (see the * rule under Base). */
+  --step-8-16: 8px;
+  --step-16-32: 16px;
+  --step-32-64: 32px;
+  --step-64-128: 64px;
+
+  --gutter: var(--step-16-32);
+  --section-pad: var(--step-64-128);
+  /* Heading rule to the first content in a section */
+  --head-gap: 32px;
   /* After a section's opening text, the next part (a grid of boxes, a band) sits twice as far
      away as that text sits from the heading, so the opening reads as one block */
-  --part-gap: clamp(56px, 6vw, 80px);
+  --part-gap: 64px;
 
   --cursor-link: url('/cursors/arrow.svg') 20 8, pointer;
   --cursor-scrub: url('/cursors/scrub.svg') 29 14, ew-resize;
 
   color-scheme: light;
+}
+
+@media (min-width: 1024px) {
+  :root {
+    --step-8-16: 16px;
+    --step-16-32: 32px;
+    --step-32-64: 64px;
+    --step-64-128: 128px;
+  }
 }
 
 :root[data-theme='dark'] {
@@ -40,9 +60,20 @@
 /* ---------- Base ---------- */
 *, *::before, *::after { box-sizing: border-box; }
 
+/* Line heights on a 4px grid. Styles set a ratio in --lh (in place of line-height); each element's
+   line height is that ratio times its own font size, rounded to the nearest 4px. --lh inherits like a
+   unitless line-height. A fixed line height goes in --lh-fixed, which does not inherit. Browsers
+   without round() use the unrounded ratio */
+@property --lh-fixed { syntax: '*'; inherits: false; }
+html { --lh: 1.65; }
+*, *::before, *::after {
+  line-height: var(--lh-fixed, calc(var(--lh) * 1em)) !important;
+  line-height: var(--lh-fixed, round(calc(var(--lh) * 1em), 4px)) !important;
+}
+
 html {
-  /* Anchor links and focused elements stop below the compact header (Header.astro), 72px plus its rule */
-  --header-h: 75px;
+  /* Anchor links and focused elements stop below the compact header (Header.astro), 80px plus its rule */
+  --header-h: 83px;
   scroll-padding-top: var(--header-h);
   background: var(--bg);
   color: var(--ink);
@@ -60,7 +91,7 @@ body {
   color: var(--ink);
   font-family: var(--font-body);
   font-size: 16px;
-  line-height: 1.65;
+  --lh: 1.65;
 }
 
 /* Case study and thesis pages set body text in Inter */
@@ -68,7 +99,7 @@ body.body-inter {
   --font-body: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
   font-family: var(--font-body);
   font-size: 17px;
-  line-height: 1.6;
+  --lh: 1.6;
 }
 
 /* Selected text: pink with near-black text in both themes (6.1:1 contrast). On pink blocks the
@@ -121,23 +152,23 @@ a, button { cursor: var(--cursor-link); }
   left: var(--gutter);
   top: -100px;
   z-index: 100;
-  padding: 10px 14px;
+  padding: 8px 16px;
   background: var(--accent);
   color: var(--on-accent);
   border: var(--rule-thin) solid var(--ink);
-  font: 600 13px var(--font-mono);
+  font: 600 13px var(--font-mono); --lh: 1.3;
   text-transform: uppercase;
   letter-spacing: 0.04em;
   text-decoration: none;
 }
-.skip-link:focus { top: 12px; }
+.skip-link:focus { top: 16px; }
 
 /* A visible marker for copy or content Scott still has to supply */
 .todo {
   display: inline-block;
-  padding: 2px 6px;
+  padding: 2px 8px;
   border: var(--rule-thin) dashed var(--ink);
-  font: 600 13px var(--font-mono);
+  font: 600 13px var(--font-mono); --lh: 1.3;
   text-transform: uppercase;
   letter-spacing: 0.04em;
 }
@@ -156,7 +187,7 @@ a, button { cursor: var(--cursor-link); }
   font-family: var(--font-display);
   font-weight: 900;
   font-size: clamp(48px, 7vw, 112px);
-  line-height: 0.88;
+  --lh: 0.88;
   letter-spacing: -0.03em;
   text-transform: uppercase;
 }
@@ -167,17 +198,17 @@ a, button { cursor: var(--cursor-link); }
   display: inline-flex;
   align-items: center;
   min-height: 44px;
-  padding: 0 18px;
+  padding: 0 16px;
   border: var(--rule-thin) solid var(--ink);
   border-radius: 0;
-  font: 600 13px var(--font-mono);
+  font: 600 13px var(--font-mono); --lh: 1.3;
   text-transform: uppercase;
   letter-spacing: 0.04em;
   text-decoration: none;
 }
 .b-pri { background: var(--accent); color: var(--on-accent); }
 .b-sec { background: transparent; color: var(--ink); }
-.b-pri.lg, .b-sec.lg { min-height: 52px; padding: 0 24px; font-size: 14px; }
+.b-pri.lg, .b-sec.lg { min-height: 52px; padding: 0 32px; font-size: 14px; }
 
 .b-pri { transition: transform .12s ease, box-shadow .12s ease; }
 .b-pri:hover { transform: translate(-3px, -3px); box-shadow: 4px 4px 0 var(--ink); color: var(--on-accent); }
@@ -227,7 +258,7 @@ a, button { cursor: var(--cursor-link); }
   font-family: var(--font-display);
   font-weight: 700;
   font-size: clamp(24px, 2.6vw, 38px);
-  line-height: 1.1;
+  --lh: 1.1;
   letter-spacing: -0.015em;
 }
 .muted { color: var(--muted); }
@@ -246,10 +277,10 @@ a, button { cursor: var(--cursor-link); }
   align-items: center;
   justify-content: center;
   text-align: center;
-  padding: 12px;
+  padding: 16px;
   background: var(--thumb);
   color: var(--ink);
-  font: 500 12px var(--font-mono);
+  font: 500 12px var(--font-mono); --lh: 1.3;
   text-transform: uppercase;
   letter-spacing: 0.04em;
 }
@@ -262,7 +293,7 @@ a, button { cursor: var(--cursor-link); }
   border-radius: 0;
   background: transparent;
   color: var(--ink);
-  font: 500 13px var(--font-mono);
+  font: 500 13px var(--font-mono); --lh: 1.3;
   text-transform: uppercase;
   letter-spacing: 0.04em;
   transition: background-color .12s ease, color .12s ease;
@@ -277,10 +308,10 @@ a, button { cursor: var(--cursor-link); }
   display: inline-flex;
   align-items: center;
   min-height: 48px;
-  padding: 0 20px;
+  padding: 0 16px;
   background: var(--on-accent);
   color: var(--accent);
-  font: 600 13px var(--font-mono);
+  font: 600 13px var(--font-mono); --lh: 1.3;
   text-transform: uppercase;
   letter-spacing: 0.04em;
   text-decoration: none;

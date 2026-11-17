@@ -13,19 +13,19 @@
 
 <style>
   .cs-contact { border-bottom: var(--rule) solid var(--ink); }
-  .cs-contact .wrap { padding-block: clamp(40px, 6vw, 80px); }
+  .cs-contact .wrap { padding-block: var(--step-32-64); }
   .big-mail {
     display: inline-block;
     font-family: var(--font-display);
     font-weight: 800;
     font-size: clamp(28px, 5vw, 80px);
-    line-height: 1;
+    --lh: 1;
     letter-spacing: -0.03em;
     color: var(--ink);
     text-decoration-thickness: 3px;
     text-underline-offset: 10px;
     overflow-wrap: anywhere;
   }
-  .contact-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 32px; }
+  .contact-actions { display: flex; flex-wrap: wrap; gap: 16px; margin-top: 32px; }
   .contact-actions .lg { min-height: 48px; font-size: 13px; }
 </style>

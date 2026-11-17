@@ -36,17 +36,17 @@ import Logo from './Logo.astro';
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
-    gap: 0 24px;
+    gap: 0 32px;
   }
   .actions {
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 16px;
   }
 
   /* Large: the logo about twice the compact size, the controls level with its top, no rule */
   .site-header { background: var(--bg); }
-  .site-header .bar { align-items: flex-start; padding-block: clamp(16px, 1.8vw, 24px) 0; }
+  .site-header .bar { align-items: flex-start; padding-block: var(--step-16-32) 0; }
   .site-header :global(.h-logo) { min-height: 0; padding: 0; }
   .site-header :global(.h-logo img) { height: clamp(56px, 5.2vw, 72px); }
 
@@ -69,7 +69,7 @@ import Logo from './Logo.astro';
     transition: transform .5s cubic-bezier(.22, 1, .36, 1), visibility 0s;
   }
   .site-header-compact .bar { align-items: stretch; }
-  .site-header-compact .actions { padding: 12px 0; }
+  .site-header-compact .actions { padding: 16px 0; }
   @media (prefers-reduced-motion: reduce) {
     .site-header-compact, .site-header-compact.is-shown { transition: none; }
   }

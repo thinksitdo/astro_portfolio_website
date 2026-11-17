@@ -171,16 +171,16 @@ const research = [
 </BaseLayout>
 
 <style>
-  .split { display: flex; flex-wrap: wrap; gap: 32px 64px; margin-top: 40px; }
+  .split { display: flex; flex-wrap: wrap; gap: 32px 64px; margin-top: 32px; }
 
   /* In short */
   .split-main { flex: 2 1 480px; min-width: 0; }
-  .intro { margin: 24px 0 0; max-width: 680px; }
+  .intro { margin: 32px 0 0; max-width: 680px; }
   .cv { color: var(--ink); font-weight: 600; }
   .facts { flex: 1 1 300px; min-width: 0; grid-template-columns: minmax(0, 1fr); align-self: start; }
-  .fact { padding: 20px 24px; }
+  .fact { padding: 16px 32px; }
   .fact-h {
-    margin: 0 0 12px;
+    margin: 0 0 16px;
     font-family: var(--font-mono);
     font-size: 13px;
     font-weight: 600;
@@ -197,7 +197,7 @@ const research = [
     font-family: var(--font-display);
     font-weight: 700;
     font-size: 20px;
-    line-height: 1.25;
+    --lh: 1.25;
   }
 
   /* Current focus */
@@ -210,46 +210,46 @@ const research = [
     font-family: var(--font-display);
     font-weight: 800;
     font-size: clamp(32px, 4vw, 60px);
-    line-height: 0.98;
+    --lh: 0.98;
     letter-spacing: -0.025em;
   }
   .focus-sub {
-    margin: 24px 0 0;
+    margin: 32px 0 0;
     font-family: var(--font-display);
     font-weight: 600;
     font-size: clamp(20px, 1.8vw, 26px);
-    line-height: 1.25;
+    --lh: 1.25;
   }
   .focus-b p { margin: 0; }
   .focus-b p + p { margin-top: 16px; }
-  .learn { margin-top: 28px; }
+  .learn { margin-top: 32px; }
 
-  /* Cases. The list adds 20px above the chips; this makes it the 40px every other section has below its heading */
-  #work :global(.row-list) { margin-top: 20px; }
-  .all-cases { min-height: 48px; padding: 0 20px; margin-top: 24px; }
+  /* Cases. The list adds 16px above the chips; this makes it the 32px every other section has below its heading */
+  #work :global(.row-list) { margin-top: 16px; }
+  .all-cases { min-height: 48px; padding: 0 16px; margin-top: 32px; }
 
   /* How I work */
-  .how-lead { margin-top: 40px; }
+  .how-lead { margin-top: 32px; }
   .how-sub { margin: 16px 0 0; max-width: 720px; font-size: 20px; }
   .questions { grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); margin-top: var(--part-gap); }
-  .q { padding: 24px; display: flex; flex-direction: column; gap: 12px; }
+  .q { padding: 32px; display: flex; flex-direction: column; gap: 16px; }
   .q-n { font-family: var(--font-mono); font-size: 13px; font-weight: 600; }
   .q-title {
     margin: 0;
     font-family: var(--font-display);
     font-weight: 800;
     font-size: 24px;
-    line-height: 1.1;
+    --lh: 1.1;
     letter-spacing: -0.01em;
   }
-  .q-body { margin: 0; font-size: 16px; line-height: 1.55; }
+  .q-body { margin: 0; font-size: 16px; --lh: 1.55; }
   .q-methods {
     margin: auto 0 0;
-    padding-top: 12px;
+    padding-top: 16px;
     border-top: var(--rule-thin) solid var(--ink);
     font-family: var(--font-mono);
     font-size: 12px;
-    line-height: 1.6;
+    --lh: 1.6;
     text-transform: uppercase;
     letter-spacing: 0.02em;
   }
@@ -266,19 +266,19 @@ const research = [
     object-fit: cover;
     border-bottom: var(--rule) solid var(--ink);
   }
-  .m-text { padding: 20px 24px 24px; }
+  .m-text { padding: 16px 32px 32px; }
   .m-title {
     margin: 0 0 8px;
     font-family: var(--font-display);
     font-weight: 800;
     font-size: 22px;
-    line-height: 1.1;
+    --lh: 1.1;
   }
-  .m-body { margin: 0; font-size: 15px; line-height: 1.55; }
+  .m-body { margin: 0; font-size: 15px; --lh: 1.55; }
 
   /* PhD in Design */
   .phd-a { flex: 1 1 420px; min-width: 0; }
-  .phd-body { margin: 20px 0 0; }
+  .phd-body { margin: 16px 0 0; }
   .phd-list {
     flex: 1 1 420px;
     min-width: 0;
@@ -294,28 +294,28 @@ const research = [
     gap: 16px;
     justify-content: space-between;
     align-items: flex-start;
-    padding-block: 20px;
+    padding-block: 16px;
     text-decoration: none;
     color: var(--ink);
   }
-  .r-text { display: flex; flex-direction: column; gap: 6px; }
-  .r-title { font-family: var(--font-display); font-weight: 800; font-size: 24px; line-height: 1.1; }
-  .r-body { font-size: 15px; line-height: 1.5; color: var(--muted); }
-  .r-arrow { font-family: var(--font-display); font-weight: 800; font-size: 28px; line-height: 1; }
+  .r-text { display: flex; flex-direction: column; gap: 8px; }
+  .r-title { font-family: var(--font-display); font-weight: 800; font-size: 24px; --lh: 1.1; }
+  .r-body { font-size: 15px; --lh: 1.5; color: var(--muted); }
+  .r-arrow { font-family: var(--font-display); font-weight: 800; font-size: 28px; --lh: 1; }
 
   /* Get in touch */
   .l-big {
     display: block;
-    margin-top: 40px;
+    margin-top: 32px;
     font-family: var(--font-display);
     font-weight: 800;
     font-size: clamp(28px, 5.4vw, 88px);
-    line-height: 1;
+    --lh: 1;
     letter-spacing: -0.03em;
     color: var(--ink);
     text-decoration-thickness: 4px;
     text-underline-offset: 10px;
     overflow-wrap: anywhere;
   }
-  .contact-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 40px; }
+  .contact-actions { display: flex; flex-wrap: wrap; gap: 16px; margin-top: 32px; }
 </style>
