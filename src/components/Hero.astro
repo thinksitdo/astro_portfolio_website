@@ -89,7 +89,7 @@ const pad = (n: number) => String(n).padStart(2, '0');
         {open && (
           <span>
             <span class="d-block">Becoming Tortoise: Designing a Participatory Installation on the action of stepping (Zoetrope animation)</span>
-            <span class="d-block time"><span class="zc">Mask position Y <strong data-zmask>0</strong></span> <span class="zc">Lenticular frame <strong data-zframe>1</strong> of 6</span></span>
+            <span class="d-block time zt">Mask y-axis <strong data-zmask>0</strong><span class="zc">Lenticular <strong data-zframe>1</strong> of 6</span></span>
           </span>
         )}
         {!open && <>
@@ -99,7 +99,7 @@ const pad = (n: number) => String(n).padStart(2, '0');
         </span>
         <span data-cap="zoetrope" hidden>
           <span class="d-block">Zoetrope image of <em>Stepping</em></span>
-          <span class="d-block time"><span class="zc">Mask position Y <strong data-zmask>0</strong></span> <span class="zc">Lenticular frame <strong data-zframe>1</strong> of 6</span></span>
+          <span class="d-block time zt">Mask y-axis <strong data-zmask>0</strong><span class="zc">Lenticular <strong data-zframe>1</strong> of 6</span></span>
         </span>
         </>}
       </span>
@@ -406,8 +406,9 @@ const pad = (n: number) => String(n).padStart(2, '0');
 
   .d-block { display: block; }
   .time { margin-top: 4px; font-variant-numeric: tabular-nums; }
-  .zc { white-space: nowrap; }
-  .zc + .zc { margin-left: 16px; }
+  /* The zoetrope readout stays on one line */
+  .zt { white-space: nowrap; }
+  .zc { margin-left: 16px; }
 
   .hx-tile {
     container-type: inline-size;
