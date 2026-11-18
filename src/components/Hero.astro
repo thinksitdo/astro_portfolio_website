@@ -577,24 +577,7 @@ const pad = (n: number) => String(n).padStart(2, '0');
   .hx-open .hx-video { background: none; overflow: visible; margin-top: calc(var(--step-16-32) + .14 * var(--hx-fs, 64px)); }
   /* The zoetrope as tall as the column, wider than it, set a little right so the reach runs off the edge */
   .hx-open .hx-zoe { padding: 0; background: none; }
-  /* Larger than its column: it runs from the header to the foot of the hero, the arm reaches toward
-     the headline and the back foot runs off the right edge */
-  .hx-open .zoe-fig { flex: none; width: auto; height: 118cqh; transform: translate(-6%, -2%); }
-  /* Open layout: each pose is a flat pink silhouette (the strip's alpha, cut to its band), so the
-     figure is graphic like the type and tiles, not a dimmed photograph */
-  .hx-open .zoe-l {
-    background: var(--accent);
-    -webkit-mask-image: url('/media/stepping-zoetrope.webp'), repeating-linear-gradient(180deg, transparent 0 var(--a), #000 var(--a) var(--b), transparent var(--b) calc(6 * var(--u)));
-    mask-image: url('/media/stepping-zoetrope.webp'), repeating-linear-gradient(180deg, transparent 0 var(--a), #000 var(--a) var(--b), transparent var(--b) calc(6 * var(--u)));
-    -webkit-mask-size: 700% 100%, 100% 100%;
-    mask-size: 700% 100%, 100% 100%;
-    -webkit-mask-position: calc(var(--k) * 100% / 6) 0, 0 0;
-    mask-position: calc(var(--k) * 100% / 6) 0, 0 0;
-    -webkit-mask-repeat: no-repeat, repeat;
-    mask-repeat: no-repeat, repeat;
-    -webkit-mask-composite: source-in;
-    mask-composite: intersect;
-  }
+  .hx-open .zoe-fig { flex: none; width: auto; height: 100cqh; transform: translateX(7%); }
   /* No box, so the figure's feet show. The caption sits on the figure at the foot of the hero and
      reaches left past the column, so its title can run on one line, but stops 32px short of the
      tiles (the headline column is 66/34 of this one; the tiles are at most 680px wide) */
@@ -625,7 +608,7 @@ const pad = (n: number) => String(n).padStart(2, '0');
     .hx-open .hx-video { grid-row: 2; margin-top: 0; }
     .hx-open .hx-bottom { grid-column: 1 / -1; grid-row: 3; }
     /* Stacked, the figure sits centred and the caption runs the full width, like the tiles above */
-    .hx-open .zoe-fig { height: 100cqh; transform: none; }
+    .hx-open .zoe-fig { transform: none; }
     .hx-open .hx-vcap { left: 0; width: 100%; max-width: none; }
   }
 </style>
@@ -720,15 +703,7 @@ const pad = (n: number) => String(n).padStart(2, '0');
   let pose = -1;
 
   // One band is one device pixel, so the bands line up with the screen's pixels at any zoom
-  // In the open layout the bands are thick (about 3px, a whole number of device pixels), so the
-  // stripes read as graphic bands and the mechanism shows, rather than a fine faint texture
-  // (about 1.5px on phones, where the figure is smaller)
-  const thick = cell?.dataset.zoe === 'only';
-  const setUnit = () => {
-    const dpr = window.devicePixelRatio || 1;
-    const band = !thick ? 0 : matchMedia('(max-width: 820px)').matches ? 1.5 : 3;
-    zoe?.style.setProperty('--u', `${band ? Math.max(1, Math.round(band * dpr)) / dpr : 1 / dpr}px`);
-  };
+  const setUnit = () => zoe?.style.setProperty('--u', `${1 / (window.devicePixelRatio || 1)}px`);
   function showPose(n: number) {
     // The mask's position before it wraps, so it reads as travelling, not swapping
     if (zmask) zmask.textContent = String(n);
