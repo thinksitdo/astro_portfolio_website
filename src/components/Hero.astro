@@ -88,8 +88,7 @@ const pad = (n: number) => String(n).padStart(2, '0');
       <span class="vcap-text">
         {open && (
           <span>
-            <span class="d-block">Becoming Tortoise: Designing a Participatory Installation on the action of stepping</span>
-            <span class="d-block time zt">Mask y-axis <strong data-zmask>0</strong><span class="zc">Lenticular <strong data-zframe>1</strong> of 6</span></span>
+            <span class="d-block">Becoming Tortoise: Designing a Participatory Installation on the action of stepping<span class="zt">Lenticular <strong data-zframe>1</strong> of 6<span class="zc">Mask y-axis <strong data-zmask>0</strong></span></span></span>
           </span>
         )}
         {!open && <>
@@ -417,9 +416,10 @@ const pad = (n: number) => String(n).padStart(2, '0');
   .d-block { display: block; }
   .time { margin-top: 4px; font-variant-numeric: tabular-nums; }
   /* The zoetrope readout stays on one line */
-  .zt { white-space: nowrap; }
+  /* The readout follows the caption on the same line, kept together if it has to wrap */
+  .zt { white-space: nowrap; margin-left: 16px; font-variant-numeric: tabular-nums; }
   .zc { margin-left: 16px; }
-  /* Room for three digits, so Lenticular stays put as the number grows */
+  /* Room for three digits, so the caption keeps its width (and its wrap) as the number grows */
   .zt [data-zmask] { display: inline-block; min-width: 3.5ch; }
 
   .hx-tile {
@@ -579,6 +579,11 @@ const pad = (n: number) => String(n).padStart(2, '0');
     .hx-split { grid-template-columns: 1fr; grid-template-rows: auto auto; }
     .hx-split .hx-video { grid-column: 1; grid-row: 2; }
     .hx-open { row-gap: 32px; }
+    /* Stacked, the figure comes straight after the headline, then the byline and tiles */
+    .hx-open .hx-strap { display: contents; }
+    .hx-open .hx-h1 { grid-column: 1 / -1; grid-row: 1; }
+    .hx-open .hx-video { grid-row: 2; }
+    .hx-open .hx-bottom { grid-column: 1 / -1; grid-row: 3; }
     /* Stacked, the figure sits centred and the caption runs the full width, like the tiles above */
     .hx-open .zoe-fig { transform: none; }
     .hx-open .hx-vcap { left: 0; width: 100%; max-width: none; }
