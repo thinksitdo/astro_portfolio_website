@@ -124,10 +124,10 @@ const payload = type === 'protected' ? encryptArticle(await Astro.slots.render('
   .cs-title {
     margin: var(--step-16-32) 0 0;
     font-family: var(--font-display);
-    font-weight: 400;
+    font-weight: 800;
     font-size: clamp(44px, 7.6vw, 128px);
-    --lh: 1.05;
-    letter-spacing: -0.01em;
+    --lh: 0.95;
+    letter-spacing: -0.03em;
     overflow-wrap: break-word;
   }
   .cs-top { display: flex; flex-wrap: wrap; gap: 32px 64px; margin-top: var(--step-32-64); }
@@ -136,7 +136,7 @@ const payload = type === 'protected' ? encryptArticle(await Astro.slots.render('
     min-width: 0;
     margin: 0;
     font-family: var(--font-display);
-    font-weight: 400;
+    font-weight: 500;
     font-size: clamp(20px, 1.8vw, 24px);
     --lh: 1.4;
   }
@@ -206,15 +206,15 @@ const payload = type === 'protected' ? encryptArticle(await Astro.slots.render('
   .article-wrap :global(.cs-sec-h h2) {
     margin: 0;
     font-family: var(--font-display);
-    font-weight: 400;
+    font-weight: 800;
     font-size: 34px;
     --lh: 1.1;
-    letter-spacing: -0.01em;
+    letter-spacing: -0.02em;
   }
   .article-wrap :global(.cs-sec-b) { min-width: 0; }
   .article-wrap :global(.cs-sec-b > *) { margin: 0 0 16px; }
   .article-wrap :global(.cs-sec-b > :last-child) { margin-bottom: 0; }
-  .article-wrap :global(.cs-sec-b h3) { font-family: var(--font-display); font-weight: 400; font-size: 22px; --lh: 1.2; }
+  .article-wrap :global(.cs-sec-b h3) { font-family: var(--font-display); font-weight: 800; font-size: 22px; --lh: 1.2; }
   .article-wrap :global(.cs-sec-b a) { text-underline-offset: 3px; }
 
   .article-wrap :global(.cs-figs) { padding-bottom: 32px; }
@@ -278,10 +278,10 @@ const payload = type === 'protected' ? encryptArticle(await Astro.slots.render('
   .next-label { font: 500 13px var(--font-mono); --lh: 1.3; text-transform: uppercase; letter-spacing: 0.04em; }
   .next-title, .next-arrow {
     font-family: var(--font-display);
-    font-weight: 400;
+    font-weight: 800;
     font-size: clamp(32px, 4vw, 60px);
-    --lh: 1.05;
-    letter-spacing: -0.01em;
+    --lh: 1;
+    letter-spacing: -0.03em;
   }
   .next-arrow { font-size: 60px; }
 

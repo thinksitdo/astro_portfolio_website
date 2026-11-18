@@ -131,13 +131,12 @@ const current = Astro.url.pathname;
 
   .sr-menu-label {
     font-family: var(--font-display);
-    font-weight: 400;
-    --lh: 1.05;
-    letter-spacing: -0.01em;
+    font-weight: 900;
+    --lh: 0.9;
+    letter-spacing: -0.035em;
     white-space: nowrap;
     font-size: clamp(20px, min(6.2vw, calc((100vh - 200px) / 7 * 0.62)), 112px);
-    /* The serif's line box has more room above the capitals than below the baseline, so centring the
-       line box sat the words low. Trimmed to cap height and baseline, the capitals centre in the row */
+    /* Trimmed to cap height and baseline, the capitals centre in the row whatever the font's line box */
     text-box: trim-both cap alphabetic;
   }
   @supports (height: 100dvh) {
