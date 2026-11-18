@@ -34,7 +34,8 @@ const pad = (n: number) => String(n).padStart(2, '0');
 ---
 <section class:list={['hx-hero', { 'hx-split': split, 'hx-open': open }]} data-layout={layout} aria-label="Introduction">
   <div class="hx-strap">
-    <h1 class="hx-h1">I research encounters between people and technology, and use what I learn to design <span class="hx-sel">better products</span>.</h1>
+    <!-- One sentence, so it stays one heading: the title, then the strap set smaller beneath it -->
+    <h1 class="hx-h1"><span class="hx-title">I research encounters between people and technology</span> <span class="hx-lede">and use what I learn to design <span class="hx-sel">better products</span>.</span></h1>
     <div class:list={['hx-bottom', { 'hx-card': split }]}>
     <div class="hx-name">
       <span class="l1">Dr Scott Robinson</span>
@@ -202,6 +203,8 @@ const pad = (n: number) => String(n).padStart(2, '0');
         if (h1.scrollHeight <= room && h1.scrollWidth <= h1.clientWidth) break;
       }
       h1.style.fontSize = size + 'px';
+      // The figure's top lines up with the headline's capitals, which depend on its size
+      hero.style.setProperty('--hx-fs', size + 'px');
     }
 
     const show = () => { fit(); h1.style.visibility = ''; };
@@ -262,8 +265,19 @@ const pad = (n: number) => String(n).padStart(2, '0');
     letter-spacing: -.035em;
     overflow-wrap: break-word;
   }
-  /* "better products" drawn as if the visitor had selected it, in the site's ::selection colours */
-  .hx-sel { background: var(--accent); color: var(--on-accent); -webkit-box-decoration-break: clone; box-decoration-break: clone; }
+  .hx-title { display: block; }
+  /* The strap: the rest of the sentence, smaller and lighter, so the title is a short block */
+  .hx-lede {
+    display: block;
+    margin-top: .4em;
+    font-size: .44em;
+    font-weight: 700;
+    --lh: 1.2;
+    letter-spacing: -.02em;
+  }
+  /* "better products" drawn as if the visitor had selected it, in the site's ::selection colours.
+     Kept on one line, so the highlight never breaks into two scraps */
+  .hx-sel { background: var(--accent); color: var(--on-accent); white-space: nowrap; padding-inline: .08em; }
   .hx-sel::selection { background: var(--ink); color: var(--bg); }
   .hx-bottom { align-self: flex-start; }
   .hx-name {
@@ -548,7 +562,10 @@ const pad = (n: number) => String(n).padStart(2, '0');
   /* No inner padding, so the byline shares the headline's and the tiles' left edge */
   .hx-open .hx-card .hx-name { padding: 0; background: none; align-self: end; }
   .hx-open .hx-card .hx-tile { border: var(--rule) solid var(--ink); align-self: end; min-height: var(--tile-h); }
-  .hx-open .hx-video { background: none; overflow: visible; }
+  /* The figure starts level with the top of the headline's capitals (Inter Tight's cap top sits
+     0.14em below the line box at line height 1) and ends level with the foot of the tiles, so the
+     two columns share their top and bottom edges */
+  .hx-open .hx-video { background: none; overflow: visible; margin-top: calc(var(--step-16-32) + .14 * var(--hx-fs, 64px)); }
   /* The zoetrope as tall as the column, wider than it, set a little right so the reach runs off the edge */
   .hx-open .hx-zoe { padding: 0; background: none; }
   .hx-open .zoe-fig { flex: none; width: auto; height: 100cqh; transform: translateX(7%); }
@@ -579,7 +596,7 @@ const pad = (n: number) => String(n).padStart(2, '0');
     /* Stacked, the figure comes straight after the headline, then the byline and tiles */
     .hx-open .hx-strap { display: contents; }
     .hx-open .hx-h1 { grid-column: 1 / -1; grid-row: 1; }
-    .hx-open .hx-video { grid-row: 2; }
+    .hx-open .hx-video { grid-row: 2; margin-top: 0; }
     .hx-open .hx-bottom { grid-column: 1 / -1; grid-row: 3; }
     /* Stacked, the figure sits centred and the caption runs the full width, like the tiles above */
     .hx-open .zoe-fig { transform: none; }
