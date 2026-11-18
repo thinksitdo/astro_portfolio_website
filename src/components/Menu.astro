@@ -28,11 +28,10 @@ const current = Astro.url.pathname;
 
   <nav aria-label="Main" class="wrap menu-nav">
     <ol>
-      {items.map((item, i) => (
+      {items.map((item) => (
         <li>
           <a class="sr-menu" href={item.href} aria-current={item.href === current ? 'page' : undefined}>
             <span class="sr-menu-label">{item.label}</span>
-            <span class="n">({String(i + 1).padStart(2, '0')})</span>
           </a>
         </li>
       ))}
@@ -137,11 +136,13 @@ const current = Astro.url.pathname;
     letter-spacing: -0.01em;
     white-space: nowrap;
     font-size: clamp(20px, min(6.2vw, calc((100vh - 200px) / 7 * 0.62)), 112px);
+    /* Castoro's line box has more room above the capitals than below the baseline, so centring the
+       line box sat the words low. Trimmed to cap height and baseline, the capitals centre in the row */
+    text-box: trim-both cap alphabetic;
   }
   @supports (height: 100dvh) {
     .sr-menu-label { font-size: clamp(20px, min(6.2vw, calc((100dvh - 200px) / 7 * 0.62)), 112px); }
   }
-  .n { font-family: var(--font-mono); font-size: 14px; font-weight: 500; }
 
   :global(html:has(#site-menu[open])) { overflow: hidden; }
 
