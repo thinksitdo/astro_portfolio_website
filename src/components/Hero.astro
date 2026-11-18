@@ -43,8 +43,8 @@ const pad = (n: number) => String(n).padStart(2, '0');
       <span class="l3">User Research <span aria-hidden="true">⇄</span><span class="visually-hidden">, moving back and forth with </span> UX and Product Design <span aria-hidden="true">⇄</span><span class="visually-hidden">, moving back and forth with </span> Product Strategy</span>
     </div>
     {split && <>
-      <a class="hx-tile hx-cta b-tileP" href="/contact/"><span class="t">Get in touch</span></a>
-      <a class="hx-tile hx-work b-tileS" href="#work"><span class="t">See my work</span></a>
+      <a class="hx-tile hx-cta b-tileP" href="/contact/"><span class="a" aria-hidden="true">→</span><span class="t">Get in touch</span></a>
+      <a class="hx-tile hx-work b-tileS" href="#work"><span class="a" aria-hidden="true">↓</span><span class="t">See my work</span></a>
     </>}
     </div>
   </div>
@@ -448,11 +448,12 @@ const pad = (n: number) => String(n).padStart(2, '0');
     justify-content: space-between;
     text-decoration: none;
   }
-  /* Set like the header's Let's talk button (mono capitals), a size up for the bigger box */
   .hx-tile .t {
-    font: 600 clamp(15px, 5cqi, 20px) var(--font-mono); --lh: 1.3;
-    text-transform: uppercase;
-    letter-spacing: .04em;
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: clamp(24px, 12cqi, 48px);
+    --lh: 1;
+    letter-spacing: -.03em;
   }
   .hx-tile .a {
     font: 600 14px var(--font-mono); --lh: 1.3;
@@ -537,7 +538,9 @@ const pad = (n: number) => String(n).padStart(2, '0');
     border: var(--rule) solid var(--ink);
   }
   .hx-card .hx-name { grid-column: 1 / -1; border: 0; }
-  .hx-card .hx-tile { grid-column: auto; grid-row: auto; min-height: clamp(96px, 9vw, 136px); justify-content: flex-end; }
+  /* Arrow at the top, label at the foot; the arrow nudges toward where the tile goes on hover */
+  .hx-card .hx-tile { grid-column: auto; grid-row: auto; min-height: clamp(96px, 9vw, 136px); justify-content: space-between; gap: 16px; }
+  .hx-card .hx-tile .a { font: 800 clamp(24px, 12cqi, 48px) var(--font-display); --lh: 1; }
 
   /* Open layout: inside the page wrapper (the padding does the wrapper's job, so the zoetrope can run
      past it to the window's edge), no ruled cells, the tiles boxed and apart */
