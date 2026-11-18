@@ -33,12 +33,6 @@ const stageTotal = portraits.length + 1;
 const pad = (n: number) => String(n).padStart(2, '0');
 ---
 <section class:list={['hx-hero', { 'hx-split': split, 'hx-open': open }]} data-layout={layout} aria-label="Introduction">
-  {open && <>
-    <!-- Two pink bars behind the figure, placed by the sizing script: one carries the strap on to the
-         right edge, the other is the floor at the foot of the tiles that the figure steps on -->
-    <span class="hx-bar hx-bar-strap" aria-hidden="true"></span>
-    <span class="hx-bar hx-bar-floor" aria-hidden="true"></span>
-  </>}
   <div class="hx-strap">
     <!-- One sentence, so it stays one heading: the title, then the strap set smaller beneath it -->
     <h1 class="hx-h1"><span class="hx-title">I research encounters between people and technology</span> <span class="hx-lede"><span class="hx-sel">and use what I learn to design better products.</span></span></h1>
@@ -63,7 +57,6 @@ const pad = (n: number) => String(n).padStart(2, '0');
   >
     <!-- Case portraits, after the video. Each image opens its case; it duplicates the caption link, so it
          is left out of the tab order and hidden from screen readers -->
-    {open && <div class="hx-still" role="img" aria-label="Scott mid-step, arms out and one knee raised"></div>}
     {portraits.map((p, i) => (
       <a class="hx-pslide" href={p.href} data-pslide={i + 1} data-title={p.title} tabindex="-1" aria-hidden="true" hidden>
         <img src={p.src} alt="" loading="lazy" />
@@ -212,25 +205,6 @@ const pad = (n: number) => String(n).padStart(2, '0');
       h1.style.fontSize = size + 'px';
       // The figure's top lines up with the headline's capitals, which depend on its size
       hero.style.setProperty('--hx-fs', size + 'px');
-      if (open) placeBars();
-    }
-
-    // Open layout: the strap bar continues the strap's highlight; the floor bar, as tall, sits level
-    // with the foot of the tiles and starts just after them
-    function placeBars() {
-      const sel = h1.querySelector('.hx-sel');
-      const work = hero.querySelector('.hx-work');
-      if (!sel || !work) return;
-      const hr = hero.getBoundingClientRect();
-      const rects = sel.getClientRects();
-      const sr = rects[rects.length - 1];
-      const wr = work.getBoundingClientRect();
-      const set = (k, v) => hero.style.setProperty(k, Math.round(v) + 'px');
-      set('--bar-h', sr.height);
-      set('--bar-top', sr.top - hr.top);
-      set('--bar-left', sr.left - hr.left);
-      set('--floor-top', wr.bottom - hr.top - sr.height);
-      set('--floor-left', wr.right - hr.left + 16);
     }
 
     const show = () => { fit(); h1.style.visibility = ''; };
@@ -254,8 +228,6 @@ const pad = (n: number) => String(n).padStart(2, '0');
       queued = true;
       requestAnimationFrame(() => { queued = false; fit(); });
     });
-    // The tiles and strap settle once the web fonts load, so the bars follow any change in the hero's size
-    if (open && window.ResizeObserver) new ResizeObserver(() => placeBars()).observe(strap);
   })();
 </script>
 
@@ -618,35 +590,6 @@ const pad = (n: number) => String(n).padStart(2, '0');
   .hx-open .vcap-text { padding: 0; }
   .hx-open .hx-pslide { border: var(--rule) solid var(--ink); }
 
-  /* Open layout, photo version: the grey cut-out of one pose stands on the floor bar, in front of both
-     bars and behind the type. The zoetrope and its caption are hidden while this is tried */
-  .hx-open { position: relative; }
-  .hx-open .hx-media, .hx-open .hx-vcap { display: none; }
-  .hx-open .hx-video { z-index: 1; cursor: auto; }
-  .hx-open .hx-strap { z-index: 2; }
-  .hx-bar {
-    position: absolute;
-    top: var(--bar-top, 0);
-    left: var(--bar-left, 0);
-    right: 0;
-    height: var(--bar-h, 0);
-    background: var(--accent);
-    z-index: 0;
-  }
-  .hx-bar-floor { top: var(--floor-top, 0); left: var(--floor-left, 0); }
-  .hx-still {
-    position: absolute;
-    right: calc(-1 * var(--gutter));
-    bottom: 0;
-    height: 104%;
-    aspect-ratio: 880 / 850;
-    background: url('/media/stepping-zoetrope.webp') no-repeat;
-    background-size: 700% 100%;
-    background-position: calc(2 * 100% / 6) 0;
-    /* The strip is tinted pink; the photo is grey, so the pink belongs to the bars alone */
-    filter: grayscale(1) contrast(1.1);
-  }
-
   @media (max-width: 820px) {
     .hx-hero { grid-template-columns: 1fr 1fr; grid-template-rows: auto auto auto auto; }
     .hx-strap { grid-column: 1 / -1; grid-row: 1; }
@@ -667,9 +610,6 @@ const pad = (n: number) => String(n).padStart(2, '0');
     /* Stacked, the figure sits centred and the caption runs the full width, like the tiles above */
     .hx-open .zoe-fig { transform: none; }
     .hx-open .hx-vcap { left: 0; width: 100%; max-width: none; }
-    /* Stacked, the bars are left out and the figure fills its cell */
-    .hx-bar { display: none; }
-    .hx-still { right: auto; left: 50%; height: 100%; transform: translateX(-50%); }
   }
 </style>
 
