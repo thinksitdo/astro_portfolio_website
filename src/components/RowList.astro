@@ -191,7 +191,7 @@ const isTodo = (v: string) => !v || v.trim().toUpperCase() === 'TODO';
           const tags: string[] = JSON.parse(li.dataset.tags || '[]');
           li.hidden = !all && !tags.includes(tag);
         });
-        pop.hidden = true;
+        close();
       });
     });
 
@@ -214,18 +214,51 @@ const isTodo = (v: string) => !v || v.trim().toUpperCase() === 'TODO';
     };
     const place = (x: number, y: number) => { pop.style.transform = `translate(${x}px, ${y}px)`; };
 
-    wrap.addEventListener('mousemove', (e) => {
+    const follow = (e: MouseEvent) => {
       const r = wrap.getBoundingClientRect();
       const w = pop.offsetWidth || 440;
       const h = pop.offsetHeight || 275;
       let x = e.clientX - r.left + 2;
       if (x + w > r.width) x = e.clientX - r.left - w - 2;
       place(x, e.clientY - r.top - h - 2);
+    };
+
+    // The popover waits until the cursor rests on a row, so sweeping down the list doesn't flash
+    // every image. Each move restarts the wait (a few pixels of hand tremor don't). Once it is open,
+    // moving to the next row swaps the image straight away; it closes when the cursor leaves the list.
+    const REST_MS = 350;
+    const JITTER = 3;
+    let current: HTMLAnchorElement | null = null;
+    let timer = 0;
+    let restX = 0, restY = 0;
+    let open = false;
+    const cancel = () => { clearTimeout(timer); timer = 0; };
+    const close = () => { cancel(); open = false; current = null; pop.hidden = true; };
+    const wait = (e: MouseEvent) => {
+      cancel();
+      restX = e.clientX; restY = e.clientY;
+      timer = window.setTimeout(() => {
+        timer = 0;
+        if (current && show(current)) { open = true; follow(e); }
+      }, REST_MS);
+    };
+
+    wrap.addEventListener('mousemove', (e) => {
+      if (open) { follow(e); return; }
+      if (!current) return;
+      if (timer && Math.abs(e.clientX - restX) <= JITTER && Math.abs(e.clientY - restY) <= JITTER) return;
+      wait(e);
     });
+    wrap.addEventListener('mouseleave', close);
 
     list.querySelectorAll<HTMLAnchorElement>('.w-row').forEach((row) => {
-      row.addEventListener('mouseenter', () => show(row));
-      row.addEventListener('mouseleave', () => { pop.hidden = true; });
+      row.addEventListener('mouseenter', (e) => {
+        current = row;
+        if (open) { if (!show(row)) open = false; follow(e); }
+        else wait(e);
+      });
+      // Between rows (or onto a gap) the popover hides but stays ready, so the next row shows at once
+      row.addEventListener('mouseleave', () => { if (current === row) current = null; cancel(); pop.hidden = true; });
       // Keyboard focus has no cursor: park the popover at the row's right edge
       row.addEventListener('focus', () => {
         if (!show(row)) return;
