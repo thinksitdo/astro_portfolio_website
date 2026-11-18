@@ -35,7 +35,7 @@ const pad = (n: number) => String(n).padStart(2, '0');
 <section class:list={['hx-hero', { 'hx-split': split, 'hx-open': open }]} data-layout={layout} aria-label="Introduction">
   <div class="hx-strap">
     <!-- One sentence, so it stays one heading: the title, then the strap set smaller beneath it -->
-    <h1 class="hx-h1"><span class="hx-title">I research encounters between people and technology</span> <span class="hx-lede">and use what I learn to design <span class="hx-sel">better products</span>.</span></h1>
+    <h1 class="hx-h1"><span class="hx-title">I research encounters between people and technology</span> <span class="hx-lede"><span class="hx-sel">and use what I learn to design better products.</span></span></h1>
     <div class:list={['hx-bottom', { 'hx-card': split }]}>
     <div class="hx-name">
       <span class="l1">Dr Scott Robinson</span>
@@ -275,9 +275,15 @@ const pad = (n: number) => String(n).padStart(2, '0');
     --lh: 1.2;
     letter-spacing: -.02em;
   }
-  /* "better products" drawn as if the visitor had selected it, in the site's ::selection colours.
-     Kept on one line, so the highlight never breaks into two scraps */
-  .hx-sel { background: var(--accent); color: var(--on-accent); white-space: nowrap; padding-inline: .08em; }
+  /* The whole strap drawn as if the visitor had selected it, in the site's ::selection colours.
+     Where it wraps (phones), each line gets its own bar with the same padding */
+  .hx-sel {
+    background: var(--accent);
+    color: var(--on-accent);
+    padding: .06em .2em .1em;
+    -webkit-box-decoration-break: clone;
+    box-decoration-break: clone;
+  }
   .hx-sel::selection { background: var(--ink); color: var(--bg); }
   .hx-bottom { align-self: flex-start; }
   .hx-name {
