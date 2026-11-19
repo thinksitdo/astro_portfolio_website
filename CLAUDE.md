@@ -3,6 +3,20 @@
 This repository rebuilds Scott Robinson's portfolio (currently WordPress) as an Astro site.
 The visual design is settled. Your job is to implement it faithfully, not to redesign it.
 
+## Redesign (branch `redesign`)
+
+The site has been redesigned in an editorial language, and this supersedes the brutalist design
+described further down (tokens, type, Header, Hero, Menu, Case lists, States). The brutalist version is
+tagged `brutalist-v1`. In the redesign:
+- Ink and paper with one pastel pink, used only as a marker (`.hl`): highlighted phrases sweep in as
+  they scroll into view, and hovered titles, links and menu items take the same sweep.
+- Type: Newsreader (serif) for statements, Inter Tight for reading, JetBrains Mono for labels.
+- Square controls with 2px ink edges; a 3px rule opens each section. Buttons lift with a hard shadow.
+- The stepping figure (`public/media/stepping-12.webp`, 12 frames) is the only round element. It sits
+  large above the homepage heading and docks in the header on scroll.
+- Light mode by default. Tokens and shared styles are in `src/styles/global.css`.
+- The design was worked out in HTML mock-ups; the decisions are recorded in the components themselves.
+
 ## Working agreement
 
 - Build in the phases below. Finish and show each phase before starting the next.
