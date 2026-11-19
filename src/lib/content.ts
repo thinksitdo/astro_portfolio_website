@@ -31,13 +31,16 @@ export async function getProjects(): Promise<Project[]> {
 export const projectUrl = (entry: Project) => `/academic-artistic/${entry.id}/`;
 export const kindLabel = (kind: 'academic' | 'artistic') => (kind === 'academic' ? 'Academic' : 'Artistic');
 
-/** List rows show the start of the intro, as in the design: at most 24 words, then an ellipsis */
+/** Fallback for list rows without an excerpt: the start of the text, at most 24 words, then an ellipsis */
 export function excerpt(text: string, words = 24) {
   const parts = text.trim().split(/\s+/);
   return parts.length <= words ? text : `${parts.slice(0, words).join(' ')}…`;
 }
 
 import { resolveImageSrc, THUMB_WIDTH } from './images';
+
+/** The text under a title in a list: the entry's own excerpt when it has one, otherwise the start of the fallback text */
+const listSummary = (own: string | undefined, fallback: string) => (own && !isTodo(own) ? own.trim() : excerpt(fallback));
 
 const thumbSrc = (entry: Case | Project | Publication) => resolveImageSrc(entry.filePath, entry.data.thumbnail, THUMB_WIDTH);
 
@@ -51,7 +54,7 @@ export function caseRows(cases: Case[], fourth: 'year-read' | 'client-year') {
     return {
       href: caseUrl(c),
       title: c.data.title,
-      summary: excerpt(c.data.intro),
+      summary: listSummary(c.data.excerpt, c.data.intro),
       tags: c.data.categories,
       col3: c.data.categories.join(' · '),
       col4: fourth === 'year-read'
@@ -66,7 +69,7 @@ export function projectRows(projects: Project[]) {
   return projects.map((p) => ({
     href: projectUrl(p),
     title: p.data.title,
-    summary: excerpt(p.data.summary),
+    summary: listSummary(p.data.excerpt, p.data.summary),
     tags: [kindLabel(p.data.kind)],
     col3: kindLabel(p.data.kind),
     col4: [p.data.details, p.data.year],
@@ -91,7 +94,7 @@ export function publicationRows(pubs: Publication[]) {
   return pubs.map((p) => ({
     href: publicationUrl(p),
     title: p.data.title,
-    summary: excerpt(p.data.summary),
+    summary: listSummary(p.data.excerpt, p.data.summary),
     tags: [p.data.kind],
     col3: p.data.kind,
     col4: [p.data.year],

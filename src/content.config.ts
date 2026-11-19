@@ -22,6 +22,8 @@ const cases = defineCollection({
     order: z.number(),
     task: z.string(),
     intro: z.string(),
+    /** Optional short text for list rows, written to fit two lines. Left out: the list shows the first 24 words of the intro */
+    excerpt: z.string().optional(),
     heroImage: z.string(),
     heroAlt: z.string().optional(),
     /** Optional portrait image (1200 × 1680) for the homepage slideshow. Empty: the case is left out of it */
@@ -40,6 +42,8 @@ const academicArtistic = defineCollection({
     year: z.coerce.string(),
     order: z.number(),
     summary: z.string(),
+    /** Optional short text for list rows, written to fit two lines. Left out: the list shows the first 24 words of the summary */
+    excerpt: z.string().optional(),
     thumbnail: z.string(),
     legacyUrl,
   }),
@@ -55,6 +59,8 @@ const publications = defineCollection({
     date: z.coerce.date().optional(),
     order: z.number(),
     summary: z.string(),
+    /** Optional short text for list rows, written to fit two lines. Left out: the list shows the first 24 words of the summary */
+    excerpt: z.string().optional(),
     /** Citation, shown in the details table. Supports *italic*, **bold** and [links](https://…) */
     reference: z.string().optional(),
     /** Optional: leave out (or TODO) for no thumbnail; then the list shows no popover */
