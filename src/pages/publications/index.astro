@@ -12,21 +12,14 @@ const pubs = await getPublications();
   <ListHero title="Publications">
     <span class="todo">TODO</span>
   </ListHero>
-  <section class="list-section">
-    <div class="wrap">
-      <RowList
-        rows={publicationRows(pubs)}
-        filters={publicationFilters(pubs)}
-        headings={['Publication', 'Type', 'Year']}
-        numbered={false}
-        thumbPlaceholders={false}
-      />
-    </div>
+  <section class="g list">
+    <RowList
+      rows={publicationRows(pubs)}
+      filters={publicationFilters(pubs)}
+      headings={['Publication', 'Type', 'Year']}
+      thumbPlaceholders={false}
+    />
   </section>
   <ContactBlock />
 </BaseLayout>
 
-<style>
-  .list-section { border-bottom: var(--rule) solid var(--ink); }
-  .list-section .wrap { padding-block: var(--step-32-64); }
-</style>

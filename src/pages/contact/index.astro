@@ -4,120 +4,75 @@
 // Formspree shows its own thank-you page. A hidden _gotcha field catches spam bots.
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import ContactBlock from '../../components/ContactBlock.astro';
+import BackLink from '../../components/BackLink.astro';
 
 const FORMSPREE = 'https://formspree.io/f/xvkaarey';
 ---
 <BaseLayout title="Contact" description="Get in touch with Scott Robinson about a role, a project, or his research and design work.">
-  <section class="contact">
-    <div class="wrap">
-      <h1 class="section-heading">Contact</h1>
-      <p class="intro">Whether it’s a role, a project or a question about my research, I’d like to hear from you. If you’d like my CV or the password for the full case studies, just say so here. I usually reply the same working day.</p>
+  <section class="g page-hero contact">
+    <BackLink href="/">Back to home</BackLink>
+    <h1 class="statement">Contact</h1>
+    <p class="copy intro">Whether it’s a role, a project or a question about my research, I’d like to hear from you. If you’d like my CV or the password for the full case studies, just say so here. I usually reply the same working day.</p>
 
-      <form class="c-form" action={FORMSPREE} method="POST" novalidate data-contact>
-        <input type="hidden" name="_subject" value="Portfolio contact form" />
-        <!-- Spam trap: people never see or fill this; bots do -->
-        <div class="trap" aria-hidden="true">
-          <label for="c-gotcha">Leave this empty</label>
-          <input id="c-gotcha" type="text" name="_gotcha" tabindex="-1" autocomplete="off" />
-        </div>
-
-        <div class="field">
-          <label for="c-name">Name</label>
-          <input id="c-name" name="name" type="text" autocomplete="name" required aria-invalid="false" />
-        </div>
-        <div class="field">
-          <label for="c-email">Email</label>
-          <input id="c-email" name="email" type="email" autocomplete="email" required aria-invalid="false" />
-        </div>
-        <div class="field">
-          <label for="c-message">Message</label>
-          <textarea id="c-message" name="message" rows="8" required aria-invalid="false"></textarea>
-        </div>
-
-        <button class="b-pri pk send" type="submit" data-send>Send →</button>
-
-        <!-- Problems sending. The script picks the message: a missing field, or a failed send -->
-        <p class="c-msg c-error" role="alert" data-error hidden>
-          <span aria-hidden="true" class="bang">!</span><span data-error-text></span>
-        </p>
-        <template data-msg-missing>Please add your name, a valid email address and a message.</template>
-        <template data-msg-failed>Your message didn’t send. Please try again, or email me at <a class="l-mark" href="mailto:hello@scottrobinson.co.uk">hello@scottrobinson.co.uk</a>.</template>
-      </form>
-
-      <div class="c-done" role="status" tabindex="-1" data-done hidden>
-        <p class="done-head">Thank you, your message is on its way.</p>
-        <p>I’ll get back to you soon, usually the same working day.</p>
+    <form class="c-form" action={FORMSPREE} method="POST" novalidate data-contact>
+      <input type="hidden" name="_subject" value="Portfolio contact form" />
+      <!-- Spam trap: people never see or fill this; bots do -->
+      <div class="trap" aria-hidden="true">
+        <label for="c-gotcha">Leave this empty</label>
+        <input id="c-gotcha" type="text" name="_gotcha" tabindex="-1" autocomplete="off" />
       </div>
+
+      <div class="field">
+        <label class="label" for="c-name">Name</label>
+        <input id="c-name" name="name" type="text" autocomplete="name" required aria-invalid="false" />
+      </div>
+      <div class="field">
+        <label class="label" for="c-email">Email</label>
+        <input id="c-email" name="email" type="email" autocomplete="email" required aria-invalid="false" />
+      </div>
+      <div class="field">
+        <label class="label" for="c-message">Message</label>
+        <textarea id="c-message" name="message" rows="8" required aria-invalid="false"></textarea>
+      </div>
+
+      <button class="btn send" type="submit" data-send>Send<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2 8h11M9 4l4 4-4 4"></path></svg></button>
+
+      <!-- Problems sending. The script picks the message: a missing field, or a failed send -->
+      <p class="c-msg c-error" role="alert" data-error hidden>
+        <span aria-hidden="true" class="bang">!</span><span data-error-text></span>
+      </p>
+      <template data-msg-missing>Please add your name, a valid email address and a message.</template>
+      <template data-msg-failed>Your message didn’t send. Please try again, or email me at <a href="mailto:hello@scottrobinson.co.uk">hello@scottrobinson.co.uk</a>.</template>
+    </form>
+
+    <div class="c-done" role="status" tabindex="-1" data-done hidden>
+      <p class="done-head statement"><span class="hl no-sweep">Thank you</span>, your message is on its way.</p>
+      <p class="copy">I’ll get back to you soon, usually the same working day.</p>
     </div>
   </section>
   <ContactBlock />
 </BaseLayout>
 
 <style>
-  .contact { border-bottom: var(--rule) solid var(--ink); }
-  .contact .wrap { padding-block: var(--section-pad); }
-  h1 { padding-bottom: 16px; border-bottom: var(--rule) solid var(--ink); }
-  .intro { margin: 32px 0 0; max-width: 720px; }
-
-  .c-form, .c-done {
-    max-width: 720px;
-    margin-top: 32px;
-    border: var(--rule) solid var(--ink);
-    box-shadow: 10px 10px 0 var(--ink);
-    /* Room for the shadow, so on phones it stops at the gutter instead of the screen edge */
-    margin-right: 10px;
-    background: var(--bg);
-    padding: var(--step-16-32);
-  }
+  /* The form: ink edged with a hard shadow, mono labels, square fields */
+  .c-form, .c-done { grid-column: 1 / 8; margin-top: clamp(32px, 3vw, 56px); margin-right: 8px; padding: clamp(20px, 2.4vw, 40px); border: var(--rw) solid var(--ink); box-shadow: 8px 8px 0 var(--ink); background: var(--bg); }
   .c-form[hidden], .c-done[hidden] { display: none; }
-  .c-done p { margin: 0; }
-  .c-done .done-head { margin-bottom: 8px; font-family: var(--font-display); font-weight: 800; font-size: 24px; --lh: 1.1; }
-  .c-error a { color: inherit; font-weight: 600; }
-
-  .field + .field { margin-top: 32px; }
-  label {
-    display: block;
-    margin-bottom: 8px;
-    font: 600 12px var(--font-mono); --lh: 1.3;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-  }
-  input, textarea {
-    display: block;
-    width: 100%;
-    min-height: 56px;
-    padding: 16px;
-    border: var(--rule) solid var(--ink);
-    border-radius: 0;
-    background: var(--bg);
-    color: var(--ink);
-    font: 500 18px var(--font-mono); --lh: 1.3;
-  }
+  .c-done:focus { outline: none; }
+  .field + .field { margin-top: 28px; }
+  .field label { display: block; margin-bottom: 8px; }
+  input, textarea { display: block; width: 100%; min-height: 52px; padding: 14px 16px; border: var(--rw) solid var(--ink); border-radius: 0; background: var(--bg); color: var(--ink); font: 400 18px/1.4 var(--sans); letter-spacing: -.01em; }
   textarea { resize: vertical; }
-  input[aria-invalid='true'], textarea[aria-invalid='true'] { border-color: var(--accent); }
-  /* No focus state was designed for inputs: the standard focus outline, as on the password box */
-  input:focus-visible, textarea:focus-visible { outline: 3px solid var(--ink); outline-offset: 3px; }
-
-  .send { margin-top: 32px; min-height: 56px; padding: 0 32px; border-width: 3px; font-size: 14px; }
-  .send:disabled { opacity: 0.6; cursor: progress; }
-
-  .c-error {
-    display: flex;
-    gap: 8px;
-    align-items: flex-start;
-    margin: 16px 0 0;
-    padding: 16px;
-    border: var(--rule) solid var(--ink);
-    background: var(--accent);
-    color: var(--on-accent);
-    font-size: 15px;
-    --lh: 1.45;
-  }
+  input:focus-visible, textarea:focus-visible { outline: 3px solid var(--hl-bg); outline-offset: 0; }
+  input[aria-invalid='true'], textarea[aria-invalid='true'] { border-color: var(--hl-ink); }
+  .send { margin-top: 32px; height: 52px; padding: 0 22px; }
+  .c-error { display: flex; gap: 10px; align-items: flex-start; margin: 16px 0 0; padding: 14px 16px; border: var(--rw) solid var(--ink); background: var(--hl-bg); color: var(--hl-ink); font-size: 15px; line-height: 1.45; }
   .c-error[hidden] { display: none; }
-  .bang { font: 700 16px var(--font-mono); --lh: 1.3; }
-
+  .c-error :global(a) { color: inherit; font-weight: 600; border-bottom: 1px solid currentColor; }
+  .bang { font: 700 15px var(--mono); }
+  .done-head { margin: 0 0 8px; font-size: clamp(26px, 2.4vw, 36px); line-height: 1.12; }
   /* Kept off screen rather than display:none, which some bots skip */
   .trap { position: absolute; left: -10000px; width: 1px; height: 1px; overflow: hidden; }
+  @media (max-width: 760px) { .c-form, .c-done { grid-column: 1 / -1; } }
 </style>
 
 <script>

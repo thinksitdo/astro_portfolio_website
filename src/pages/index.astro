@@ -1,335 +1,123 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import Hero from '../components/Hero.astro';
-import SectionHead from '../components/SectionHead.astro';
 import RowList from '../components/RowList.astro';
-import { caseFilters, caseRows, getCases } from '../lib/content';
+import ContactBlock from '../components/ContactBlock.astro';
+import { caseRows, getCases } from '../lib/content';
 
-const homeCases = (await getCases()).slice(0, 6);
-
-const questions = [
-  { n: '01', title: 'What is actually happening?', body: 'I use research to understand how people work, what they need, where things break down, and the organisational and technical context around them.', methods: 'Interviews · Observation · Contextual analysis · Workshops · Stakeholder engagement · Data evaluation' },
-  { n: '02', title: 'What have we learned?', body: 'I make sense of what we’ve learned, identify where meaningful change is possible, and turn evidence into opportunities, propositions and product direction.', methods: 'Synthesis · Relationship mapping · Experience mapping · Product discovery · Proposition development · Product vision · Product strategy' },
-  { n: '03', title: 'What might the answer look like?', body: 'I make things to explore ideas and answer questions, choosing the level of fidelity according to what we need to learn — from maps and staged experiences to prototypes and working software.', methods: 'Concept development · Embodied ideation · Wizard of Oz · Prototyping · AI-assisted prototyping' },
-  { n: '04', title: 'Is our approach working?', body: 'I put ideas in front of people to understand what works, what doesn’t, and what we need to learn next before we build.', methods: 'Usability testing · Remote testing · Prototype evaluation · Iteration · Product feedback · Market evidence' },
+// The homepage picks its cases and their order, leading with the AI work; the Cases page shows them all
+const FEATURED = [
+  'strategic-pivot-to-ai-research-platform',
+  'designing-for-trust',
+  'apex-mvp-backlog',
+  'sustainable-fishing-ngo-mapping-digital-relationships',
+  'auditing-student-digital-experience-in-a-russell-group-university',
+  'musiciansfirst-connecting-musicians-fixers-and-bookers',
 ];
+const allCases = await getCases();
+const homeCases = FEATURED.map((id) => allCases.find((c) => c.id === id)).filter((c) => c !== undefined);
 
-// img is null where Scott still has to supply the picture; the placeholder text names what goes there
-const making = [
-  { title: 'Mapping complex relationships', diagram: 1, body: 'Bringing interviews and workshops together into a form that allowed relationships between people, processes, data and digital services to be seen and questioned.' },
-  { title: 'Staging an encounter', diagram: 2, body: 'Sometimes the thing being investigated is experiential. Staging an experience makes it possible to encounter and question something before deciding what should be built.' },
-  { title: 'Making an idea testable', diagram: 3, body: 'From sketches and interactive prototypes to working technology, giving an idea form creates something that can be experienced and questioned.' },
-  { title: 'Building to investigate', diagram: 4, body: 'AI-assisted development lets me take those questions into functional React interfaces, where encounters can be experienced and tested rather than imagined.' },
+// How I work: four groups of methods, each with one of Scott's diagrams (light and dark versions)
+const methods = [
+  { title: 'Observing and interviewing', diagram: 2, body: 'Observing and interviewing people where the work happens, to see what is actually going on.', methods: 'Interviews · Observation · Contextual analysis · Data analysis' },
+  { title: 'Workshops and mapping', diagram: 1, body: 'Bringing people together in workshops, so relationships between people, processes, data and services can be seen and questioned.', methods: 'Workshops · Stakeholder engagement · Relationship mapping · Experience mapping · Synthesis' },
+  { title: 'Prototyping, lived or digital', diagram: 3, body: 'Giving an idea form, from a staged experience to working software, so it can be encountered before it is fully developed.', methods: 'Embodied ideation · Wizard of Oz · Concept development · Prototyping · AI-assisted prototyping' },
+  { title: 'Testing and evaluation', diagram: 4, body: 'Putting ideas in front of people to learn what works, what doesn’t, and what we need to learn next.', methods: 'Usability testing · Remote testing · Prototype evaluation · Iteration · Product feedback · Market evidence' },
 ];
 
 const research = [
   { title: 'Thesis', href: '/thesis/', body: 'I completed my AHRC-funded thesis at Goldsmiths, University of London, April 2026.' },
   { title: 'Publications', href: '/publications/', body: 'Read my research published by Bloomsbury, Taylor & Francis and Goldsmiths.' },
 ];
+
+const arrow = '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2 8h11M9 4l4 4-4 4"></path></svg>';
 ---
 <BaseLayout
   title="Scott Robinson"
   description="I research encounters between people and technology, and use what I learn to design better products."
 >
-  <Hero layout="open" />
+  <div class="g hero">
+    <div class="fig-slot" aria-hidden="true"></div>
+    <h1 class="statement">People don’t interact with technology. They <span class="hl">encounter it</span> as part of their <em>lived experience</em><svg class="glyph" viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="3.2"></circle><path d="M9 0h2v6H9zM9 14h2v6H9zM0 9h6v2H0zM14 9h6v2h-6zM2.9 4.3l1.4-1.4 4.2 4.2-1.4 1.4zM11.5 12.9l1.4-1.4 4.2 4.2-1.4 1.4zM15.7 2.9l1.4 1.4-4.2 4.2-1.4-1.4zM7.1 11.5l1.4 1.4-4.2 4.2-1.4-1.4z"></path></svg></h1>
+    <p class="lede">I’m Dr Scott Robinson. I research those encounters and use what I learn to design better products.</p>
+  </div>
 
-  <section id="about" class="section">
-    <div class="wrap">
-      <SectionHead>In short</SectionHead>
-      <div class="split">
-        <div class="split-main">
-          <p class="lead">Designer, researcher and product strategist with 25+ years’ experience and a practice-based PhD.</p>
-          <p class="muted intro">I help organisations understand people and products, find where meaningful change is possible, and turn that into product vision, strategy and features. Most recently, I spent seven years at an AI fintech startup, where I led research, product strategy and UX for a research platform used by investment professionals in a heavily regulated industry. <a class="l-mark cv" href="/contact/">CV available on request</a></p>
-        </div>
-        <div class="box-grid facts">
-          <div class="fact">
-            <h3 class="fact-h">Specialisms</h3>
-            <ul class="fact-list">
-              <li>UX Research &amp; Design</li>
-              <li>Product Design and Strategy</li>
-              <li>Human–AI Decision-Making</li>
-              <li>Soma Design</li>
-            </ul>
-          </div>
-          <div class="fact">
-            <h3 class="fact-h">Location</h3>
-            <p class="fact-list">London, UK · Remote</p>
-          </div>
-        </div>
-      </div>
+  <section class="g in-short" id="about">
+    <h2 class="head statement">In short</h2>
+    <p class="statement big">Designer, researcher and product strategist with <span class="hl">20+ years’ experience</span> and a practice-based PhD.</p>
+    <p class="copy intro">I help organisations understand people and products, find where meaningful change is possible, and turn that into product vision, strategy and features. Most recently, I spent seven years at an AI fintech startup, where I led research, product strategy and UX for a research platform used by investment professionals in a heavily regulated industry.</p>
+    <a class="slink after" href="/contact/"><span class="hl">CV available on request</span><Fragment set:html={arrow} /></a>
+    <dl class="facts">
+      <div><dt class="label">Specialisms</dt><dd>UX Research &amp; Design<br />Product Design and Strategy<br />Human–AI Decision-Making<br />Soma Design</dd></div>
+      <div><dt class="label">Location</dt><dd>London, UK · Remote</dd></div>
+    </dl>
+  </section>
+
+  <section class="g" id="work">
+    <h2 class="head statement">Cases</h2>
+    <p class="statement big">Currently focused on <span class="hl">human + AI decision-making</span></p>
+    <p class="copy intro">My recent work explores how people work with increasingly capable AI and how they interrogate evidence, establish trust and retain judgement and accountability.</p>
+    <RowList rows={caseRows(homeCases, 'client-year')} headings={['Project', 'Category', 'Client', 'Year']} />
+    <a class="slink after" href="/cases/"><span class="hl">See all cases</span><Fragment set:html={arrow} /></a>
+  </section>
+
+  <section class="g" id="research">
+    <h2 class="head statement">PhD in Design</h2>
+    <p class="statement big">Encounters are my <span class="hl">contribution to design research</span></p>
+    <p class="copy intro">Alongside my commercial work I collaborate with practitioners from disciplines such as theatre and climbing to explore what their ways of working can teach us about design. I write about how understanding design activities as encounters might change the way we understand embodied experience. I share what I learn through publications and conferences.</p>
+    <div class="rows hov sub">
+      {research.map((r) => (
+        <a class="row sub" href={r.href}><span class="p-t"><span class="t">{r.title}</span></span><span class="p-b">{r.body}</span><span class="p-a" aria-hidden="true">→</span></a>
+      ))}
     </div>
   </section>
 
-  <section id="focus" class="section focus pk">
-    <div class="wrap">
-      <SectionHead onAccent>Current focus</SectionHead>
-      <div class="split">
-        <div class="focus-a">
-          <p class="focus-title">Human + AI decision-making</p>
-          <p class="focus-sub">AI is both something I investigate and something that is changing how I investigate and make.</p>
-        </div>
-        <div class="focus-b">
-          <p>My recent work explores AI from both sides of the design process. I research how people work with increasingly capable AI — how they interrogate evidence, establish trust and retain judgement and accountability.</p>
-          <p>At the same time, AI is changing how I research and design. The boundary between designing and building is becoming more fluid, allowing questions to move from research, through design and into working software. For me, this is part of a familiar evolution in design tools. What matters is still the judgement about what to build, what not to build, and what needs to exist to answer the question.</p>
-          <a class="b-inv learn" href="#work">Learn more →</a>
-        </div>
-      </div>
+  <section class="g" id="how">
+    <h2 class="head statement">How I work</h2>
+    <p class="statement big">Every design method is a chance for encounters to <span class="hl">generate knowledge</span>.</p>
+    <p class="copy intro">I don’t begin with a particular design method. I begin by asking what we need to understand.</p>
+    <div class="methods">
+      {methods.map((m) => (
+        <article class="mk method">
+          <div class="img"><img class="lt" src={`/media/research-diagrams/diagram-${m.diagram}-light.png`} alt="" loading="lazy" /><img class="dk" src={`/media/research-diagrams/diagram-${m.diagram}-dark.png`} alt="" loading="lazy" /></div>
+          <h3>{m.title}</h3>
+          <p class="copy">{m.body}</p>
+          <p class="m-list">{m.methods}</p>
+        </article>
+      ))}
     </div>
   </section>
 
-  <section id="work" class="section">
-    <div class="wrap">
-      <SectionHead>Cases</SectionHead>
-      <RowList
-        rows={caseRows(homeCases, 'year-read')}
-        filters={caseFilters(homeCases)}
-        headings={['Project', 'Category', 'Year · Read']}
-        numbered={false}
-        filterLabel="Filter work by category"
-        fourthUpper
-      />
-      <a class="b-sec all-cases" href="/cases/">See all cases →</a>
-    </div>
-  </section>
-
-  <section id="how" class="section">
-    <div class="wrap">
-      <SectionHead>How I work</SectionHead>
-      <p class="lead how-lead">The question determines the method.</p>
-      <p class="muted how-sub">I don’t begin with a particular design method. I begin by asking what we need to understand.</p>
-      <div class="box-grid questions">
-        {questions.map((q) => (
-          <div class="q">
-            <span class="q-n">{q.n}</span>
-            <h3 class="q-title">{q.title}</h3>
-            <p class="q-body">{q.body}</p>
-            <p class="q-methods muted">{q.methods}</p>
-          </div>
-        ))}
-      </div>
-    </div>
-  </section>
-
-  <section id="design-research" class="section">
-    <div class="wrap">
-      <SectionHead>Design as research</SectionHead>
-      <div class="split dr">
-        <p class="lead dr-lead">Research doesn’t end with a report.</p>
-        <p class="muted dr-body">Research can take many forms, and it doesn’t stop when designing or making begins. Mapping relationships, sketching an idea, staging an encounter or building working software can all be ways of investigating a question. What I make — and how I make it — depends on what I’m trying to understand.</p>
-      </div>
-      <div class="box-grid making">
-        {making.map((m) => (
-          <div class="m">
-            {/* Decorative diagram, light and dark versions. A CSS background, so only the current theme's file is downloaded */}
-            <div class="m-img m-diagram" style={`--d-light: url(/media/research-diagrams/diagram-${m.diagram}-light.png); --d-dark: url(/media/research-diagrams/diagram-${m.diagram}-dark.png)`}></div>
-            <div class="m-text">
-              <h3 class="m-title">{m.title}</h3>
-              <p class="muted m-body">{m.body}</p>
-            </div>
-          </div>
-        ))}
-      </div>
-    </div>
-  </section>
-
-  <section id="research" class="section">
-    <div class="wrap">
-      <SectionHead>PhD in Design</SectionHead>
-      <div class="split">
-        <div class="phd-a">
-          <p class="lead">A practice-based PhD in embodied and somatic design</p>
-          <p class="muted phd-body">My research starts with people whose practices are deeply embodied. I work with practitioners from disciplines such as theatre and climbing to explore what their ways of working can teach us about design, and how thinking about design activities as encounters might change the way we understand embodied experience.</p>
-        </div>
-        <ul class="phd-list">
-          {research.map((r) => (
-            <li>
-              <a class="l-row" href={r.href}>
-                <span class="r-text">
-                  <span class="r-title">{r.title}</span>
-                  <span class="r-body">{r.body}</span>
-                </span>
-                <span class="r-arrow" aria-hidden="true">→</span>
-              </a>
-            </li>
-          ))}
-        </ul>
-      </div>
-    </div>
-  </section>
-
-  <section id="contact" class="section">
-    <div class="wrap">
-      <SectionHead>Get in touch</SectionHead>
-      <a class="l-big" href="mailto:hello@scottrobinson.co.uk">hello@scottrobinson.co.uk</a>
-      <div class="contact-actions">
-        <a class="b-pri pk lg" href="mailto:hello@scottrobinson.co.uk">Get in touch →</a>
-        <a class="b-sec lg" href="https://www.linkedin.com/in/drscottrobinson/">LinkedIn ↗</a>
-      </div>
-    </div>
-  </section>
+  <ContactBlock />
 </BaseLayout>
 
 <style>
-  .split { display: flex; flex-wrap: wrap; gap: 32px 64px; margin-top: 32px; }
+  /* Hero: the figure's slot, the heading, the line under it */
+  .hero { padding-top: clamp(20px, 2.2vw, 40px); padding-bottom: clamp(80px, 9vw, 170px); }
+  .fig-slot { grid-column: 1 / -1; height: var(--d-a); margin-bottom: clamp(20px, 2.4vw, 44px); }
+  .hero h1 { grid-column: 1 / 10; margin: 0; font-size: clamp(42px, 5.6vw, 108px); line-height: 1.04; }
+  .glyph { display: inline-block; width: .46em; height: .46em; margin-left: .1em; vertical-align: .04em; }
+  .glyph * { fill: var(--ink); }
+  .lede { grid-column: 1 / 6; margin-top: clamp(28px, 3vw, 48px); font-size: clamp(18px, 1.4vw, 24px); line-height: 1.4; font-weight: 500; letter-spacing: -.02em; }
 
-  /* In short */
-  .split-main { flex: 2 1 480px; min-width: 0; }
-  .intro { margin: 32px 0 0; max-width: 680px; }
-  .cv { color: var(--ink); font-weight: 600; }
-  .facts { flex: 1 1 300px; min-width: 0; grid-template-columns: minmax(0, 1fr); align-self: start; }
-  .fact { padding: 16px 32px; }
-  .fact-h {
-    margin: 0 0 16px;
-    font-family: var(--font-mono);
-    font-size: 13px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-  }
-  .fact-list {
-    margin: 0;
-    padding: 0;
-    list-style: none;
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-    font-family: var(--font-display);
-    font-weight: 700;
-    font-size: 20px;
-    --lh: 1.25;
-  }
+  /* In short: statement left, facts on the right */
+  .facts { grid-column: 9 / -1; grid-row: 2 / span 3; align-self: start; margin: clamp(16px, 1.4vw, 24px) 0 0; }
+  .facts div { padding: 12px 0; border-top: 1px solid var(--ink); }
+  .facts div:last-child { border-bottom: 1px solid var(--ink); }
+  .facts dt { color: var(--grey); }
+  .facts dd { margin: 4px 0 0; font-size: clamp(16px, 1.15vw, 19px); line-height: 1.4; letter-spacing: -.015em; }
 
-  /* Current focus */
-  .focus { background: var(--accent); color: var(--on-accent); }
-  .focus :global(a:focus-visible) { outline-color: var(--on-accent); }
-  .focus-a { flex: 1 1 360px; min-width: 0; }
-  .focus-b { flex: 1 1 420px; min-width: 0; }
-  .focus-title {
-    margin: 0;
-    font-family: var(--font-display);
-    font-weight: 800;
-    font-size: clamp(32px, 4vw, 60px);
-    --lh: 0.98;
-    letter-spacing: -0.025em;
-  }
-  .focus-sub {
-    margin: 32px 0 0;
-    font-family: var(--font-display);
-    font-weight: 600;
-    font-size: clamp(20px, 1.8vw, 26px);
-    --lh: 1.25;
-  }
-  .focus-b p { margin: 0; }
-  .focus-b p + p { margin-top: 16px; }
-  .learn { margin-top: 32px; }
+  /* How I work: four cards that line up row by row (images, titles, lines and methods) */
+  .methods { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); column-gap: var(--gap); margin-top: clamp(40px, 4vw, 72px); }
+  .method { display: grid; grid-row: span 4; grid-template-rows: subgrid; row-gap: 0; padding-bottom: 40px; }
+  .method > * { align-self: start; }
+  .m-list { margin-top: 12px; font: 500 12px/1.55 var(--mono); letter-spacing: .01em; color: var(--grey); }
 
-  /* Cases. The list adds 16px above the chips; this makes it the 32px every other section has below its heading */
-  #work :global(.row-list) { margin-top: 16px; }
-  .all-cases { min-height: 48px; padding: 0 16px; margin-top: 32px; }
-
-  /* How I work */
-  .how-lead { margin-top: 32px; }
-  .how-sub { margin: 16px 0 0; max-width: 720px; font-size: 20px; }
-  .questions { grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); margin-top: var(--part-gap); }
-  .q { padding: 32px; display: flex; flex-direction: column; gap: 16px; }
-  .q-n { font-family: var(--font-mono); font-size: 13px; font-weight: 600; }
-  .q-title {
-    margin: 0;
-    font-family: var(--font-display);
-    font-weight: 800;
-    font-size: 24px;
-    --lh: 1.1;
-    letter-spacing: -0.01em;
-    /* Two lines reserved, so the bodies line up across the boxes */
-    min-height: 2lh;
+  @media (max-width: 1000px) { .methods { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  @media (max-width: 760px) {
+    .hero h1, .lede { grid-column: 1 / -1; }
+    .fig-slot { margin-bottom: 20px; }
+    .facts { grid-column: 1 / -1; grid-row: auto; }
+    .methods { grid-template-columns: minmax(0, 1fr); }
+    .method { padding-bottom: 32px; }
   }
-  .q-body { margin: 0; font-size: 16px; --lh: 1.55; }
-  .q-methods {
-    margin: auto 0 0;
-    padding-top: 16px;
-    border-top: var(--rule-thin) solid var(--ink);
-    font-family: var(--font-mono);
-    font-size: 12px;
-    --lh: 1.6;
-    text-transform: uppercase;
-    letter-spacing: 0.02em;
-  }
-
-  /* Design as research */
-  .dr { gap: 16px 64px; }
-  .dr-lead { flex: 1 1 320px; }
-  .dr-body { flex: 1 1 420px; margin: 0; }
-  .making { grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); margin-top: var(--part-gap); }
-  .m { display: flex; flex-direction: column; }
-  .m-img {
-    aspect-ratio: 4 / 3;
-    width: 100%;
-    border-bottom: var(--rule) solid var(--ink);
-  }
-  /* The diagrams are a little wider than 4:3; fitted, not cropped */
-  /* The diagram sits on a layer of its own, so it can zoom inside the frame as the case study images do */
-  .m-diagram { position: relative; overflow: hidden; }
-  .m-diagram::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: var(--d-light) center / contain no-repeat;
-  }
-  :global(:root[data-theme='dark']) .m-diagram::before { background-image: var(--d-dark); }
-  @media (prefers-reduced-motion: no-preference) {
-    .m-diagram::before { transition: transform 0.4s ease; }
-    .m-diagram:hover::before { transform: scale(1.03); }
-  }
-  .m-text { padding: 16px 32px 32px; }
-  .m-title {
-    margin: 0 0 8px;
-    font-family: var(--font-display);
-    font-weight: 800;
-    font-size: 22px;
-    --lh: 1.1;
-  }
-  .m-body { margin: 0; font-size: 15px; --lh: 1.55; }
-
-  /* PhD in Design */
-  .phd-a { flex: 1 1 420px; min-width: 0; }
-  .phd-body { margin: 16px 0 0; }
-  .phd-list {
-    flex: 1 1 420px;
-    min-width: 0;
-    margin: 0;
-    padding: 0;
-    list-style: none;
-    border-top: var(--rule) solid var(--ink);
-    align-self: start;
-  }
-  .phd-list li { border-bottom: var(--rule-thin) solid var(--ink); }
-  .l-row {
-    display: flex;
-    gap: 16px;
-    justify-content: space-between;
-    align-items: flex-start;
-    padding-block: 16px;
-    text-decoration: none;
-    color: var(--ink);
-  }
-  .r-text { display: flex; flex-direction: column; gap: 8px; }
-  .r-title { font-family: var(--font-display); font-weight: 800; font-size: 24px; --lh: 1.1; }
-  .r-body { font-size: 15px; --lh: 1.5; color: var(--muted); }
-  .r-arrow { font-family: var(--font-display); font-weight: 800; font-size: 28px; --lh: 1; }
-
-  /* Get in touch */
-  .l-big {
-    display: block;
-    margin-top: 32px;
-    font-family: var(--font-display);
-    font-weight: 800;
-    font-size: clamp(28px, 5.4vw, 88px);
-    --lh: 1;
-    letter-spacing: -0.03em;
-    color: var(--ink);
-    text-decoration-thickness: 4px;
-    text-underline-offset: 10px;
-    overflow-wrap: anywhere;
-  }
-  .contact-actions { display: flex; flex-wrap: wrap; gap: 16px; margin-top: 32px; }
 </style>
