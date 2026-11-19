@@ -11,6 +11,7 @@ legacyUrl: "https://scottrobinson.co.uk/project/strategic-pivot-to-ai-research-p
 order: 2
 task: "Taking Contours from concept to commercial use, with 50+ active users, 10,000+ documents and 60 research providers."
 intro: "Apex, our research search platform, wasn't getting traction, and we were running out of runway. Research showed investment firms felt they had to adopt AI but feared losing their IP and lacked the expertise to build their own. I made the case to our CEO for dropping five years of code while keeping the design and ideas, and took on the CPO/CXO role through the pivot."
+excerpt: "Making the case to drop five years of code and pivot KiteEdge to an AI research platform, as CPO/CXO."
 heroImage: "/media/contours-pivot-hero.jpg"
 heroPortrait: ""
 thumbnail: "/media/contours-pivot-thumbnail.jpg"

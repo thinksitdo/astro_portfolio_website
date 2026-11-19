@@ -11,6 +11,7 @@ legacyUrl: "https://scottrobinson.co.uk/project/musiciansfirst-connecting-musici
 order: 6
 task: "TODO"
 intro: "MusiciansFirst was a start-up providing digital services to the music industry, beginning with a searchable directory that connected professional musicians with industry fixers, programmers…"   # TODO excerpt from current site, replace with full intro
+excerpt: "Designing a searchable directory that connects professional musicians with fixers and programmers."
 heroImage: "TODO"
 heroPortrait: ""
 thumbnail: "TODO"

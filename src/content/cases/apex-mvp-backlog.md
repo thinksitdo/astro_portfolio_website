@@ -11,6 +11,7 @@ legacyUrl: "https://scottrobinson.co.uk/project/apex-focusing-an-mvp-backlog-on-
 order: 3
 task: "Turn an unowned, untested backlog into a focused MVP."
 intro: "I worked on Apex, KiteEdge's first MVP, a search platform for asset owners built on graph ontologies. Their backlog had grown large with nobody owning it, and none of it had been tested against user needs. First as a UX consultant and then as the only UX resource, I focused it on what users needed, and we delivered the MVP with rapid prototyping built into the development cycle."
+excerpt: "Turning an unowned, untested backlog into a focused MVP for KiteEdge."
 heroImage: "/media/apex-hero.jpg"
 heroAlt: "Apex backlog displayed on office wall"
 heroPortrait: ""

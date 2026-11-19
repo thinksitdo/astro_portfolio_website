@@ -11,6 +11,7 @@ legacyUrl: "https://scottrobinson.co.uk/project/vital-signs-from-printed-reports
 order: 9
 task: "TODO"
 intro: "Senior stakeholders at Direct Line needed to act quickly on up-to-date sales and marketing information, but it reached them in printed, hand-bound documents. I…"   # TODO excerpt from current site, replace with full intro
+excerpt: "Replacing Direct Line's printed, hand-bound reports with a live sales and marketing metrics service."
 heroImage: "TODO"
 heroPortrait: ""
 thumbnail: "TODO"

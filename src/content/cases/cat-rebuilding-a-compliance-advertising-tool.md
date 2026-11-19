@@ -11,6 +11,7 @@ legacyUrl: "https://scottrobinson.co.uk/project/cat-rebuilding-a-compliance-adve
 order: 8
 task: "TODO"
 intro: "CAT checks whether Microsoft’s advertising partners follow its brand guidelines. The original tool was over ten years old, and the update coincided with contract…"   # TODO excerpt from current site, replace with full intro
+excerpt: "Rebuilding a ten-year-old tool that checks Microsoft's advertising partners follow its brand guidelines."
 heroImage: "TODO"
 heroPortrait: ""
 thumbnail: "TODO"

@@ -11,6 +11,7 @@ legacyUrl: "https://scottrobinson.co.uk/project/auditing-student-digital-experie
 order: 3
 task: "Understanding how different groups of students experienced digital services and administrative processes at different stages of university life."
 intro: "A Russell Group university wanted to understand how different groups of students, from prospective students to those already studying, experienced its digital services and administrative processes. I designed and led whiteboarding workshops with students and administrative staff, alongside a programme of remote usability testing. The research produced experience maps for four student groups and a short film I edited from the sessions, which we presented to senior stakeholders."
+excerpt: "Workshops and remote testing that mapped how four groups of students experience a university's digital services."
 heroImage: "/media/uol-hero.jpg"
 heroAlt: ""
 heroPortrait: ""
