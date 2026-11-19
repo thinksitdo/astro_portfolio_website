@@ -1,5 +1,5 @@
 ---
-import Logo from './Logo.astro';
+import ThemeSwitch from './ThemeSwitch.astro';
 
 const items = [
   { label: 'Home', href: '/' },
@@ -13,141 +13,68 @@ const items = [
 
 const current = Astro.url.pathname;
 ---
-<dialog id="site-menu" class="sr-menu-wrap" aria-label="Menu">
-  <div class="menu-top">
-    <div class="wrap row">
-      <Logo />
-      <div class="top-actions">
-      <a class="b-pri talk" href="/contact/">Let’s talk →</a>
-      <button class="icon-btn menu-close" type="button" aria-label="Close menu">
-        <svg width="20" height="20" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M2 2L18 18M18 2L2 18" stroke="currentColor" stroke-width="3"></path></svg>
-      </button>
-      </div>
-    </div>
+<dialog id="site-menu" class="menu" aria-label="Menu">
+  <div class="g menu-top">
+    <button class="burger close menu-close" type="button" aria-label="Close menu"><svg viewBox="0 0 14 14" aria-hidden="true"><path d="M2 2l10 10M12 2 2 12"></path></svg></button>
   </div>
 
-  <nav aria-label="Main" class="wrap menu-nav">
-    <ol>
-      {items.map((item) => (
-        <li>
-          <a class="sr-menu" href={item.href} aria-current={item.href === current ? 'page' : undefined}>
-            <span class="sr-menu-label">{item.label}</span>
+  <nav aria-label="Main" class="g menu-nav">
+    <ol class="sub">
+      {items.map((item, i) => (
+        <li class="sub">
+          <a class="sub" href={item.href} aria-current={item.href === current ? 'page' : undefined}>
+            <span class="mi-n">{String(i + 1).padStart(2, '0')}</span>
+            <span class="mi-t statement"><span class="mk-hl">{item.label}</span></span>
+            <span class="mi-a" aria-hidden="true">→</span>
           </a>
         </li>
       ))}
     </ol>
   </nav>
 
-  <div class="menu-foot">
-    <div class="wrap row label">
-      <a class="l-mark" href="mailto:hello@scottrobinson.co.uk" style="text-transform: none">hello@scottrobinson.co.uk</a>
-      <a class="l-mark" href="https://www.linkedin.com/in/drscottrobinson/">LinkedIn ↗</a>
+  <div class="g menu-foot">
+    <div class="label">
+      <a href="mailto:hello@scottrobinson.co.uk" style="text-transform: none">hello@scottrobinson.co.uk</a>
+      <ThemeSwitch />
+      <a href="https://www.linkedin.com/in/drscottrobinson/" rel="external">LinkedIn ↗</a>
     </div>
   </div>
 </dialog>
 
 <style>
-  /* Exactly one viewport tall and never scrolls */
-  .sr-menu-wrap {
-    position: fixed;
-    inset: 0;
-    width: 100%;
-    max-width: none;
-    height: 100vh;
-    height: 100dvh;
-    max-height: none;
-    margin: 0;
-    padding: 0;
-    border: 0;
-    overflow: hidden;
-    background: var(--bg);
-    color: var(--ink);
-  }
-  .sr-menu-wrap[open] { display: flex; flex-direction: column; }
-  .sr-menu-wrap::backdrop { background: var(--bg); }
+  /* Full screen, exactly one viewport tall */
+  .menu { position: fixed; inset: 0; width: 100%; max-width: none; height: 100vh; height: 100dvh; max-height: none; margin: 0; padding: 0; border: 0; background: var(--bg); color: var(--ink); overflow-y: auto; }
+  .menu[open] { display: flex; flex-direction: column; animation: menu-in .3s ease; }
+  .menu::backdrop { background: var(--bg); }
+  @keyframes menu-in { from { opacity: 0; } }
+  @media (prefers-reduced-motion: reduce) { .menu[open] { animation: none; } }
+  .menu-top { padding-top: clamp(14px, 1.6vw, 24px); padding-bottom: clamp(14px, 1.6vw, 24px); }
+  .menu-top .close { grid-column: -2 / -1; justify-self: end; }
 
-  .row {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: space-between;
-    gap: 16px 32px;
-  }
-  .menu-top { border-bottom: var(--rule) solid var(--ink); }
-  .top-actions { display: flex; align-items: center; gap: 16px; }
+  .menu-nav { flex: 1 1 auto; align-content: center; padding-top: 16px; padding-bottom: 16px; }
+  ol { margin: 0; padding: 0; list-style: none; }
+  li { border-top: 1px solid var(--ink); }
+  li:last-child { border-bottom: 1px solid var(--ink); }
+  a.sub { align-items: baseline; padding: clamp(8px, 1.3vh, 18px) 0; color: var(--ink); }
+  a.sub:focus-visible { outline: none; }
+  .mi-n { grid-column: 1 / 2; font: 600 12px var(--mono); letter-spacing: .04em; color: var(--grey); }
+  .mi-t { grid-column: 2 / 11; font-size: clamp(30px, min(4.8vw, 7vh), 76px); line-height: 1.08; }
+  /* The marker sweeps in behind the item under the cursor, and marks the current page */
+  .mk-hl { padding: .09em .08em .05em; margin: 0 -.08em; box-decoration-break: clone; -webkit-box-decoration-break: clone; background: linear-gradient(var(--hl-bg), var(--hl-bg)) no-repeat 0 0 / 0% 100%; transition: background-size .45s var(--e), color .2s ease; }
+  a:hover .mk-hl, a:focus-visible .mk-hl, a[aria-current] .mk-hl { background-size: 100% 100%; color: var(--hl-ink); }
+  .mi-a { grid-column: 12 / 13; justify-self: end; font: 500 20px var(--mono); color: var(--hl-ink); opacity: 0; transform: translateX(-14px); transition: opacity .2s ease, transform .35s cubic-bezier(.3, 1.5, .5, 1); }
+  a:hover .mi-a, a:focus-visible .mi-a { opacity: 1; transform: none; }
 
-  /* Let's talk only appears here on phones, where the header leaves it out */
-  .talk { display: none; }
-  @media (max-width: 480px) {
-    .talk { display: inline-flex; }
-  }
-  .menu-foot { border-top: var(--rule) solid var(--ink); }
-  .menu-foot .row { padding-top: 16px; padding-bottom: 32px; }
+  .menu-foot > div { grid-column: 1 / -1; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px; padding: 18px 0 28px; }
+  .menu-foot a:hover { color: var(--hl-ink); }
 
-  .menu-nav {
-    flex: 1 1 auto;
-    min-height: 0;
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    padding-block: var(--step-16-32);
+  @media (max-width: 760px) {
+    .mi-n, .mi-a { display: none; }
+    .mi-t { grid-column: 1 / -1; }
   }
-  ol {
-    flex: 1 1 auto;
-    min-height: 0;
-    display: flex;
-    flex-direction: column;
-    margin: 0;
-    padding: 0;
-    list-style: none;
-  }
-  /* Rules only between items. The first item's top rule and the last item's bottom rule are there
-     but transparent, so they appear on hover or focus without the layout moving */
-  li {
-    flex: 1 1 0;
-    min-height: 0;
-    display: flex;
-    border-top: var(--rule) solid var(--ink);
-  }
-  li:first-child { border-top-color: transparent; }
-  li:last-child { border-bottom: var(--rule) solid transparent; }
-  li:first-child:hover, li:first-child:focus-within { border-top-color: var(--ink); }
-  li:last-child:hover, li:last-child:focus-within { border-bottom-color: var(--ink); }
-
-  .sr-menu {
-    flex: 1;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 32px;
-    padding: 0 8px;
-    color: var(--ink);
-    text-decoration: none;
-    transition: background-color .12s ease;
-  }
-  .sr-menu:hover,
-  .sr-menu:focus-visible { background: var(--accent); color: var(--on-accent); }
-  .sr-menu:focus-visible { outline-offset: -6px; }
-
-  .sr-menu-label {
-    font-family: var(--font-display);
-    font-weight: 900;
-    --lh: 0.9;
-    letter-spacing: -0.035em;
-    white-space: nowrap;
-    font-size: clamp(20px, min(6.2vw, calc((100vh - 200px) / 7 * 0.62)), 112px);
-    /* Trimmed to cap height and baseline, the capitals centre in the row whatever the font's line box */
-    text-box: trim-both cap alphabetic;
-  }
-  @supports (height: 100dvh) {
-    .sr-menu-label { font-size: clamp(20px, min(6.2vw, calc((100dvh - 200px) / 7 * 0.62)), 112px); }
-  }
+  @media (prefers-reduced-motion: reduce) { .mk-hl, .mi-a { transition: none; } }
 
   :global(html:has(#site-menu[open])) { overflow: hidden; }
-
-  @media (prefers-reduced-motion: reduce) {
-    .sr-menu { transition: none; }
-  }
 </style>
 
 <script>

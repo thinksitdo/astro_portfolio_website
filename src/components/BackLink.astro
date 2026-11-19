@@ -1,0 +1,6 @@
+---
+// A back link: the same style as "See all cases", with the arrow leading and pointing back
+interface Props { href: string }
+const { href } = Astro.props;
+---
+<a class="slink back" href={href}><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M14 8H3M7 4 3 8l4 4"></path></svg><span class="hl"><slot /></span></a>

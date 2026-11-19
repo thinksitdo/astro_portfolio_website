@@ -1,100 +1,100 @@
 ---
+// Sticky header: London clock, light and dark switch, Get in touch, menu button.
+// The stepping figure (a link home) lives here too. On the homepage it starts large in the slot above
+// the heading (.fig-slot) and, as the page scrolls, shrinks and moves up into the header's first column.
+// On other pages it sits there from the start.
 import ThemeSwitch from './ThemeSwitch.astro';
-import Logo from './Logo.astro';
 ---
-<!-- Two headers. The large one is part of the page and scrolls away with it. Once it is off screen,
-     a separate compact header (the original height, with its rule) slides down from the top, and
-     slides away again when the large one comes back into view. While hidden it is inert. -->
-<header class="site-header" id="top">
-  <div class="wrap bar">
-    <Logo />
-    <div class="actions">
-      <ThemeSwitch />
-      <a class="b-pri pk talk" href="/contact/">Let’s talk →</a>
-      <button class="icon-btn menu-open" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="site-menu">
-        <svg width="22" height="16" viewBox="0 0 22 16" aria-hidden="true" focusable="false"><path d="M0 2H22M0 8H22M0 14H22" stroke="currentColor" stroke-width="3"></path></svg>
-      </button>
-    </div>
+<header class="g top" id="top">
+  <div class="r">
+    <span class="clock label" aria-label="Time in London">London <span data-time>--:--</span></span>
+    <ThemeSwitch />
+    <a class="btn talk" href="/contact/">Get in touch<svg class="plane" viewBox="0 0 16 16" aria-hidden="true"><path d="M14.5 1.5 1.5 7l5 2.5 2.5 5 5.5-13zM6.5 9.5l8-8"></path></svg></a>
+    <button class="burger menu-open" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="site-menu"><svg viewBox="0 0 20 10" aria-hidden="true"><path d="M1 1h18M1 9h12"></path></svg></button>
   </div>
 </header>
-
-<div class="site-header-compact" aria-hidden="true" inert>
-  <div class="wrap bar">
-    <Logo />
-    <div class="actions">
-      <ThemeSwitch />
-      <a class="b-pri pk talk" href="/contact/">Let’s talk →</a>
-      <button class="icon-btn menu-open" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="site-menu">
-        <svg width="22" height="16" viewBox="0 0 22 16" aria-hidden="true" focusable="false"><path d="M0 2H22M0 8H22M0 14H22" stroke="currentColor" stroke-width="3"></path></svg>
-      </button>
-    </div>
-  </div>
-</div>
+<a class="fig" href="/" aria-label="Home"><i></i></a>
 
 <style>
-  .bar {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    gap: 0 32px;
-  }
-  .actions {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-  }
+  .top { position: sticky; top: 0; z-index: 40; padding-top: clamp(14px, 1.6vw, 24px); padding-bottom: clamp(14px, 1.6vw, 24px); align-items: center; background: var(--bg); }
+  .r { grid-column: 4 / -1; grid-row: 1; display: flex; justify-content: flex-end; align-items: center; gap: clamp(12px, 2vw, 32px); }
+  .clock { white-space: nowrap; }
+  .clock::before { content: ''; display: inline-block; width: 7px; height: 7px; margin-right: 6px; background: var(--ink); vertical-align: 1px; }
 
-  /* Large: the logo about twice the compact size, the controls level with its top, no rule */
-  .site-header { background: var(--bg); }
-  .site-header .bar { align-items: flex-start; padding-block: var(--step-16-32) 0; }
-  .site-header :global(.h-logo) { min-height: 0; padding: 0; }
-  .site-header :global(.h-logo img) { height: clamp(56px, 5.2vw, 72px); }
+  /* The stepping figure: 12 frames in one strip, all registered on the planted foot, which sits on the
+     bottom centre of the circle. The rest of the figure may step outside it */
+  .fig { position: fixed; left: 0; top: 0; z-index: 45; width: var(--d-a); height: var(--d-a); transform-origin: 0 0; will-change: transform; visibility: hidden; }
+  .fig:global(.ready) { visibility: visible; }
+  .fig::before { content: ''; position: absolute; inset: 0; border-radius: 50%; background: var(--fig-bg); }
+  .fig i { position: absolute; height: 118%; aspect-ratio: 880 / 850; top: calc(97% - 118% * 804 / 850); left: calc(50% - 118% * 329 / 850); background: url('/media/stepping-12.webp') no-repeat; background-size: 1200% 100%; background-position: calc(var(--frame, 0) * 100% / 11) 0; filter: grayscale(1) contrast(1.15); pointer-events: none; }
+  .fig:focus-visible { outline-offset: 6px; border-radius: 50%; }
 
-  /* Compact: the original header, fixed to the top, out of view until the large one has gone */
-  .site-header-compact {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    z-index: 50;
-    background: var(--bg);
-    border-bottom: var(--rule) solid var(--ink);
-    transform: translateY(calc(-100% - 8px));
-    visibility: hidden;
-    transition: transform .5s cubic-bezier(.22, 1, .36, 1), visibility 0s linear .5s;
-  }
-  .site-header-compact.is-shown {
-    transform: none;
-    visibility: visible;
-    transition: transform .5s cubic-bezier(.22, 1, .36, 1), visibility 0s;
-  }
-  .site-header-compact .bar { align-items: stretch; }
-  .site-header-compact .actions { padding: 16px 0; }
-  @media (prefers-reduced-motion: reduce) {
-    .site-header-compact, .site-header-compact.is-shown { transition: none; }
-  }
-
-  /* On phones Let's talk moves into the menu, so the header stays on one row */
-  @media (max-width: 480px) {
-    .talk { display: none; }
+  /* The clock gives way below 1000px; the switch moves into the menu on phones */
+  @media (max-width: 1000px) { .clock { display: none; } }
+  @media (max-width: 760px) {
+    .r { grid-column: 2 / -1; gap: 10px; }
+    .r :global(.tsw) { display: none; }
   }
 </style>
 
 <script>
-  const header = document.querySelector<HTMLElement>('.site-header');
-  const compact = document.querySelector<HTMLElement>('.site-header-compact');
-  if (header && compact) {
-    // The large header's height, for the hero filling the rest of the first screen
-    const publish = () => document.documentElement.style.setProperty('--header-tall', `${header.offsetHeight}px`);
-    publish();
-    new ResizeObserver(publish).observe(header);
+  // Clock: the time in London
+  const time = document.querySelector<HTMLElement>('[data-time]');
+  const tick = () => { if (time) time.textContent = new Intl.DateTimeFormat('en-GB', { hour: '2-digit', minute: '2-digit', timeZone: 'Europe/London' }).format(new Date()); };
+  tick();
+  setInterval(tick, 15000);
 
-    // Show the compact header once the large one is entirely off screen
-    new IntersectionObserver(([entry]) => {
-      const show = !entry.isIntersecting && entry.boundingClientRect.bottom <= 0;
-      compact.classList.toggle('is-shown', show);
-      compact.inert = !show;
-      compact.setAttribute('aria-hidden', String(!show));
-    }).observe(header);
+  // The stepping figure. Hover plays the steps on a loop and leaves it where it stopped;
+  // scrolling steps on from there, one step every 60px. Still with reduced motion
+  const fig = document.querySelector<HTMLElement>('.fig')!;
+  const header = document.querySelector<HTMLElement>('header.top')!;
+  const burger = header.querySelector<HTMLElement>('.menu-open')!;
+  const N = 12;
+  const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let frame = 0;
+  let timer = 0;
+  let lastStep = Math.floor(scrollY / 60);
+  const show = (f: number) => { frame = ((f % N) + N) % N; fig.style.setProperty('--frame', String(frame)); };
+  show(0);
+  if (!still) {
+    fig.addEventListener('mouseenter', () => { clearInterval(timer); timer = window.setInterval(() => show(frame + 1), 110); });
+    fig.addEventListener('mouseleave', () => { clearInterval(timer); timer = 0; });
   }
+
+  // Two stages: large in the homepage slot, docked in the header's first column once scrolled
+  const slot = document.querySelector<HTMLElement>('.fig-slot');
+  const phone = matchMedia('(max-width: 760px)');
+  const ease = (t: number) => t * t * (3 - 2 * t);
+  const place = () => {
+    const d = fig.offsetWidth;
+    const hr = header.getBoundingClientRect();
+    const b = burger.getBoundingClientRect();
+    const dd = phone.matches ? 40 : 48;
+    const dock = { x: hr.left + parseFloat(getComputedStyle(header).paddingLeft), y: b.top + (b.height - dd) / 2 };
+    let x = dock.x, y = dock.y, size = dd;
+    if (slot) {
+      const r = slot.getBoundingClientRect();
+      const t = ease(Math.min(1, Math.max(0, scrollY / 260)));
+      x = r.left + (dock.x - r.left) * t;
+      y = r.top + (dock.y - r.top) * t;
+      size = d + (dd - d) * t;
+    }
+    fig.style.transform = `translate(${x}px, ${y}px) scale(${size / d})`;
+    fig.classList.add('ready');
+  };
+  let ticking = false;
+  addEventListener('scroll', () => {
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(() => {
+      ticking = false;
+      place();
+      if (still || timer) return;
+      const step = Math.floor(scrollY / 60);
+      if (step !== lastStep) { show(frame + step - lastStep); lastStep = step; }
+    });
+  }, { passive: true });
+  addEventListener('resize', place);
+  document.fonts?.ready.then(place);
+  place();
 </script>

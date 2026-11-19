@@ -3,7 +3,6 @@ import '../styles/global.css';
 import Header from '../components/Header.astro';
 import Menu from '../components/Menu.astro';
 import Footer from '../components/Footer.astro';
-import BulgeGrid from '../components/BulgeGrid.astro';
 
 import { isTodo } from '../lib/content';
 import { DEFAULT_SHARE_IMAGE, SITE_NAME, isStaging, person } from '../lib/site';
@@ -13,7 +12,7 @@ interface Props {
   title: string;
   /** Search result and link preview text. "TODO" leaves it out and warns in the terminal */
   description?: string;
-  /** Body text face: mono on the homepage, Inter on case study and thesis pages (open question for Scott) */
+  /** No longer used: the redesign has one body face. Kept so existing pages still compile */
   bodyFont?: 'mono' | 'inter';
   /** Keep this page out of search results. Prefer adding the path to lib/noindex.mjs, which also drops it from the sitemap */
   noindex?: boolean;
@@ -23,7 +22,7 @@ interface Props {
   ogType?: 'website' | 'article';
 }
 
-const { title, description, bodyFont = 'mono', noindex = false, image, ogType = 'website' } = Astro.props;
+const { title, description, noindex = false, image, ogType = 'website' } = Astro.props;
 const fullTitle = title === SITE_NAME ? title : `${title} · ${SITE_NAME}`;
 const canonical = new URL(Astro.url.pathname, Astro.site);
 const desc = isTodo(description) ? undefined : description!.trim();
@@ -34,7 +33,7 @@ const shareUrl = share ? new URL(share.src, Astro.site).href : undefined;
 const isHome = Astro.url.pathname === '/';
 ---
 <!doctype html>
-<html lang="en-GB" data-theme="dark">
+<html lang="en-GB" data-theme="light">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -59,13 +58,15 @@ const isHome = Astro.url.pathname === '/';
 
     {isHome && <script type="application/ld+json" set:html={JSON.stringify(person)} />}
 
-    <!-- Set the theme before first paint: the stored choice, else dark. The html tag says dark too, for visitors without JavaScript -->
+    <!-- Set the theme before first paint: the stored choice, else light. The js class turns on the
+         marker's sweep-in, so without JavaScript the highlights simply show -->
     <script is:inline>
       (function () {
         var theme;
         try { theme = localStorage.getItem('theme'); } catch (e) {}
-        if (theme !== 'light' && theme !== 'dark') theme = 'dark';
+        if (theme !== 'light' && theme !== 'dark') theme = 'light';
         document.documentElement.dataset.theme = theme;
+        document.documentElement.classList.add('js');
       })();
     </script>
 
@@ -73,11 +74,10 @@ const isHome = Astro.url.pathname === '/';
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@800;900&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300..600;1,6..72,300..600&family=Inter+Tight:wght@400;500;600&family=JetBrains+Mono:wght@500;600&display=swap"
     />
   </head>
-  <body class:list={[{ 'body-inter': bodyFont === 'inter' }]}>
-    <BulgeGrid />
+  <body>
     <a class="skip-link" href="#main">Skip to content</a>
     <Header />
     <Menu />
@@ -85,5 +85,18 @@ const isHome = Astro.url.pathname === '/';
       <slot />
     </main>
     <Footer />
+    <script>
+      // The marker: highlighted phrases sweep in as they scroll into view. Section names and link labels are left out
+      const marks = document.querySelectorAll('main .hl:not(.slink .hl):not(.no-sweep)');
+      if (matchMedia('(prefers-reduced-motion: reduce)').matches) marks.forEach((m) => m.classList.add('sweep', 'on'));
+      else {
+        const io = new IntersectionObserver((entries) => entries.forEach((e) => {
+          if (!e.isIntersecting) return;
+          setTimeout(() => e.target.classList.add('on'), 150);
+          io.unobserve(e.target);
+        }), { rootMargin: '0px 0px -12% 0px' });
+        marks.forEach((m) => { m.classList.add('sweep'); io.observe(m); });
+      }
+    </script>
   </body>
 </html>

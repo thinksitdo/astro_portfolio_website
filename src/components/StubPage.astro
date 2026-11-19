@@ -1,21 +1,14 @@
 ---
 // A page that exists so links resolve, but has no design or copy yet.
+import BackLink from './BackLink.astro';
 interface Props {
   heading: string;
   note: string;
 }
 const { heading, note } = Astro.props;
 ---
-<section class="stub">
-  <div class="wrap">
-    <h1 class="section-heading">{heading}</h1>
-    <p><span class="todo">TODO</span> {note}</p>
-  </div>
+<section class="g page-hero stub">
+  <BackLink href="/">Back to home</BackLink>
+  <h1 class="statement">{heading}</h1>
+  <p class="copy intro"><span class="todo">TODO</span> {note}</p>
 </section>
-
-<style>
-  .stub { border-bottom: var(--rule) solid var(--ink); }
-  .wrap { padding-block: var(--section-pad); }
-  h1 { padding-bottom: 16px; border-bottom: var(--rule) solid var(--ink); }
-  p { margin: 32px 0 0; }
-</style>

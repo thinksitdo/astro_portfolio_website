@@ -1,27 +1,12 @@
 ---
 ---
-<footer class="site-footer">
-  <div class="wrap row">
+<footer class="g site-footer">
+  <div>
     <span>© 2025–2026 Scott Robinson. All rights reserved</span>
-    <span>From design to code, built with <a class="l-mark" href="https://astro.build/" rel="external">Astro</a></span>
-    <a class="l-mark" href="#top" data-to-top>Back to top ↑</a>
+    <span>From design to code, built with <a class="f-link" href="https://astro.build/" rel="external">Astro</a></span>
+    <a class="f-link" href="#top" data-to-top>Back to top ↑</a>
   </div>
 </footer>
-
-<style>
-  .row {
-    padding-top: 32px;
-    padding-bottom: 32px;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    gap: 16px;
-    font-family: var(--font-mono);
-    font-size: 12px;
-    text-transform: uppercase;
-    letter-spacing: 0.04em;
-  }
-</style>
 
 <script>
   // Back to top glides up rather than jumping: fast at first, then easing into the top.
@@ -45,7 +30,7 @@
     ['wheel', 'touchstart', 'keydown'].forEach((t) => window.addEventListener(t, stop, { passive: true }));
     const step = (now: number) => {
       const t = Math.min(1, (now - t0) / duration);
-      window.scrollTo(0, Math.round(start * (1 - easeOutQuint(t))));
+      window.scrollTo({ top: Math.round(start * (1 - easeOutQuint(t))), behavior: 'instant' });
       if (t < 1) { frame = requestAnimationFrame(step); return; }
       stop();
       // Move focus to the top too, as the jump would, so the next Tab starts from the header

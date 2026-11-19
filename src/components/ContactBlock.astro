@@ -1,31 +1,14 @@
 ---
-// Email and buttons at the foot of inner pages (case studies, lists, thesis)
+// Get in touch, at the foot of every page: the section's name, then the contact form and LinkedIn
 ---
-<section id="contact" class="cs-contact" aria-label="Get in touch">
-  <div class="wrap">
-    <a class="l-mark big-mail" href="mailto:hello@scottrobinson.co.uk">hello@scottrobinson.co.uk</a>
-    <div class="contact-actions">
-      <a class="b-pri pk lg" href="mailto:hello@scottrobinson.co.uk">Get in touch →</a>
-      <a class="b-sec lg" href="https://www.linkedin.com/in/drscottrobinson/">LinkedIn ↗</a>
-    </div>
-  </div>
+<section class="g contact-block" id="contact" aria-label="Get in touch">
+  <h2 class="head statement">Get in touch</h2>
+  <nav class="c-links" aria-label="Get in touch">
+    <a class="slink" href="/contact/"><span class="hl">Contact form</span><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2 8h11M9 4l4 4-4 4"></path></svg></a>
+    <a class="slink" href="https://www.linkedin.com/in/drscottrobinson/" rel="external"><span class="hl">LinkedIn</span><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4 12 12 4M5 4h7v7"></path></svg></a>
+  </nav>
 </section>
 
 <style>
-  .cs-contact { border-bottom: var(--rule) solid var(--ink); }
-  .cs-contact .wrap { padding-block: var(--step-32-64); }
-  .big-mail {
-    display: inline-block;
-    font-family: var(--font-display);
-    font-weight: 800;
-    font-size: clamp(28px, 5vw, 80px);
-    --lh: 1;
-    letter-spacing: -0.03em;
-    color: var(--ink);
-    text-decoration-thickness: 3px;
-    text-underline-offset: 10px;
-    overflow-wrap: anywhere;
-  }
-  .contact-actions { display: flex; flex-wrap: wrap; gap: 16px; margin-top: 32px; }
-  .contact-actions .lg { min-height: 48px; font-size: 13px; }
+  .c-links { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: 16px clamp(28px, 3vw, 56px); margin-top: clamp(28px, 2.6vw, 44px); }
 </style>
